@@ -48,7 +48,7 @@ a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
 .main-header { background-color: var(--primary-white); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
 .header-inner { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; }
 .logo-section { display: flex; align-items: center; gap: 15px; cursor: pointer; }
-.logo { background: linear-gradient(135deg, var(--primary-green), var(--secondary-dark-green)); color: white; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; font-size: 24px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,135,81,0.2); }
+.logo { width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,135,81,0.2); overflow: hidden; background: white; }
 .logo-text h1 { font-size: 1.4rem; color: var(--primary-green); line-height: 1.2; font-weight: 800; letter-spacing: -0.5px; }
 .logo-text h2 { font-size: 1rem; color: var(--primary-gold); font-weight: 600; letter-spacing: 1px; }
 
