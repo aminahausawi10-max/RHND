@@ -198,24 +198,27 @@
                 <div class="content-card">
                     <h3>Request Assistance</h3>
                     <p style="color: var(--text-light); margin-bottom: 25px;">Submit a ticket to our support team for any issues or inquiries.</p>
-                    <form onsubmit="event.preventDefault(); alert('Support ticket submitted! We will contact you soon.'); document.getElementById('ticket-form').reset();" id="ticket-form">
+                    <form id="ticket-form">
                         <div class="form-group">
                             <label>Subject</label>
-                            <input type="text" class="form-control" required placeholder="Brief description of your issue">
+                            <input type="text" id="req-subject" class="form-control" required placeholder="Brief description of your issue">
                         </div>
                         <div class="form-group">
                             <label>Category</label>
-                            <select class="form-control" required>
-                                <option>Consular Assistance</option>
-                                <option>Technical Issue</option>
+                            <select id="req-category" class="form-control" required>
+                                <option>Passport & Consular Assistance</option>
+                                <option>NIN Registration & Verification</option>
+                                <option>Legal & Welfare Support</option>
+                                <option>Business & Investment Support</option>
                                 <option>General Inquiry</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Details</label>
-                            <textarea class="form-control" rows="5" required placeholder="Please provide as much detail as possible..."></textarea>
+                            <textarea id="req-details" class="form-control" rows="5" required placeholder="Please provide as much detail as possible..."></textarea>
                         </div>
-                        <button class="btn btn-primary">Submit Ticket</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Ticket</button>
+                        <span id="ticket-status" style="margin-left: 15px; font-weight: bold; color: var(--primary-green); display: none;"></span>
                     </form>
                 </div>
             </div>
@@ -224,16 +227,48 @@
     
     <script>
         function switchTab(tabId) {
-            // Update nav items
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             event.currentTarget.classList.add('active');
-            
-            // Hide all panels
             document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
-            
-            // Show target panel
             document.getElementById('tab-' + tabId).classList.add('active');
         }
+
+        document.getElementById('ticket-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const rawUser = localStorage.getItem("rhnd_user");
+            let user = { name: "Diaspora Member", email: "member@rhnd.com" };
+            if (rawUser) { try { user = JSON.parse(rawUser); } catch(e) {} }
+
+            const subject = document.getElementById('req-subject').value;
+            const category = document.getElementById('req-category').value;
+            const details = document.getElementById('req-details').value;
+            const statusSpan = document.getElementById('ticket-status');
+
+            try {
+                const res = await fetch('/api/requests', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: user.name || 'Member',
+                        email: user.email || 'member@rhnd.com',
+                        country: 'Diaspora',
+                        category: category,
+                        subject: subject,
+                        details: details
+                    })
+                });
+                if (res.ok) {
+                    statusSpan.style.display = 'inline';
+                    statusSpan.textContent = 'Ticket Submitted! Admin has received your request.';
+                    document.getElementById('ticket-form').reset();
+                    setTimeout(() => statusSpan.style.display = 'none', 4000);
+                } else {
+                    alert('Failed to submit ticket. Please try again.');
+                }
+            } catch(err) {
+                alert('Network error submitting ticket.');
+            }
+        });
     </script>
 </body>
 </html>
