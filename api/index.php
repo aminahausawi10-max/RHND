@@ -14,6 +14,8 @@ if (strpos($requestUri, "/api/") === 0) {
         require __DIR__ . "/../src/api/login.php";
     } elseif ($requestUri === "/api/register" && $method === "POST") {
         require __DIR__ . "/../src/api/register.php";
+    } elseif ($requestUri === "/api/setup") {
+        require __DIR__ . "/setup.php";
     } elseif ($requestUri === "/api/posts") {
         require __DIR__ . "/../src/api/posts.php";
     } elseif (preg_match("#^/api/posts/(\d+)$#", $requestUri, $matches)) {
