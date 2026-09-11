@@ -103,6 +103,9 @@
                 <div class="nav-item" onclick="switchAdminTab('broadcast')">
                     <i class="fas fa-bullhorn"></i> Broadcast Alert
                 </div>
+                                <div class="nav-item" onclick="switchAdminTab('entities')">
+                    <i class="fas fa-landmark"></i> Ministries & Agencies
+                </div>
                 <div class="nav-item" onclick="switchAdminTab('settings')">
                     <i class="fas fa-cog"></i> Platform Settings
                 </div>
@@ -186,6 +189,9 @@
                             </button>
                             <button type="button" onclick="switchOverviewSubTab('media')" id="subtab-btn-media" class="btn-action" style="padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; background: #e2e8f0; color: #334155;">
                                 <i class="fas fa-photo-video"></i> Media (<span id="badge-media-count">0</span>)
+                            </button>
+                            <button type="button" onclick="switchOverviewSubTab('entities')" id="subtab-btn-entities" class="btn-action" style="padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; background: #e2e8f0; color: #334155;">
+                                <i class="fas fa-landmark"></i> Ministries & Agencies (<span id="badge-entities-count">0</span>)
                             </button>
                         </div>
                     </div>
@@ -577,7 +583,67 @@
                 </div>
             </div>
 
-            <!-- 7. PLATFORM SETTINGS TAB -->
+            <!-- 7. MINISTRIES & AGENCIES FULL PANEL -->
+            <div id="tab-entities" class="panel">
+                <div class="content-card">
+                    <h3>Add New Federal Ministry or Government Agency</h3>
+                    <form id="add-entity-full-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Entity Type</label>
+                                <select id="ent-type-full" class="form-control">
+                                    <option value="Ministry">Federal Ministry</option>
+                                    <option value="Agency">Government Agency / Commission</option>
+                                    <option value="Policy">National Policy Initiative</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Official Name</label>
+                                <input type="text" id="ent-name-full" class="form-control" required placeholder="e.g. Federal Ministry of Foreign Affairs">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Leadership / Head</label>
+                                <input type="text" id="ent-leader-full" class="form-control" placeholder="e.g. Amb. Yusuf Maitama Tuggar (Minister)">
+                            </div>
+                            <div class="form-group">
+                                <label>Official Website Link</label>
+                                <input type="url" id="ent-website-full" class="form-control" placeholder="https://foreignaffairs.gov.ng">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Mandate & Key Responsibilities</label>
+                            <textarea id="ent-desc-full" class="form-control" rows="3" placeholder="Brief mandate or citizen services..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Save to Official Platform
+                        </button>
+                    </form>
+                </div>
+
+                <div class="content-card">
+                    <h3>Published Ministries & Agencies List</h3>
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Official Name</th>
+                                    <th>Minister / Leader</th>
+                                    <th>Website</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="entities-full-list-tbody">
+                                <tr><td colspan="5" style="text-align: center;">Loading entities...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. PLATFORM SETTINGS TAB -->
             <div id="tab-settings" class="panel">
                 <div class="content-card">
                     <h3>Platform & Contact Settings</h3>
@@ -895,6 +961,7 @@
             if(!confirm('Delete this media item?')) return;
             const res = await fetch('/api/media?id=' + id, { method: 'DELETE', headers: fetchHeaders });
             if (res.ok) fetchMedia();
+        fetchEntities();
         }
 
         document.getElementById('add-media-form').addEventListener('submit', async (e) => {
@@ -914,6 +981,7 @@
                 document.getElementById('add-media-form').reset();
                 alert('Media item published successfully!');
                 fetchMedia();
+        fetchEntities();
             }
         });
 
@@ -926,7 +994,7 @@
 
         // Subtab switcher on Overview page
         function switchOverviewSubTab(type) {
-            const types = ['news', 'members', 'requests', 'media'];
+            const types = ['news', 'members', 'requests', 'media', 'entities'];
             types.forEach(t => {
                 const btn = document.getElementById('subtab-btn-' + t);
                 const content = document.getElementById('subtab-content-' + t);
@@ -1051,6 +1119,132 @@
             }
         }
 
+        
+        // --- 5. MINISTRIES & AGENCIES LOGIC ---
+        async function fetchEntities() {
+            try {
+                const res = await fetch('/api/entities');
+                const items = await res.json();
+                
+                // Update badge count
+                const badge = document.getElementById('badge-entities-count');
+                if (badge) badge.textContent = items.length || 0;
+
+                // Sync Overview Table
+                const ovTbody = document.getElementById('ov-entities-list-tbody');
+                if (ovTbody) {
+                    if (!items || items.length === 0) {
+                        ovTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No ministries or agencies configured.</td></tr>';
+                    } else {
+                        ovTbody.innerHTML = items.map(e => `
+                            <tr>
+                                <td><span class="badge ${e.type === 'Ministry' ? 'badge-resolved' : 'badge-progress'}">${e.type}</span></td>
+                                <td><strong>${e.name}</strong></td>
+                                <td>${e.leader || '<span style="color:#94a3b8;">N/A</span>'}</td>
+                                <td><a href="${e.website}" target="_blank" style="color:var(--primary-green);"><i class="fas fa-external-link-alt"></i> Visit</a></td>
+                                <td>
+                                    <button onclick="deleteEntity(${e.id})" class="btn-action btn-delete">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+
+                // Sync Full Panel Table
+                const fullTbody = document.getElementById('entities-full-list-tbody');
+                if (fullTbody) {
+                    if (!items || items.length === 0) {
+                        fullTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No entities found.</td></tr>';
+                    } else {
+                        fullTbody.innerHTML = items.map(e => `
+                            <tr>
+                                <td><span class="badge ${e.type === 'Ministry' ? 'badge-resolved' : 'badge-progress'}">${e.type}</span></td>
+                                <td><strong>${e.name}</strong></td>
+                                <td>${e.leader || 'N/A'}</td>
+                                <td><a href="${e.website}" target="_blank" style="color:var(--primary-green); font-weight:600;"><i class="fas fa-link"></i> ${e.website}</a></td>
+                                <td>
+                                    <button onclick="deleteEntity(${e.id})" class="btn-action btn-delete">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+            } catch(err) {
+                console.error("Error loading entities:", err);
+            }
+        }
+
+        async function deleteEntity(id) {
+            if (!confirm('Are you sure you want to remove this ministry/agency from the website?')) return;
+            const res = await fetch('/api/entities?id=' + id, { method: 'DELETE', headers: fetchHeaders });
+            if (res.ok) {
+                fetchEntities();
+            } else {
+                alert('Delete failed. Check credentials.');
+            }
+        }
+
+        // Overview Add Entity Listener
+        const ovEntForm = document.getElementById('ov-add-entity-form');
+        if (ovEntForm) {
+            ovEntForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const type = document.getElementById('ov-ent-type').value;
+                const name = document.getElementById('ov-ent-name').value;
+                const leader = document.getElementById('ov-ent-leader').value;
+                const website = document.getElementById('ov-ent-website').value;
+                const description = document.getElementById('ov-ent-desc').value;
+                const status = document.getElementById('ov-ent-status');
+
+                const res = await fetch('/api/entities', {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body: JSON.stringify({ type, name, leader, website, description })
+                });
+
+                if (res.ok) {
+                    ovEntForm.reset();
+                    status.textContent = 'Added Successfully!';
+                    status.style.display = 'inline';
+                    setTimeout(() => status.style.display = 'none', 3000);
+                    fetchEntities();
+                } else {
+                    alert('Failed to add entity.');
+                }
+            });
+        }
+
+        // Dedicated Full Add Entity Listener
+        const fullEntForm = document.getElementById('add-entity-full-form');
+        if (fullEntForm) {
+            fullEntForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const type = document.getElementById('ent-type-full').value;
+                const name = document.getElementById('ent-name-full').value;
+                const leader = document.getElementById('ent-leader-full').value;
+                const website = document.getElementById('ent-website-full').value;
+                const description = document.getElementById('ent-desc-full').value;
+
+                const res = await fetch('/api/entities', {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body: JSON.stringify({ type, name, leader, website, description })
+                });
+
+                if (res.ok) {
+                    fullEntForm.reset();
+                    alert('Ministry / Agency saved successfully to the platform!');
+                    fetchEntities();
+                } else {
+                    alert('Failed to save entity.');
+                }
+            });
+        }
+
         // Form listeners for Overview Hub
         document.addEventListener('DOMContentLoaded', () => {
             // Overview Add News
@@ -1154,6 +1348,7 @@
                         status.style.display = 'inline';
                         setTimeout(() => status.style.display = 'none', 3000);
                         fetchMedia();
+        fetchEntities();
                     }
                 });
             }
@@ -1165,6 +1360,7 @@
         fetchMembers();
         fetchRequests();
         fetchMedia();
+        fetchEntities();
     </script>
 </body>
 </html>

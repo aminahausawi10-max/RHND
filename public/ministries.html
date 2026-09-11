@@ -92,14 +92,41 @@
     <!-- Main Content Area -->
     <section class="section-padding">
         <div class="container">
-            <div class="cards-grid">
-                <div class="update-card" style="padding: 60px; text-align: center; border: 2px dashed #cbd5e1; background: transparent; box-shadow: none; grid-column: 1 / -1;">
-                    <h3 style="color: var(--text-light); margin-bottom: 10px;">Content for Federal Ministries is being updated.</h3>
-                    <p style="color: #94a3b8;">Our administrators are currently populating this section with official data.</p>
+            <div id="ministries-grid" class="cards-grid">
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                    <p style="color: var(--text-light); font-size: 1.1rem;"><i class="fas fa-spinner fa-spin"></i> Loading Federal Ministries...</p>
                 </div>
             </div>
         </div>
     </section>
+
+    <script>
+        async function loadMinistries() {
+            try {
+                const res = await fetch('/api/entities?type=Ministry');
+                const items = await res.json();
+                const grid = document.getElementById('ministries-grid');
+                if (!items || items.length === 0) {
+                    grid.innerHTML = '<div class="update-card" style="padding: 50px; text-align: center; grid-column: 1 / -1;"><p>No ministries configured yet.</p></div>';
+                    return;
+                }
+                grid.innerHTML = items.map(m => `
+                    <div class="update-card" style="border-top: 4px solid var(--primary-green);">
+                        <div class="card-content">
+                            <div class="category" style="color: var(--primary-gold);"><i class="fas fa-landmark"></i> Federal Ministry</div>
+                            <h3 style="font-size: 1.3rem; margin-bottom: 8px;">${m.name}</h3>
+                            ${m.leader ? `<div style="font-size: 0.9rem; font-weight: 700; color: var(--secondary-dark-green); margin-bottom: 12px;"><i class="fas fa-user-tie"></i> ${m.leader}</div>` : ''}
+                            <p style="font-size: 0.95rem; color: var(--text-light); margin-bottom: 20px;">${m.description || ''}</p>
+                            ${m.website ? `<a href="${m.website}" target="_blank" class="read-more" style="font-weight: 700; color: var(--primary-green);">Visit Official Portal <i class="fas fa-external-link-alt"></i></a>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            } catch(e) {
+                document.getElementById('ministries-grid').innerHTML = '<p style="grid-column: 1 / -1; color: red;">Error loading ministries.</p>';
+            }
+        }
+        loadMinistries();
+    </script>
     <!-- Footer -->
     <footer class="main-footer">
         <div class="container footer-grid">
