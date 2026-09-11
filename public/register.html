@@ -127,7 +127,7 @@
             
             if (res.ok) {
                 successDiv.style.display = 'block';
-                setTimeout(() => window.location.href = '/login', 2000);
+                setTimeout(() => window.location.href = 'login.html', 2000);
             } else {
                 errorDiv.textContent = data.error || 'Registration failed.';
                 errorDiv.style.display = 'block';
