@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,17 +6,20 @@
     <title>Renewed Hope Nigeria Diaspora</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="container top-bar-inner">
             <div class="top-bar-left">
-                <span>Connecting Nigerians Worldwide</span>
+                <i class="fas fa-globe"></i> <span>Connecting Nigerians Worldwide</span>
             </div>
             <div class="top-bar-right">
                 <a href="#">Help</a>
+                <span class="divider">|</span>
                 <a href="#">FAQ</a>
+                <span class="divider">|</span>
                 <a href="#">Contact</a>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -27,23 +30,26 @@
         </div>
     </div>
 
-    <!-- Header -->
-    <header class="main-header">
+    <!-- Main Header -->
+    <header class="main-header" id="header">
         <div class="container header-inner">
             <div class="logo-section">
-                <div class="logo">RHND</div>
+                <div class="logo">
+                    <i class="fas fa-eagle"></i>
+                </div>
                 <div class="logo-text">
                     <h1>RENEWED HOPE</h1>
                     <h2>NIGERIA DIASPORA</h2>
-                    <p>Connecting Nigerians Worldwide</p>
                 </div>
             </div>
+            
             <div class="header-actions">
                 <div class="search-box">
-                    <input type="text" placeholder="Search...">
+                    <input type="text" placeholder="Search news, updates...">
                     <button><i class="fas fa-search"></i></button>
                 </div>
                 <div class="language-selector">
+                    <i class="fas fa-language"></i>
                     <select>
                         <option>English</option>
                         <option>Hausa</option>
@@ -56,112 +62,180 @@
                 </div>
             </div>
         </div>
-    </header>
 
-    <!-- Main Navigation -->
-    <nav class="main-nav">
-        <div class="container">
-            <ul class="nav-links">
-                <li><a href="#" class="active">HOME</a></li>
-                <li><a href="#">NEWS</a></li>
-                <li><a href="#">GOVERNMENT</a></li>
-                <li><a href="#">MINISTRIES</a></li>
-                <li><a href="#">AGENCIES</a></li>
-                <li><a href="#">NATIONAL ASSEMBLY</a></li>
-                <li><a href="#">DIASPORA</a></li>
-                <li><a href="#">MEDIA CENTRE</a></li>
-                <li><a href="#">MEMBERSHIP</a></li>
-                <li><a href="#">HELP & SUPPORT</a></li>
-                <li><a href="#">CONTACT</a></li>
-            </ul>
-        </div>
-    </nav>
+        <!-- Navigation Menu -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul class="nav-links">
+                    <li><a href="#" class="active">HOME</a></li>
+                    <li><a href="#">NEWS</a></li>
+                    <li><a href="#">GOVERNMENT</a></li>
+                    <li><a href="#">MINISTRIES</a></li>
+                    <li><a href="#">AGENCIES</a></li>
+                    <li><a href="#">NATIONAL ASSEMBLY</a></li>
+                    <li><a href="#">DIASPORA</a></li>
+                    <li><a href="#">MEDIA CENTRE</a></li>
+                    <li><a href="#">MEMBERSHIP</a></li>
+                    <li><a href="#">HELP & SUPPORT</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
     <!-- Hero Section -->
     <section class="hero-section">
+        <div class="hero-overlay"></div>
         <div class="hero-content container">
-            <h1>RENEWED HOPE NIGERIA DIASPORA</h1>
-            <p>Connecting Nigerians Worldwide. Your reliable source for information, government policies, diaspora affairs, and community support.</p>
+            <span class="hero-badge">Official Platform</span>
+            <h1>Connecting Nigerians<br><span class="text-gold">Worldwide</span></h1>
+            <p>Your reliable source for verified government policies, diaspora affairs, media content, and community support services globally.</p>
             <div class="hero-buttons">
-                <a href="#" class="btn btn-primary">Explore Government Updates</a>
-                <a href="#" class="btn btn-secondary">Join Diaspora Community</a>
+                <a href="#" class="btn btn-primary btn-large"><i class="fas fa-compass"></i> Explore Updates</a>
+                <a href="#" class="btn btn-secondary btn-large"><i class="fas fa-users"></i> Join Community</a>
             </div>
         </div>
     </section>
 
     <!-- Government Updates Section -->
-    <section class="government-updates container section-padding">
-        <div class="section-header">
-            <h2>GOVERNMENT UPDATES</h2>
-            <div class="line"></div>
-        </div>
-        <div class="cards-grid">
-            <div class="card">
-                <div class="card-img" style="background-color: #eee; height: 150px;"></div>
-                <div class="card-content">
-                    <span class="badge">Official Government Source</span>
-                    <h3>Presidential Address on Diaspora Affairs</h3>
-                    <p>Summary of the recent activities and policies benefiting the Nigerian diaspora.</p>
-                    <a href="#" class="read-more">Read Official Source</a>
-                </div>
+    <section class="government-updates section-padding">
+        <div class="container">
+            <div class="section-header">
+                <h2>Government Updates</h2>
+                <p>Verified public information and announcements</p>
+                <div class="line"></div>
             </div>
-            <div class="card">
-                <div class="card-img" style="background-color: #eee; height: 150px;"></div>
-                <div class="card-content">
-                    <span class="badge">Official Government Source</span>
-                    <h3>Federal Executive Council Decisions</h3>
-                    <p>Highlights from the latest FEC meeting concerning economic development.</p>
-                    <a href="#" class="read-more">Read Official Source</a>
+            
+            <div class="cards-grid">
+                <!-- Card 1 -->
+                <div class="update-card">
+                    <div class="card-img presidency-img">
+                        <span class="badge"><i class="fas fa-check-circle"></i> Official Source</span>
+                    </div>
+                    <div class="card-content">
+                        <span class="category">Presidency</span>
+                        <h3>Presidential Address on Diaspora Affairs</h3>
+                        <p>Summary of the recent activities and policies benefiting the Nigerian diaspora worldwide.</p>
+                        <a href="#" class="read-more">Read Official Source <i class="fas fa-arrow-right"></i></a>
+                    </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-img" style="background-color: #eee; height: 150px;"></div>
-                <div class="card-content">
-                    <span class="badge">Official Government Source</span>
-                    <h3>New Diaspora Investment Program</h3>
-                    <p>Details about the newly launched investment opportunities for Nigerians abroad.</p>
-                    <a href="#" class="read-more">Read Official Source</a>
+
+                <!-- Card 2 -->
+                <div class="update-card">
+                    <div class="card-img fec-img">
+                        <span class="badge"><i class="fas fa-check-circle"></i> Official Source</span>
+                    </div>
+                    <div class="card-content">
+                        <span class="category">Federal Executive Council</span>
+                        <h3>New Economic Development Policies</h3>
+                        <p>Highlights from the latest FEC meeting concerning national economic development and growth.</p>
+                        <a href="#" class="read-more">Read Official Source <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="update-card">
+                    <div class="card-img ministry-img">
+                        <span class="badge"><i class="fas fa-check-circle"></i> Official Source</span>
+                    </div>
+                    <div class="card-content">
+                        <span class="category">Foreign Affairs</span>
+                        <h3>New Diaspora Investment Program</h3>
+                        <p>Details about the newly launched investment opportunities designed exclusively for Nigerians abroad.</p>
+                        <a href="#" class="read-more">Read Official Source <i class="fas fa-arrow-right"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Diaspora Membership Section -->
+    <!-- Services / Agencies Section -->
+    <section class="services-section section-padding">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Government Agencies & Parastatals</h2>
+                <div class="line mx-auto"></div>
+            </div>
+            <div class="services-grid">
+                <div class="service-box">
+                    <div class="service-icon"><i class="fas fa-id-card"></i></div>
+                    <h4>NiDCOM & NIMC</h4>
+                    <p>Diaspora Identity and Commission services</p>
+                </div>
+                <div class="service-box">
+                    <div class="service-icon"><i class="fas fa-passport"></i></div>
+                    <h4>Immigration</h4>
+                    <p>Passport renewals and visa services</p>
+                </div>
+                <div class="service-box">
+                    <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h4>Security Agencies</h4>
+                    <p>Police, NDLEA, NAPTIP and DSS updates</p>
+                </div>
+                <div class="service-box">
+                    <div class="service-icon"><i class="fas fa-landmark"></i></div>
+                    <h4>National Assembly</h4>
+                    <p>Senate and House of Representatives bills</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Membership Section -->
     <section class="membership-section">
-        <div class="container text-center">
-            <h2>BECOME A MEMBER TODAY</h2>
-            <p>Join the official Renewed Hope Nigeria Diaspora community and connect with millions of Nigerians globally.</p>
-            <a href="#" class="btn btn-primary btn-large mt-20">JOIN OUR DIASPORA COMMUNITY</a>
+        <div class="container membership-inner">
+            <div class="membership-text">
+                <h2>Join Our Diaspora Community</h2>
+                <p>Register today to receive updates, request assistance, and connect with millions of Nigerians globally through your personalized dashboard.</p>
+                <a href="#" class="btn btn-primary btn-large mt-20">Create Membership ID</a>
+            </div>
+            <div class="membership-image">
+                <div class="mockup-card">
+                    <div class="mockup-header">Membership ID</div>
+                    <div class="mockup-body">
+                        <div class="mockup-avatar"></div>
+                        <div class="mockup-lines">
+                            <div class="m-line w-70"></div>
+                            <div class="m-line w-50"></div>
+                            <div class="m-line w-80"></div>
+                        </div>
+                    </div>
+                    <div class="mockup-footer">RHND-000001</div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="main-footer">
         <div class="container footer-grid">
-            <div class="footer-col">
-                <h3>Renewed Hope Nigeria Diaspora</h3>
-                <p>Connecting Nigerians Worldwide.</p>
-                <div class="social-icons mt-10">
+            <div class="footer-col brand-col">
+                <div class="logo-text footer-logo">
+                    <h2 class="text-white">RENEWED HOPE</h2>
+                    <h3 class="text-gold">NIGERIA DIASPORA</h3>
+                </div>
+                <p class="mt-20">Connecting Nigerians Worldwide. A professional platform for diaspora information and support.</p>
+                <div class="social-icons mt-20">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
             <div class="footer-col">
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">News</a></li>
-                    <li><a href="#">Government</a></li>
-                    <li><a href="#">Ministries</a></li>
-                    <li><a href="#">Agencies</a></li>
+                    <li><a href="#">News & Media</a></li>
+                    <li><a href="#">Government Updates</a></li>
+                    <li><a href="#">Ministries & Agencies</a></li>
+                    <li><a href="#">Diaspora Services</a></li>
+                    <li><a href="#">Help & Support</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>Useful Links</h3>
+                <h3>Official Sources</h3>
                 <ul>
-                    <li><a href="#">Official Government Sources</a></li>
+                    <li><a href="#">State House</a></li>
                     <li><a href="#">NiDCOM</a></li>
                     <li><a href="#">NIMC</a></li>
                     <li><a href="#">Immigration</a></li>
@@ -169,16 +243,20 @@
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>Languages</h3>
+                <h3>Languages & Legal</h3>
                 <ul>
                     <li><a href="#">English</a></li>
                     <li><a href="#">Hausa</a></li>
                     <li><a href="#">العربية</a></li>
+                    <li class="mt-10"><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
                 </ul>
             </div>
         </div>
-        <div class="footer-bottom text-center">
-            <p>&copy; 2026 Renewed Hope Nigeria Diaspora. All Rights Reserved.</p>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 Renewed Hope Nigeria Diaspora. All Rights Reserved.</p>
+            </div>
         </div>
     </footer>
 
