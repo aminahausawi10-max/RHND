@@ -1,28 +1,43 @@
 <?php
 require __DIR__ . "/../../config/database.php";
 
-$method = $_SERVER["REQUEST_METHOD"];
+$method = $_SERVER['REQUEST_METHOD'];
 
-if ($method === "GET") {
-    $stmt = $pdo->query("SELECT posts.*, users.name as author FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC");
+if ($method === 'GET') {
+    // Fetch all posts
+    $stmt = $pdo->query("SELECT p.*, u.name as author_name FROM posts p LEFT JOIN users u ON p.user_id = u.id ORDER BY p.created_at DESC");
     $posts = $stmt->fetchAll();
     echo json_encode($posts);
-} elseif ($method === "POST") {
-    if (!isset($_SESSION["user_id"])) {
-        http_response_code(401);
-        echo json_encode(["error" => "Unauthorized"]);
-        exit;
-    }
+} 
+elseif ($method === 'POST') {
+    // Create a new post
     $data = json_decode(file_get_contents("php://input"), true);
-    if (!$data || !isset($data["title"]) || !isset($data["content"])) {
+    if (!isset($data['title']) || !isset($data['content'])) {
         http_response_code(400);
         echo json_encode(["error" => "Missing title or content"]);
         exit;
     }
+    
+    // Hardcode user_id 1 for admin for now since we don't have session management yet
+    $userId = 1; 
+    
     $stmt = $pdo->prepare("INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)");
-    $stmt->execute([$_SESSION["user_id"], $data["title"], $data["content"]]);
-    echo json_encode(["status" => "success", "id" => $pdo->lastInsertId()]);
-} else {
-    http_response_code(405);
+    $stmt->execute([$userId, $data['title'], $data['content']]);
+    echo json_encode(["success" => true, "id" => $pdo->lastInsertId()]);
 }
-
+elseif ($method === 'DELETE') {
+    // Delete a post
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        http_response_code(400);
+        echo json_encode(["error" => "Missing post ID"]);
+        exit;
+    }
+    $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ?");
+    $stmt->execute([$id]);
+    echo json_encode(["success" => true]);
+}
+else {
+    http_response_code(405);
+    echo json_encode(["error" => "Method not allowed"]);
+}
