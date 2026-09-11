@@ -5,8 +5,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // Admin Authentication Check for modifications
 if ($method === 'POST' || $method === 'DELETE') {
-    $headers = getallheaders();
-    $adminPassword = $headers['X-Admin-Password'] ?? '';
+    $adminPassword = $_SERVER['HTTP_X_ADMIN_PASSWORD'] ?? '';
+    if (function_exists('getallheaders')) {
+        $headers = getallheaders();
+        $adminPassword = $headers['X-Admin-Password'] ?? $headers['x-admin-password'] ?? $adminPassword;
+    }
+    
     if ($adminPassword !== 'Admin@RHND2026') {
         http_response_code(401);
         echo json_encode(["error" => "Unauthorized: Incorrect Admin Password"]);
