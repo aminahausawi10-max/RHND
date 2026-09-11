@@ -3,6 +3,18 @@ require __DIR__ . "/../../config/database.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 
+// Admin Authentication Check for modifications
+if ($method === 'POST' || $method === 'DELETE') {
+    $headers = getallheaders();
+    $adminPassword = $headers['X-Admin-Password'] ?? '';
+    if ($adminPassword !== 'Admin@RHND2026') {
+        http_response_code(401);
+        echo json_encode(["error" => "Unauthorized: Incorrect Admin Password"]);
+        exit;
+    }
+}
+
+
 if ($method === 'GET') {
     // Fetch all posts
     $stmt = $pdo->query("SELECT p.*, u.name as author_name FROM posts p LEFT JOIN users u ON p.user_id = u.id ORDER BY p.created_at DESC");
