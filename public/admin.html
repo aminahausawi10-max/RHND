@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin | Renewed Hope Nigeria Diaspora</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            RHND <span>Admin</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+            <li><a href="#"><i class="fas fa-users"></i> <span>Members</span></a></li>
+            <li><a href="#"><i class="fas fa-globe"></i> <span>Countries</span></a></li>
+            <li><a href="#"><i class="fas fa-user-tie"></i> <span>Coordinators</span></a></li>
+            <li><a href="#"><i class="fas fa-newspaper"></i> <span>News & Updates</span></a></li>
+            <li><a href="#"><i class="fas fa-photo-video"></i> <span>Media Centre</span></a></li>
+            <li><a href="#"><i class="fas fa-hands-helping"></i> <span>Assistance Requests</span></a></li>
+            <li><a href="#"><i class="fas fa-comments"></i> <span>Comments & Reports</span></a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search records...">
+            </div>
+            <div class="header-user">
+                <div class="notifications"><i class="fas fa-bell"></i></div>
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/35" alt="Admin">
+                    <span>Super Admin</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Area -->
+        <main class="dashboard-area">
+            <h2 class="page-title">Dashboard Overview</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h4>Total Members</h4>
+                        <h2>12,450</h2>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                </div>
+                <div class="stat-card" style="border-left-color: var(--admin-sidebar);">
+                    <div class="stat-info">
+                        <h4>New Members</h4>
+                        <h2>340</h2>
+                    </div>
+                    <div class="stat-icon" style="color: var(--admin-sidebar); background: rgba(0,51,102,0.1);"><i class="fas fa-user-plus"></i></div>
+                </div>
+                <div class="stat-card" style="border-left-color: var(--admin-warning);">
+                    <div class="stat-info">
+                        <h4>Countries</h4>
+                        <h2>42</h2>
+                    </div>
+                    <div class="stat-icon" style="color: var(--admin-warning); background: rgba(212,175,55,0.1);"><i class="fas fa-globe-africa"></i></div>
+                </div>
+                <div class="stat-card" style="border-left-color: var(--admin-danger);">
+                    <div class="stat-info">
+                        <h4>Pending Requests</h4>
+                        <h2>15</h2>
+                    </div>
+                    <div class="stat-icon" style="color: var(--admin-danger); background: rgba(231,76,60,0.1);"><i class="fas fa-exclamation-circle"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h4>News/Articles</h4>
+                        <h2>128</h2>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
+                </div>
+                <div class="stat-card" style="border-left-color: var(--admin-sidebar);">
+                    <div class="stat-info">
+                        <h4>Media Uploads</h4>
+                        <h2>560</h2>
+                    </div>
+                    <div class="stat-icon" style="color: var(--admin-sidebar); background: rgba(0,51,102,0.1);"><i class="fas fa-photo-video"></i></div>
+                </div>
+                <div class="stat-card" style="border-left-color: var(--admin-warning);">
+                    <div class="stat-info">
+                        <h4>Coordinators</h4>
+                        <h2>38</h2>
+                    </div>
+                    <div class="stat-icon" style="color: var(--admin-warning); background: rgba(212,175,55,0.1);"><i class="fas fa-user-tie"></i></div>
+                </div>
+                <div class="stat-card" style="border-left-color: var(--admin-accent);">
+                    <div class="stat-info">
+                        <h4>Resolved Requests</h4>
+                        <h2>840</h2>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Table -->
+            <div class="table-section">
+                <div class="table-header">
+                    <h3>Recent Assistance Requests</h3>
+                    <button class="btn-sm">View All</button>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Member Name</th>
+                            <th>Country</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RHND-HELP-00125</td>
+                            <td>Ahmed Musa</td>
+                            <td>Saudi Arabia</td>
+                            <td>Passport Renewal</td>
+                            <td>Oct 12, 2026</td>
+                            <td><span class="status pending">Pending</span></td>
+                            <td><a href="#" style="color:var(--admin-sidebar);"><i class="fas fa-eye"></i> View</a></td>
+                        </tr>
+                        <tr>
+                            <td>RHND-HELP-00124</td>
+                            <td>Grace Okafor</td>
+                            <td>United Kingdom</td>
+                            <td>Legal Support</td>
+                            <td>Oct 11, 2026</td>
+                            <td><span class="status resolved">Resolved</span></td>
+                            <td><a href="#" style="color:var(--admin-sidebar);"><i class="fas fa-eye"></i> View</a></td>
+                        </tr>
+                        <tr>
+                            <td>RHND-HELP-00123</td>
+                            <td>Oluwaseun Adeyemi</td>
+                            <td>USA</td>
+                            <td>Business Inquiry</td>
+                            <td>Oct 10, 2026</td>
+                            <td><span class="status pending">Pending</span></td>
+                            <td><a href="#" style="color:var(--admin-sidebar);"><i class="fas fa-eye"></i> View</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+</body>
+</html>

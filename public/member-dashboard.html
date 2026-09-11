@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard | RHND</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard-layout { display: flex; min-height: 100vh; background: var(--bg-light); }
+        .member-sidebar { width: 250px; background: var(--primary-green); color: white; padding: 20px 0; }
+        .member-sidebar .logo { margin: 0 auto 20px; }
+        .member-sidebar ul { list-style: none; }
+        .member-sidebar ul li a { display: block; padding: 15px 20px; color: rgba(255,255,255,0.8); border-left: 4px solid transparent; }
+        .member-sidebar ul li a:hover, .member-sidebar ul li a.active { background: var(--secondary-dark-green); color: var(--primary-gold); border-left-color: var(--primary-gold); }
+        .member-sidebar ul li a i { width: 25px; }
+        
+        .member-content { flex: 1; padding: 30px; }
+        .welcome-banner { background: white; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary-gold); }
+        .welcome-banner h2 { color: var(--secondary-blue); }
+        .membership-id-badge { background: var(--bg-light); padding: 10px 20px; border-radius: 30px; font-weight: bold; border: 1px solid #ddd; color: var(--primary-green); }
+        
+        .dash-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .dash-card { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s; border-bottom: 3px solid var(--secondary-emerald); }
+        .dash-card:hover { transform: translateY(-5px); }
+        .dash-card i { font-size: 2rem; color: var(--primary-green); margin-bottom: 15px; }
+        .dash-card h3 { font-size: 1.1rem; color: var(--text-color); }
+        
+        @media(max-width: 768px) {
+            .dashboard-layout { flex-direction: column; }
+            .member-sidebar { width: 100%; display: flex; overflow-x: auto; padding: 10px; }
+            .welcome-banner { flex-direction: column; text-align: center; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <div class="member-sidebar">
+            <div class="logo text-center" style="width:60px; height:60px; border-radius:50%; background:white; color:var(--primary-green); display:flex; align-items:center; justify-content:center; font-weight:bold; border: 2px solid var(--primary-gold);">RHND</div>
+            <ul>
+                <li><a href="#" class="active"><i class="fas fa-home"></i> My Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="#"><i class="fas fa-globe-africa"></i> My Country Info</a></li>
+                <li><a href="#"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+                <li><a href="#"><i class="fas fa-hands-helping"></i> Help Requests</a></li>
+                <li><a href="#"><i class="fas fa-file-alt"></i> Documents</a></li>
+                <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="member-content">
+            <div class="welcome-banner">
+                <div>
+                    <h2>Welcome, Amina!</h2>
+                    <p>Connected from <strong>Saudi Arabia</strong></p>
+                </div>
+                <div class="membership-id-badge">
+                    ID: RHND-000001
+                </div>
+            </div>
+
+            <div class="dash-cards">
+                <div class="dash-card">
+                    <i class="fas fa-user-edit"></i>
+                    <h3>My Profile</h3>
+                </div>
+                <div class="dash-card" style="border-bottom-color: var(--primary-gold);">
+                    <i class="fas fa-globe"></i>
+                    <h3>My Country</h3>
+                </div>
+                <div class="dash-card">
+                    <i class="fas fa-bell"></i>
+                    <h3>Announcements</h3>
+                </div>
+                <div class="dash-card" style="border-bottom-color: var(--secondary-blue);">
+                    <i class="fas fa-headset"></i>
+                    <h3>Request Assistance</h3>
+                </div>
+            </div>
+            
+            <div style="margin-top: 40px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <h3 style="color: var(--primary-green); margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Recent Notifications</h3>
+                <p style="padding: 10px; background: #f9f9f9; border-left: 4px solid var(--primary-gold); margin-bottom: 10px;">Welcome to the Renewed Hope Nigeria Diaspora official platform. Your registration is complete!</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
