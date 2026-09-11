@@ -35,10 +35,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // Navigation
-    document.querySelectorAll(".nav-link").forEach(link => {
+    document.querySelectorAll(".nav-link-custom").forEach(link => {
         link.addEventListener("click", (e) => {
             e.preventDefault();
-            const target = e.target.getAttribute("data-target");
+            // find closest anchor in case they clicked an icon inside
+            const target = e.target.closest("a").getAttribute("data-target");
             showView(target);
         });
     });
@@ -58,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
             if (data.status === "success") {
                 isLoggedIn = true;
-                userInfo.textContent = "Logged in as: " + email;
+                userInfo.innerHTML = `<span class="badge bg-success me-2"></span> Logged in as: <strong>${email}</strong>`;
                 showView("dashboard");
             } else {
                 alert(data.error || "Login failed");
@@ -101,11 +102,17 @@ document.addEventListener("DOMContentLoaded", () => {
             postsContainer.innerHTML = "";
             posts.forEach(post => {
                 const div = document.createElement("div");
-                div.className = "card post-card";
+                div.className = "col-md-6 col-lg-4";
                 div.innerHTML = `
-                    <h4>${post.title}</h4>
-                    <p>${post.content}</p>
-                    <small>By: ${post.author} on ${new Date(post.created_at).toLocaleString()}</small>
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">${post.title}</h3>
+                            <p class="text-muted">${post.content}</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <small>By: <strong>${post.author}</strong> on ${new Date(post.created_at).toLocaleDateString()}</small>
+                        </div>
+                    </div>
                 `;
                 postsContainer.appendChild(div);
             });
