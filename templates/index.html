@@ -4,47 +4,104 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <title>RHND Dashboard</title>
-    <!-- Tabler Core CDN for professional UI -->
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tabler Core -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
     <style>
-      .view-container { display: none; }
+      :root {
+        --tblr-font-sans-serif: "Inter", -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+      }
+      body {
+        font-family: var(--tblr-font-sans-serif);
+        transition: background 0.3s ease;
+      }
+      .view-container { display: none; animation: fadeIn 0.5s; }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      /* Auth screen specific styles */
+      .auth-mode {
+        background: linear-gradient(-45deg, #1d4ed8, #4f46e5, #7c3aed, #ec4899);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        min-height: 100vh;
+      }
+      @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      .auth-mode .navbar-vertical {
+        display: none !important; /* Hide sidebar on auth screens */
+      }
+      .auth-mode .page-wrapper {
+        margin-left: 0 !important;
+        padding-top: 8vh;
+      }
+      .auth-mode .page-header {
+        display: none; /* Hide header on auth screens */
+      }
+      .auth-mode .card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      }
+      
+      /* Dashboard enhancements */
+      .dashboard-mode {
+        background-color: #f8f9fa;
+      }
+      .card {
+        border-radius: 12px;
+        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .post-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+      }
+      .navbar-brand {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
     </style>
   </head>
-  <body class="theme-light">
+  <body>
     <div class="page">
       <!-- Sidebar -->
-      <aside class="navbar navbar-vertical navbar-expand-lg navbar-dark">
+      <aside class="navbar navbar-vertical navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <h1 class="navbar-brand navbar-brand-autodark">
-            <a href="#">RHND Platform</a>
+          <h1 class="navbar-brand navbar-brand-autodark mt-3">
+            <a href="#">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon text-primary me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" /><path d="M12 12l8 -4.5" /><path d="M12 12l0 9" /><path d="M12 12l-8 -4.5" /><path d="M16 5.25l-8 4.5" /></svg>
+              RHND Platform
+            </a>
           </h1>
           <div class="collapse navbar-collapse" id="sidebar-menu">
             <ul class="navbar-nav pt-lg-3">
               <li class="nav-item">
                 <a class="nav-link nav-link-custom" data-target="dashboard" style="cursor:pointer;">
-                  <span class="nav-link-title">
+                  <span class="nav-link-icon d-md-none d-lg-inline-block">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="5 12 3 12 12 3 21 12 19 12" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
-                    Dashboard
                   </span>
+                  <span class="nav-link-title">Dashboard</span>
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link nav-link-custom" data-target="login" style="cursor:pointer;">
-                  <span class="nav-link-title">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M20 12h-13l3 -3m0 6l-3 -3" /></svg>
-                    Login
+              <li class="nav-item mt-auto pt-5">
+                <a class="nav-link text-danger" id="logout-btn" style="cursor:pointer;">
+                  <span class="nav-link-icon d-md-none d-lg-inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon text-danger" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M20 12h-13l3 -3m0 6l-3 -3" /></svg>
                   </span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link nav-link-custom" data-target="register" style="cursor:pointer;">
-                  <span class="nav-link-title">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="9" cy="7" r="4" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 11h6m-3 -3v6" /></svg>
-                    Register
-                  </span>
+                  <span class="nav-link-title">Logout</span>
                 </a>
               </li>
             </ul>
@@ -58,10 +115,14 @@
           <div class="container-xl">
             <div class="row g-2 align-items-center">
               <div class="col">
-                <h2 class="page-title">Welcome to RHND</h2>
+                <div class="page-pretitle">Overview</div>
+                <h2 class="page-title">Dashboard</h2>
               </div>
               <div class="col-auto ms-auto d-print-none">
-                <div id="user-info" class="text-muted">Not logged in</div>
+                <div id="user-info" class="text-muted d-flex align-items-center">
+                  <span class="avatar avatar-sm rounded-circle bg-primary text-white me-2" id="user-avatar">?</span>
+                  <span id="user-email-display">Not logged in</span>
+                </div>
               </div>
             </div>
           </div>
@@ -73,21 +134,27 @@
             
             <!-- Login View -->
             <section id="login-view" class="view-container">
-              <div class="row justify-content-center mt-5">
-                <div class="col-md-6 col-lg-5">
-                  <form class="card card-md shadow-sm" id="login-form">
+              <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-5">
+                  <div class="text-center mb-4">
+                    <h1 class="text-white fw-bold" style="font-size: 2.5rem; letter-spacing: -1px;">RHND Platform</h1>
+                    <p class="text-white-50 fs-3">Welcome back! Please login to your account.</p>
+                  </div>
+                  <form class="card p-4" id="login-form">
                     <div class="card-body">
-                      <h2 class="card-title text-center mb-4">Login to your account</h2>
-                      <div class="mb-3">
-                        <label class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="login-email" placeholder="Enter email" required>
+                      <div class="mb-4">
+                        <label class="form-label fw-semibold">Email address</label>
+                        <input type="email" class="form-control form-control-lg" id="login-email" placeholder="hello@example.com" required>
                       </div>
-                      <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="password" class="form-control" id="login-password" placeholder="Password" required>
+                      <div class="mb-4">
+                        <label class="form-label fw-semibold">Password</label>
+                        <input type="password" class="form-control form-control-lg" id="login-password" placeholder="••••••••" required>
                       </div>
-                      <div class="form-footer">
-                        <button type="submit" class="btn btn-primary w-100">Sign in</button>
+                      <div class="form-footer mt-5">
+                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">Sign in</button>
+                      </div>
+                      <div class="text-center text-muted mt-4 fs-4">
+                        Don't have an account yet? <a href="#" class="nav-link-custom fw-bold text-primary" data-target="register">Sign up</a>
                       </div>
                     </div>
                   </form>
@@ -97,25 +164,31 @@
 
             <!-- Register View -->
             <section id="register-view" class="view-container">
-              <div class="row justify-content-center mt-5">
-                <div class="col-md-6 col-lg-5">
-                  <form class="card card-md shadow-sm" id="register-form">
+              <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-5">
+                  <div class="text-center mb-4">
+                    <h1 class="text-white fw-bold" style="font-size: 2.5rem; letter-spacing: -1px;">Join RHND</h1>
+                    <p class="text-white-50 fs-3">Create your new account today.</p>
+                  </div>
+                  <form class="card p-4" id="register-form">
                     <div class="card-body">
-                      <h2 class="card-title text-center mb-4">Create new account</h2>
                       <div class="mb-3">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-control" id="reg-name" placeholder="Enter name" required>
+                        <label class="form-label fw-semibold">Full Name</label>
+                        <input type="text" class="form-control form-control-lg" id="reg-name" placeholder="John Doe" required>
                       </div>
                       <div class="mb-3">
-                        <label class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="reg-email" placeholder="Enter email" required>
+                        <label class="form-label fw-semibold">Email address</label>
+                        <input type="email" class="form-control form-control-lg" id="reg-email" placeholder="hello@example.com" required>
                       </div>
-                      <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="password" class="form-control" id="reg-password" placeholder="Password" required>
+                      <div class="mb-4">
+                        <label class="form-label fw-semibold">Password</label>
+                        <input type="password" class="form-control form-control-lg" id="reg-password" placeholder="••••••••" required>
                       </div>
-                      <div class="form-footer">
-                        <button type="submit" class="btn btn-primary w-100">Create new account</button>
+                      <div class="form-footer mt-5">
+                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">Create account</button>
+                      </div>
+                      <div class="text-center text-muted mt-4 fs-4">
+                        Already have an account? <a href="#" class="nav-link-custom fw-bold text-primary" data-target="login">Sign in</a>
                       </div>
                     </div>
                   </form>
@@ -125,24 +198,26 @@
 
             <!-- Dashboard View -->
             <section id="dashboard-view" class="view-container">
-              <div class="row row-cards">
+              <div class="row row-cards mb-4">
                 <div class="col-md-12">
-                  <div class="card shadow-sm">
-                    <div class="card-header">
-                      <h3 class="card-title">Create New Post</h3>
+                  <div class="card">
+                    <div class="card-status-top bg-primary"></div>
+                    <div class="card-header border-0 pb-0">
+                      <h3 class="card-title fw-bold fs-2">Share something new</h3>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body pt-2">
                       <form id="create-post-form">
                         <div class="mb-3">
-                          <label class="form-label">Title</label>
-                          <input type="text" class="form-control" id="post-title" placeholder="Post Title" required>
+                          <input type="text" class="form-control form-control-lg border-0 bg-light shadow-none" id="post-title" placeholder="Give your post a title..." required style="font-size: 1.2rem; font-weight: 500;">
                         </div>
                         <div class="mb-3">
-                          <label class="form-label">Content</label>
-                          <textarea class="form-control" id="post-content" rows="3" placeholder="What's on your mind?" required></textarea>
+                          <textarea class="form-control border-0 bg-light shadow-none" id="post-content" rows="3" placeholder="What's on your mind?" required style="resize: none;"></textarea>
                         </div>
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-primary">Post</button>
+                        <div class="text-end mt-3">
+                            <button type="submit" class="btn btn-primary btn-pill px-4 fw-bold shadow-sm">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="10" y1="14" x2="21" y2="3" /><path d="M21 3l-6.5 18a0.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a0.55 .55 0 0 1 0 -1l18 -6.5" /></svg>
+                              Publish Post
+                            </button>
                         </div>
                       </form>
                     </div>
@@ -150,7 +225,7 @@
                 </div>
               </div>
 
-              <div class="hr-text mt-5 mb-4">Recent Posts</div>
+              <h2 class="page-title mb-3 mt-5">Recent Feed</h2>
               <div class="row row-cards" id="posts-container">
                 <!-- Posts dynamically inserted here -->
               </div>

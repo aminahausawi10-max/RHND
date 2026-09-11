@@ -7,18 +7,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("login-form");
     const registerForm = document.getElementById("register-form");
     const createPostForm = document.getElementById("create-post-form");
+    const logoutBtn = document.getElementById("logout-btn");
     
     const postsContainer = document.getElementById("posts-container");
-    const userInfo = document.getElementById("user-info");
+    const emailDisplay = document.getElementById("user-email-display");
+    const avatarDisplay = document.getElementById("user-avatar");
     
-    // Simple state
     let isLoggedIn = false;
     
-    // View switching
     function showView(view) {
         dashboardView.style.display = "none";
         loginView.style.display = "none";
         registerView.style.display = "none";
+        
+        // Handle body background mode & sidebar visibility
+        if (view === "login" || view === "register") {
+            document.body.classList.remove("dashboard-mode");
+            document.body.classList.add("auth-mode");
+        } else {
+            document.body.classList.remove("auth-mode");
+            document.body.classList.add("dashboard-mode");
+        }
         
         if (view === "dashboard") {
             if (!isLoggedIn) {
@@ -34,17 +43,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
-    // Navigation
-    document.querySelectorAll(".nav-link-custom").forEach(link => {
-        link.addEventListener("click", (e) => {
+    document.body.addEventListener("click", (e) => {
+        const link = e.target.closest(".nav-link-custom");
+        if (link) {
             e.preventDefault();
-            // find closest anchor in case they clicked an icon inside
-            const target = e.target.closest("a").getAttribute("data-target");
-            showView(target);
-        });
+            showView(link.getAttribute("data-target"));
+        }
     });
     
-    // Auth
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            isLoggedIn = false;
+            showView("login");
+        });
+    }
+    
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const email = document.getElementById("login-email").value;
@@ -59,7 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
             if (data.status === "success") {
                 isLoggedIn = true;
-                userInfo.innerHTML = `<span class="badge bg-success me-2"></span> Logged in as: <strong>${email}</strong>`;
+                emailDisplay.textContent = email;
+                avatarDisplay.textContent = email.charAt(0).toUpperCase();
                 showView("dashboard");
             } else {
                 alert(data.error || "Login failed");
@@ -93,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
     
-    // Posts
     async function loadPosts() {
         try {
             const res = await fetch("/api/posts");
@@ -102,15 +115,19 @@ document.addEventListener("DOMContentLoaded", () => {
             postsContainer.innerHTML = "";
             posts.forEach(post => {
                 const div = document.createElement("div");
-                div.className = "col-md-6 col-lg-4";
+                div.className = "col-md-6 col-lg-4 mb-4";
                 div.innerHTML = `
-                    <div class="card shadow-sm h-100">
+                    <div class="card h-100 post-card">
                         <div class="card-body">
-                            <h3 class="card-title">${post.title}</h3>
-                            <p class="text-muted">${post.content}</p>
-                        </div>
-                        <div class="card-footer text-muted">
-                            <small>By: <strong>${post.author}</strong> on ${new Date(post.created_at).toLocaleDateString()}</small>
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="avatar avatar-md rounded-circle bg-primary text-white shadow-sm me-3">${post.author.charAt(0).toUpperCase()}</div>
+                                <div>
+                                    <div class="fw-bold fs-3 text-dark">${post.author}</div>
+                                    <div class="text-muted small">${new Date(post.created_at).toLocaleDateString()} at ${new Date(post.created_at).toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"})}</div>
+                                </div>
+                            </div>
+                            <h3 class="card-title fs-2 fw-bold mb-2">${post.title}</h3>
+                            <p class="text-muted fs-3" style="line-height: 1.6;">${post.content}</p>
                         </div>
                     </div>
                 `;
