@@ -1,6 +1,6 @@
-<?php
+﻿<?php
 // Use DATABASE_URL environment variable provided by Neon/Vercel
-$dbUrl = getenv("DATABASE_URL") ?: $_ENV["DATABASE_URL"] ?? null;
+$dbUrl = getenv("DATABASE_URL") ?: $_ENV["DATABASE_URL"] ?? "postgresql://neondb_owner:npg_DpIVbjQh3Rz5@ep-green-breeze-at2cczuz-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
 
 if (!$dbUrl) {
     die(json_encode(["error" => "DATABASE_URL environment variable is not set."]));
@@ -8,11 +8,11 @@ if (!$dbUrl) {
 
 // Parse postgres URL: postgres://user:password@host:port/dbname
 $parsedUrl = parse_url($dbUrl);
-$host = $parsedUrl["host"];
+$host = $parsedUrl["host"] ?? "";
 $port = $parsedUrl["port"] ?? 5432;
-$user = $parsedUrl["user"];
-$pass = $parsedUrl["pass"];
-$db = ltrim($parsedUrl["path"], "/");
+$user = $parsedUrl["user"] ?? "";
+$pass = $parsedUrl["pass"] ?? "";
+$db = isset($parsedUrl["path"]) ? ltrim($parsedUrl["path"], "/") : "";
 
 $dsn = "pgsql:host=$host;port=$port;dbname=$db;sslmode=require";
 $options = [
