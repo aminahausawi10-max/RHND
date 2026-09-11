@@ -133,28 +133,28 @@
                 <h2 style="margin-bottom: 25px; color: #0f172a; font-weight: 800;">Platform Performance</h2>
                 
                 <div class="stat-grid">
-                    <div class="stat-card" style="border-bottom-color: #3b82f6;">
+                    <div class="stat-card" onclick="switchOverviewSubTab('members'); scrollToManager();" style="border-bottom-color: #3b82f6; cursor: pointer;" title="Click to Add or Remove Members">
                         <div>
                             <h3 id="stat-members">0</h3>
                             <p>Registered Members</p>
                         </div>
                         <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;"><i class="fas fa-users"></i></div>
                     </div>
-                    <div class="stat-card" style="border-bottom-color: var(--primary-green);">
+                    <div class="stat-card" onclick="switchOverviewSubTab('news'); scrollToManager();" style="border-bottom-color: var(--primary-green); cursor: pointer;" title="Click to Add or Remove News">
                         <div>
                             <h3 id="stat-news">0</h3>
                             <p>Published News</p>
                         </div>
                         <div class="stat-icon" style="background: #f0fdf4; color: var(--primary-green);"><i class="fas fa-newspaper"></i></div>
                     </div>
-                    <div class="stat-card" style="border-bottom-color: #f59e0b;">
+                    <div class="stat-card" onclick="switchOverviewSubTab('requests'); scrollToManager();" style="border-bottom-color: #f59e0b; cursor: pointer;" title="Click to Add or Remove Support Tickets">
                         <div>
                             <h3 id="stat-requests">0</h3>
                             <p>Support Tickets</p>
                         </div>
                         <div class="stat-icon" style="background: #fef3c7; color: #f59e0b;"><i class="fas fa-ticket-alt"></i></div>
                     </div>
-                    <div class="stat-card" style="border-bottom-color: #8b5cf6;">
+                    <div class="stat-card" onclick="switchOverviewSubTab('media'); scrollToManager();" style="border-bottom-color: #8b5cf6; cursor: pointer;" title="Click to Add or Remove Media">
                         <div>
                             <h3 id="stat-media">0</h3>
                             <p>Media Items</p>
@@ -163,59 +163,212 @@
                     </div>
                 </div>
                 
-                <div class="content-card">
-                    <h3>Quick Administration Actions</h3>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                        <button onclick="switchAdminTab('news')" class="btn btn-primary" style="font-size: 0.9rem;">
-                            <i class="fas fa-plus"></i> Post News Update
-                        </button>
-                        <button onclick="switchAdminTab('members')" class="btn btn-secondary" style="font-size: 0.9rem;">
-                            <i class="fas fa-user-plus"></i> Add New Member
-                        </button>
-                        <button onclick="switchAdminTab('requests')" class="btn btn-secondary" style="font-size: 0.9rem;">
-                            <i class="fas fa-inbox"></i> Check Support Requests
-                        </button>
-                        <button onclick="switchAdminTab('media')" class="btn btn-secondary" style="font-size: 0.9rem;">
-                            <i class="fas fa-upload"></i> Upload Media
-                        </button>
+                
+                <!-- DIRECT ADD AND REMOVE HUB BELOW CARDS -->
+                <div class="content-card" id="overview-manager-section" style="border-top: 4px solid var(--primary-green);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">
+                        <div>
+                            <h3 style="margin: 0 0 5px 0; color: #0f172a; font-size: 1.3rem;">
+                                <i class="fas fa-layer-group text-gold" style="margin-right: 8px;"></i> Quick Manager: Add & Remove
+                            </h3>
+                            <p style="margin: 0; color: #64748b; font-size: 0.88rem;">Directly add new records or delete existing items without switching pages.</p>
+                        </div>
+                        <!-- Subtab buttons -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="overview-category-tabs">
+                            <button type="button" onclick="switchOverviewSubTab('news')" id="subtab-btn-news" class="btn-action active-subtab" style="padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; background: var(--secondary-dark-green); color: var(--primary-gold);">
+                                <i class="fas fa-newspaper"></i> News (<span id="badge-news-count">0</span>)
+                            </button>
+                            <button type="button" onclick="switchOverviewSubTab('members')" id="subtab-btn-members" class="btn-action" style="padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; background: #e2e8f0; color: #334155;">
+                                <i class="fas fa-users"></i> Members (<span id="badge-members-count">0</span>)
+                            </button>
+                            <button type="button" onclick="switchOverviewSubTab('requests')" id="subtab-btn-requests" class="btn-action" style="padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; background: #e2e8f0; color: #334155;">
+                                <i class="fas fa-ticket-alt"></i> Tickets (<span id="badge-requests-count">0</span>)
+                            </button>
+                            <button type="button" onclick="switchOverviewSubTab('media')" id="subtab-btn-media" class="btn-action" style="padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; background: #e2e8f0; color: #334155;">
+                                <i class="fas fa-photo-video"></i> Media (<span id="badge-media-count">0</span>)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 1. NEWS SUBTAB -->
+                    <div id="subtab-content-news" class="subtab-content">
+                        <div style="background: #f8fafc; padding: 22px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+                            <h4 style="margin: 0 0 15px 0; color: var(--secondary-dark-green); font-size: 1.05rem;">
+                                <i class="fas fa-plus-circle text-gold"></i> Add New News Article / Announcement
+                            </h4>
+                            <form id="ov-add-post-form">
+                                <div class="form-group">
+                                    <label>Article Headline</label>
+                                    <input type="text" id="ov-post-title" class="form-control" required placeholder="Enter news title...">
+                                </div>
+                                <div class="form-group">
+                                    <label>Article Details</label>
+                                    <textarea id="ov-post-content" class="form-control" required rows="3" placeholder="Enter article body..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="padding: 9px 20px; font-size: 0.9rem;">
+                                    <i class="fas fa-paper-plane"></i> Publish Live
+                                </button>
+                                <span id="ov-post-status" style="margin-left: 15px; color: var(--primary-green); font-weight: 700; display: none;"></span>
+                            </form>
+                        </div>
+                        <h4 style="margin: 0 0 15px 0; color: #0f172a; display: flex; justify-content: space-between;">
+                            <span>Current Published News</span>
+                            <small style="color: #64748b; font-weight: normal;">Click 'Delete' to remove any article</small>
+                        </h4>
+                        <div id="ov-posts-list">Loading articles...</div>
+                    </div>
+
+                    <!-- 2. MEMBERS SUBTAB -->
+                    <div id="subtab-content-members" class="subtab-content" style="display: none;">
+                        <div style="background: #f8fafc; padding: 22px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+                            <h4 style="margin: 0 0 15px 0; color: var(--secondary-dark-green); font-size: 1.05rem;">
+                                <i class="fas fa-user-plus text-gold"></i> Add New Member Account
+                            </h4>
+                            <form id="ov-add-member-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Full Name</label>
+                                        <input type="text" id="ov-mem-name" class="form-control" required placeholder="Member name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email Address</label>
+                                        <input type="email" id="ov-mem-email" class="form-control" required placeholder="email@rhnd.com">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" id="ov-mem-pass" class="form-control" required placeholder="Assign password">
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="padding: 9px 20px; font-size: 0.9rem;">
+                                    <i class="fas fa-user-check"></i> Create Member
+                                </button>
+                                <span id="ov-mem-status" style="margin-left: 15px; color: var(--primary-green); font-weight: 700; display: none;"></span>
+                            </form>
+                        </div>
+                        <h4 style="margin: 0 0 15px 0; color: #0f172a; display: flex; justify-content: space-between;">
+                            <span>Registered Members List</span>
+                            <small style="color: #64748b; font-weight: normal;">Click 'Remove' to delete an account</small>
+                        </h4>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Registered Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ov-members-list-tbody">
+                                    <tr><td colspan="5" style="text-align: center; color: #64748b;">Loading members...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 3. SUPPORT TICKETS SUBTAB -->
+                    <div id="subtab-content-requests" class="subtab-content" style="display: none;">
+                        <div style="background: #f8fafc; padding: 22px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+                            <h4 style="margin: 0 0 15px 0; color: var(--secondary-dark-green); font-size: 1.05rem;">
+                                <i class="fas fa-plus-circle text-gold"></i> Log Assistance Request
+                            </h4>
+                            <form id="ov-add-request-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Member Name</label>
+                                        <input type="text" id="ov-req-name" class="form-control" required placeholder="Citizen Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        <select id="ov-req-category" class="form-control">
+                                            <option>Passport Renewal</option>
+                                            <option>NIN Registration</option>
+                                            <option>Legal Assistance</option>
+                                            <option>General Support</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Subject</label>
+                                    <input type="text" id="ov-req-subject" class="form-control" required placeholder="Issue subject">
+                                </div>
+                                <div class="form-group">
+                                    <label>Details</label>
+                                    <textarea id="ov-req-details" class="form-control" rows="2" required placeholder="Describe request..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="padding: 9px 20px; font-size: 0.9rem;">
+                                    <i class="fas fa-save"></i> Save Ticket
+                                </button>
+                                <span id="ov-req-status" style="margin-left: 15px; color: var(--primary-green); font-weight: 700; display: none;"></span>
+                            </form>
+                        </div>
+                        <h4 style="margin: 0 0 15px 0; color: #0f172a; display: flex; justify-content: space-between;">
+                            <span>Active Assistance Requests</span>
+                            <small style="color: #64748b; font-weight: normal;">Resolve or delete tickets</small>
+                        </h4>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Member</th>
+                                        <th>Category</th>
+                                        <th>Subject</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ov-requests-list-tbody">
+                                    <tr><td colspan="6" style="text-align: center; color: #64748b;">Loading tickets...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 4. MEDIA SUBTAB -->
+                    <div id="subtab-content-media" class="subtab-content" style="display: none;">
+                        <div style="background: #f8fafc; padding: 22px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+                            <h4 style="margin: 0 0 15px 0; color: var(--secondary-dark-green); font-size: 1.05rem;">
+                                <i class="fas fa-upload text-gold"></i> Add Media to Library
+                            </h4>
+                            <form id="ov-add-media-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Media Title</label>
+                                        <input type="text" id="ov-media-title" class="form-control" required placeholder="Title...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Type</label>
+                                        <select id="ov-media-type" class="form-control">
+                                            <option value="Photo">Photo</option>
+                                            <option value="Video">Video</option>
+                                            <option value="Press Release">Press Release</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Image or Video Link URL</label>
+                                    <input type="url" id="ov-media-url" class="form-control" required placeholder="https://images.unsplash.com/...">
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="padding: 9px 20px; font-size: 0.9rem;">
+                                    <i class="fas fa-upload"></i> Upload Item
+                                </button>
+                                <span id="ov-media-status" style="margin-left: 15px; color: var(--primary-green); font-weight: 700; display: none;"></span>
+                            </form>
+                        </div>
+                        <h4 style="margin: 0 0 15px 0; color: #0f172a; display: flex; justify-content: space-between;">
+                            <span>Media Items</span>
+                            <small style="color: #64748b; font-weight: normal;">Click 'Delete' to remove any item</small>
+                        </h4>
+                        <div id="ov-media-library-grid" class="media-grid">
+                            <p style="grid-column: 1/-1;">Loading media items...</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="content-card">
-                    <h3>Recent System Logs</h3>
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>Action Event</th>
-                                <th>Status</th>
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Super Admin</td>
-                                <td>Accessed Administration Portal</td>
-                                <td><span class="badge badge-resolved">Success</span></td>
-                                <td>Just now</td>
-                            </tr>
-                            <tr>
-                                <td>Neon Database</td>
-                                <td>Postgres Connection Pooled & Active</td>
-                                <td><span class="badge badge-resolved">Online</span></td>
-                                <td>Active</td>
-                            </tr>
-                            <tr>
-                                <td>Vercel Deployment</td>
-                                <td>Production Build Synchronized</td>
-                                <td><span class="badge badge-resolved">Live</span></td>
-                                <td>Active</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
-            
+
             <!-- 2. MANAGE NEWS TAB -->
             <div id="tab-news" class="panel">
                 <div class="content-card">
@@ -493,6 +646,7 @@
                 const statCount = document.getElementById('stat-news');
                 if (statCount) statCount.textContent = posts.length || 0;
                 
+                syncOverviewLists(posts, null, null, null);
                 if (!posts || posts.length === 0) {
                     list.innerHTML = '<p style="color: #64748b;">No news articles published yet.</p>';
                     return;
@@ -560,6 +714,7 @@
                 const statCount = document.getElementById('stat-members');
                 if (statCount) statCount.textContent = users.length || 0;
 
+                syncOverviewLists(null, users, null, null);
                 if (!users || users.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No registered members found.</td></tr>';
                     return;
@@ -627,6 +782,7 @@
                 const statCount = document.getElementById('stat-requests');
                 if (statCount) statCount.textContent = requests.length || 0;
 
+                syncOverviewLists(null, null, requests, null);
                 if (!requests || requests.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #64748b;">No assistance tickets logged.</td></tr>';
                     return;
@@ -709,6 +865,7 @@
                 const statCount = document.getElementById('stat-media');
                 if (statCount) statCount.textContent = items.length || 0;
 
+                syncOverviewLists(null, null, null, items);
                 if (!items || items.length === 0) {
                     grid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b;">No media files uploaded yet.</p>';
                     return;
@@ -759,6 +916,249 @@
                 fetchMedia();
             }
         });
+
+        
+        // Smooth scroll to manager on card click
+        function scrollToManager() {
+            const el = document.getElementById('overview-manager-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Subtab switcher on Overview page
+        function switchOverviewSubTab(type) {
+            const types = ['news', 'members', 'requests', 'media'];
+            types.forEach(t => {
+                const btn = document.getElementById('subtab-btn-' + t);
+                const content = document.getElementById('subtab-content-' + t);
+                if (t === type) {
+                    if (btn) {
+                        btn.style.background = 'var(--secondary-dark-green)';
+                        btn.style.color = 'var(--primary-gold)';
+                    }
+                    if (content) content.style.display = 'block';
+                } else {
+                    if (btn) {
+                        btn.style.background = '#e2e8f0';
+                        btn.style.color = '#334155';
+                    }
+                    if (content) content.style.display = 'none';
+                }
+            });
+        }
+
+        // Sync Overview lists whenever data loads
+        function syncOverviewLists(posts, users, requests, media) {
+            // 1. Sync News
+            if (posts) {
+                const badge = document.getElementById('badge-news-count');
+                if (badge) badge.textContent = posts.length || 0;
+                const ovList = document.getElementById('ov-posts-list');
+                if (ovList) {
+                    if (!posts || posts.length === 0) {
+                        ovList.innerHTML = '<p style="color: #64748b;">No news published yet.</p>';
+                    } else {
+                        ovList.innerHTML = posts.map(p => `
+                            <div style="border-bottom: 1px solid #e2e8f0; padding: 14px 0; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h5 style="margin: 0 0 4px 0; font-size: 1.05rem; color: #0f172a;">${p.title}</h5>
+                                    <small style="color: #64748b;"><i class="far fa-clock"></i> ${new Date(p.created_at).toLocaleDateString()}</small>
+                                </div>
+                                <button onclick="deletePost(${p.id})" class="btn-action btn-delete"><i class="fas fa-trash"></i> Delete</button>
+                            </div>
+                        `).join('');
+                    }
+                }
+            }
+
+            // 2. Sync Members
+            if (users) {
+                const badge = document.getElementById('badge-members-count');
+                if (badge) badge.textContent = users.length || 0;
+                const ovTbody = document.getElementById('ov-members-list-tbody');
+                if (ovTbody) {
+                    if (!users || users.length === 0) {
+                        ovTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No registered members.</td></tr>';
+                    } else {
+                        ovTbody.innerHTML = users.map(u => `
+                            <tr>
+                                <td><strong>#${u.id}</strong></td>
+                                <td><strong>${u.name || 'Member'}</strong></td>
+                                <td>${u.email}</td>
+                                <td>${new Date(u.created_at).toLocaleDateString()}</td>
+                                <td><button onclick="deleteMember(${u.id})" class="btn-action btn-delete"><i class="fas fa-trash"></i> Remove</button></td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+            }
+
+            // 3. Sync Requests
+            if (requests) {
+                const badge = document.getElementById('badge-requests-count');
+                if (badge) badge.textContent = requests.length || 0;
+                const ovTbody = document.getElementById('ov-requests-list-tbody');
+                if (ovTbody) {
+                    if (!requests || requests.length === 0) {
+                        ovTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #64748b;">No support tickets logged.</td></tr>';
+                    } else {
+                        ovTbody.innerHTML = requests.map(r => {
+                            const badgeClass = r.status === 'Resolved' ? 'badge-resolved' : (r.status === 'In Progress' ? 'badge-progress' : 'badge-pending');
+                            return `
+                            <tr>
+                                <td><strong>#T-${r.id}</strong></td>
+                                <td><strong>${r.name}</strong><br><small style="color:#64748b;">${r.email}</small></td>
+                                <td><span class="badge" style="background:#f1f5f9; color:#334155;">${r.category}</span></td>
+                                <td><div style="font-weight:600; font-size:0.9rem;">${r.subject}</div></td>
+                                <td><span class="badge ${badgeClass}">${r.status}</span></td>
+                                <td>
+                                    <div style="display: flex; gap: 6px;">
+                                        ${r.status !== 'Resolved' ? `<button onclick="updateRequestStatus(${r.id}, 'Resolved')" class="btn-action btn-success-sm"><i class="fas fa-check"></i></button>` : ''}
+                                        <button onclick="deleteRequest(${r.id})" class="btn-action btn-delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            `;
+                        }).join('');
+                    }
+                }
+            }
+
+            // 4. Sync Media
+            if (media) {
+                const badge = document.getElementById('badge-media-count');
+                if (badge) badge.textContent = media.length || 0;
+                const ovGrid = document.getElementById('ov-media-library-grid');
+                if (ovGrid) {
+                    if (!media || media.length === 0) {
+                        ovGrid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b;">No media uploaded yet.</p>';
+                    } else {
+                        ovGrid.innerHTML = media.map(m => `
+                            <div class="media-card">
+                                <div class="media-preview">
+                                    <img src="${m.url}" alt="${m.title}" onerror="this.src='https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600'">
+                                </div>
+                                <div class="media-info">
+                                    <span class="badge badge-progress" style="margin-bottom: 6px;">${m.media_type}</span>
+                                    <h4 style="font-size: 0.95rem; margin-bottom: 4px;">${m.title}</h4>
+                                    <button onclick="deleteMedia(${m.id})" class="btn-action btn-delete" style="width: 100%; justify-content: center; margin-top: 8px;">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            }
+        }
+
+        // Form listeners for Overview Hub
+        document.addEventListener('DOMContentLoaded', () => {
+            // Overview Add News
+            const ovPostForm = document.getElementById('ov-add-post-form');
+            if (ovPostForm) {
+                ovPostForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const title = document.getElementById('ov-post-title').value;
+                    const content = document.getElementById('ov-post-content').value;
+                    const status = document.getElementById('ov-post-status');
+                    
+                    const res = await fetch('/api/posts', {
+                        method: 'POST',
+                        headers: fetchHeaders,
+                        body: JSON.stringify({title, content})
+                    });
+                    if (res.ok) {
+                        document.getElementById('ov-post-title').value = '';
+                        document.getElementById('ov-post-content').value = '';
+                        status.textContent = 'Published Live!';
+                        status.style.display = 'inline';
+                        setTimeout(() => status.style.display = 'none', 3000);
+                        fetchPosts();
+                    } else {
+                        alert('Publish failed. Verify admin credentials.');
+                    }
+                });
+            }
+
+            // Overview Add Member
+            const ovMemForm = document.getElementById('ov-add-member-form');
+            if (ovMemForm) {
+                ovMemForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('ov-mem-name').value;
+                    const email = document.getElementById('ov-mem-email').value;
+                    const password = document.getElementById('ov-mem-pass').value;
+                    const status = document.getElementById('ov-mem-status');
+
+                    const res = await fetch('/api/users', {
+                        method: 'POST',
+                        headers: fetchHeaders,
+                        body: JSON.stringify({name, email, password})
+                    });
+                    if (res.ok) {
+                        ovMemForm.reset();
+                        status.textContent = 'Member Created!';
+                        status.style.display = 'inline';
+                        setTimeout(() => status.style.display = 'none', 3000);
+                        fetchMembers();
+                    } else {
+                        alert('Failed to add member.');
+                    }
+                });
+            }
+
+            // Overview Add Request
+            const ovReqForm = document.getElementById('ov-add-request-form');
+            if (ovReqForm) {
+                ovReqForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('ov-req-name').value;
+                    const category = document.getElementById('ov-req-category').value;
+                    const subject = document.getElementById('ov-req-subject').value;
+                    const details = document.getElementById('ov-req-details').value;
+                    const status = document.getElementById('ov-req-status');
+
+                    const res = await fetch('/api/requests', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email: 'admin-log@rhnd.com', category, subject, details })
+                    });
+                    if (res.ok) {
+                        ovReqForm.reset();
+                        status.textContent = 'Ticket Logged!';
+                        status.style.display = 'inline';
+                        setTimeout(() => status.style.display = 'none', 3000);
+                        fetchRequests();
+                    }
+                });
+            }
+
+            // Overview Add Media
+            const ovMediaForm = document.getElementById('ov-add-media-form');
+            if (ovMediaForm) {
+                ovMediaForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const title = document.getElementById('ov-media-title').value;
+                    const media_type = document.getElementById('ov-media-type').value;
+                    const url = document.getElementById('ov-media-url').value;
+                    const status = document.getElementById('ov-media-status');
+
+                    const res = await fetch('/api/media', {
+                        method: 'POST',
+                        headers: fetchHeaders,
+                        body: JSON.stringify({ title, media_type, url })
+                    });
+                    if (res.ok) {
+                        ovMediaForm.reset();
+                        status.textContent = 'Media Added!';
+                        status.style.display = 'inline';
+                        setTimeout(() => status.style.display = 'none', 3000);
+                        fetchMedia();
+                    }
+                });
+            }
+        });
+
 
         // Initialize All Dashboard Data
         fetchPosts();
