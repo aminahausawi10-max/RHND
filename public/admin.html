@@ -133,36 +133,117 @@
             
             <!-- 1. OVERVIEW TAB -->
             <div id="tab-overview" class="panel active">
-                <h2 style="margin-bottom: 25px; color: #0f172a; font-weight: 800;">Platform Performance</h2>
+                <!-- PLATFORM PERFORMANCE HEADER WITH CONTROLS -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h2 style="margin: 0; color: #0f172a; font-weight: 800; font-size: 1.6rem;">Platform Performance</h2>
+                        <p style="margin: 5px 0 0; color: #64748b; font-size: 0.9rem;">
+                            Counts automatically from the database. Click <strong>"Set Custom"</strong> on any card to type your own number (e.g. 100), or click <strong>"Use Original"</strong> to restore the live count.
+                        </p>
+                    </div>
+                    <div>
+                        <button type="button" onclick="resetAllStatsToOriginal()" class="btn btn-secondary" style="padding: 9px 16px; font-size: 0.85rem; font-weight: 600;" title="Restore all cards to original database numbers">
+                            <i class="fas fa-sync-alt"></i> Reset All to Original DB Count
+                        </button>
+                    </div>
+                </div>
                 
+                <!-- STAT CARDS WITH EDIT AND RESTORE BUTTONS -->
                 <div class="stat-grid">
-                    <div class="stat-card" onclick="switchOverviewSubTab('members'); scrollToManager();" style="border-bottom-color: #3b82f6; cursor: pointer;" title="Click to Add or Remove Members">
-                        <div>
-                            <h3 id="stat-members">0</h3>
-                            <p>Registered Members</p>
+                    <!-- 1. MEMBERS -->
+                    <div class="stat-card" style="border-bottom-color: #3b82f6; flex-direction: column; align-items: stretch; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="display: flex; align-items: baseline; gap: 8px;">
+                                    <h3 id="stat-members" style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;">0</h3>
+                                    <span id="badge-mode-members" style="font-size: 0.72rem; color: #3b82f6; font-weight: 700; background: #eff6ff; padding: 2px 7px; border-radius: 4px; border: 1px solid #bfdbfe;">Live DB</span>
+                                </div>
+                                <p style="margin: 3px 0 0 0; color: #64748b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Registered Members</p>
+                            </div>
+                            <div class="stat-icon" onclick="switchOverviewSubTab('members'); scrollToManager();" style="background: #eff6ff; color: #3b82f6; cursor: pointer;" title="Manage members below">
+                                <i class="fas fa-users"></i>
+                            </div>
                         </div>
-                        <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;"><i class="fas fa-users"></i></div>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap; border-top: 1px solid #f1f5f9; padding-top: 10px;">
+                            <button type="button" onclick="editStatNumber('members', 'Registered Members')" class="btn-action" style="background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; font-size: 0.76rem; padding: 4px 8px;" title="Type custom number like 100">
+                                <i class="fas fa-pencil-alt text-gold"></i> Set Custom (e.g. 100)
+                            </button>
+                            <button type="button" id="btn-reset-members" onclick="resetStatToOriginal('members')" class="btn-action btn-info-sm" style="font-size: 0.76rem; padding: 4px 8px; display: none;" title="Restore original database count">
+                                <i class="fas fa-undo"></i> Use Original (<span id="orig-stat-members">0</span>)
+                            </button>
+                        </div>
                     </div>
-                    <div class="stat-card" onclick="switchOverviewSubTab('news'); scrollToManager();" style="border-bottom-color: var(--primary-green); cursor: pointer;" title="Click to Add or Remove News">
-                        <div>
-                            <h3 id="stat-news">0</h3>
-                            <p>Published News</p>
+
+                    <!-- 2. NEWS -->
+                    <div class="stat-card" style="border-bottom-color: var(--primary-green); flex-direction: column; align-items: stretch; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="display: flex; align-items: baseline; gap: 8px;">
+                                    <h3 id="stat-news" style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;">0</h3>
+                                    <span id="badge-mode-news" style="font-size: 0.72rem; color: var(--primary-green); font-weight: 700; background: #f0fdf4; padding: 2px 7px; border-radius: 4px; border: 1px solid #bbf7d0;">Live DB</span>
+                                </div>
+                                <p style="margin: 3px 0 0 0; color: #64748b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Published News</p>
+                            </div>
+                            <div class="stat-icon" onclick="switchOverviewSubTab('news'); scrollToManager();" style="background: #f0fdf4; color: var(--primary-green); cursor: pointer;" title="Manage news below">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
                         </div>
-                        <div class="stat-icon" style="background: #f0fdf4; color: var(--primary-green);"><i class="fas fa-newspaper"></i></div>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap; border-top: 1px solid #f1f5f9; padding-top: 10px;">
+                            <button type="button" onclick="editStatNumber('news', 'Published News')" class="btn-action" style="background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; font-size: 0.76rem; padding: 4px 8px;" title="Type custom number like 100">
+                                <i class="fas fa-pencil-alt text-gold"></i> Set Custom (e.g. 100)
+                            </button>
+                            <button type="button" id="btn-reset-news" onclick="resetStatToOriginal('news')" class="btn-action btn-info-sm" style="font-size: 0.76rem; padding: 4px 8px; display: none;" title="Restore original database count">
+                                <i class="fas fa-undo"></i> Use Original (<span id="orig-stat-news">0</span>)
+                            </button>
+                        </div>
                     </div>
-                    <div class="stat-card" onclick="switchOverviewSubTab('requests'); scrollToManager();" style="border-bottom-color: #f59e0b; cursor: pointer;" title="Click to Add or Remove Support Tickets">
-                        <div>
-                            <h3 id="stat-requests">0</h3>
-                            <p>Support Tickets</p>
+
+                    <!-- 3. SUPPORT TICKETS -->
+                    <div class="stat-card" style="border-bottom-color: #f59e0b; flex-direction: column; align-items: stretch; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="display: flex; align-items: baseline; gap: 8px;">
+                                    <h3 id="stat-requests" style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;">0</h3>
+                                    <span id="badge-mode-requests" style="font-size: 0.72rem; color: #b45309; font-weight: 700; background: #fef3c7; padding: 2px 7px; border-radius: 4px; border: 1px solid #fde68a;">Live DB</span>
+                                </div>
+                                <p style="margin: 3px 0 0 0; color: #64748b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Support Tickets</p>
+                            </div>
+                            <div class="stat-icon" onclick="switchOverviewSubTab('requests'); scrollToManager();" style="background: #fef3c7; color: #f59e0b; cursor: pointer;" title="Manage tickets below">
+                                <i class="fas fa-ticket-alt"></i>
+                            </div>
                         </div>
-                        <div class="stat-icon" style="background: #fef3c7; color: #f59e0b;"><i class="fas fa-ticket-alt"></i></div>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap; border-top: 1px solid #f1f5f9; padding-top: 10px;">
+                            <button type="button" onclick="editStatNumber('requests', 'Support Tickets')" class="btn-action" style="background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; font-size: 0.76rem; padding: 4px 8px;" title="Type custom number like 100">
+                                <i class="fas fa-pencil-alt text-gold"></i> Set Custom (e.g. 100)
+                            </button>
+                            <button type="button" id="btn-reset-requests" onclick="resetStatToOriginal('requests')" class="btn-action btn-info-sm" style="font-size: 0.76rem; padding: 4px 8px; display: none;" title="Restore original database count">
+                                <i class="fas fa-undo"></i> Use Original (<span id="orig-stat-requests">0</span>)
+                            </button>
+                        </div>
                     </div>
-                    <div class="stat-card" onclick="switchOverviewSubTab('media'); scrollToManager();" style="border-bottom-color: #8b5cf6; cursor: pointer;" title="Click to Add or Remove Media">
-                        <div>
-                            <h3 id="stat-media">0</h3>
-                            <p>Media Items</p>
+
+                    <!-- 4. MEDIA ITEMS -->
+                    <div class="stat-card" style="border-bottom-color: #8b5cf6; flex-direction: column; align-items: stretch; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="display: flex; align-items: baseline; gap: 8px;">
+                                    <h3 id="stat-media" style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;">0</h3>
+                                    <span id="badge-mode-media" style="font-size: 0.72rem; color: #6d28d9; font-weight: 700; background: #f5f3ff; padding: 2px 7px; border-radius: 4px; border: 1px solid #ddd6fe;">Live DB</span>
+                                </div>
+                                <p style="margin: 3px 0 0 0; color: #64748b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Media Items</p>
+                            </div>
+                            <div class="stat-icon" onclick="switchOverviewSubTab('media'); scrollToManager();" style="background: #f5f3ff; color: #8b5cf6; cursor: pointer;" title="Manage media below">
+                                <i class="fas fa-photo-video"></i>
+                            </div>
                         </div>
-                        <div class="stat-icon" style="background: #f5f3ff; color: #8b5cf6;"><i class="fas fa-photo-video"></i></div>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap; border-top: 1px solid #f1f5f9; padding-top: 10px;">
+                            <button type="button" onclick="editStatNumber('media', 'Media Items')" class="btn-action" style="background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; font-size: 0.76rem; padding: 4px 8px;" title="Type custom number like 100">
+                                <i class="fas fa-pencil-alt text-gold"></i> Set Custom (e.g. 100)
+                            </button>
+                            <button type="button" id="btn-reset-media" onclick="resetStatToOriginal('media')" class="btn-action btn-info-sm" style="font-size: 0.76rem; padding: 4px 8px; display: none;" title="Restore original database count">
+                                <i class="fas fa-undo"></i> Use Original (<span id="orig-stat-media">0</span>)
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
@@ -709,8 +790,7 @@
                 const res = await fetch('/api/posts');
                 const posts = await res.json();
                 const list = document.getElementById('posts-list');
-                const statCount = document.getElementById('stat-news');
-                if (statCount) statCount.textContent = posts.length || 0;
+                updateStatDisplay('news', posts.length || 0);
                 
                 syncOverviewLists(posts, null, null, null);
                 if (!posts || posts.length === 0) {
@@ -777,8 +857,7 @@
                 const res = await fetch('/api/users');
                 const users = await res.json();
                 const tbody = document.getElementById('members-list-tbody');
-                const statCount = document.getElementById('stat-members');
-                if (statCount) statCount.textContent = users.length || 0;
+                updateStatDisplay('members', users.length || 0);
 
                 syncOverviewLists(null, users, null, null);
                 if (!users || users.length === 0) {
@@ -845,8 +924,7 @@
                 const res = await fetch('/api/requests');
                 const requests = await res.json();
                 const tbody = document.getElementById('requests-list-tbody');
-                const statCount = document.getElementById('stat-requests');
-                if (statCount) statCount.textContent = requests.length || 0;
+                updateStatDisplay('requests', requests.length || 0);
 
                 syncOverviewLists(null, null, requests, null);
                 if (!requests || requests.length === 0) {
@@ -928,8 +1006,7 @@
                 const res = await fetch('/api/media');
                 const items = await res.json();
                 const grid = document.getElementById('media-library-grid');
-                const statCount = document.getElementById('stat-media');
-                if (statCount) statCount.textContent = items.length || 0;
+                updateStatDisplay('media', items.length || 0);
 
                 syncOverviewLists(null, null, null, items);
                 if (!items || items.length === 0) {
@@ -986,6 +1063,95 @@
         });
 
         
+        
+        // --- CUSTOM STATS NUMBER OVERRIDE & LIVE COUNT RESTORE ---
+        const realCounts = {
+            members: 0,
+            news: 0,
+            requests: 0,
+            media: 0
+        };
+
+        function getCustomStats() {
+            try {
+                return JSON.parse(localStorage.getItem('rhnd_custom_stats') || '{}');
+            } catch(e) {
+                return {};
+            }
+        }
+
+        function saveCustomStats(stats) {
+            localStorage.setItem('rhnd_custom_stats', JSON.stringify(stats));
+        }
+
+        function updateStatDisplay(key, realCount) {
+            if (realCount !== undefined && realCount !== null) {
+                realCounts[key] = realCount;
+            }
+            const currentReal = realCounts[key] || 0;
+
+            const origSpan = document.getElementById('orig-stat-' + key);
+            if (origSpan) origSpan.textContent = currentReal;
+
+            const customStats = getCustomStats();
+            const statH3 = document.getElementById('stat-' + key);
+            const badgeMode = document.getElementById('badge-mode-' + key);
+            const resetBtn = document.getElementById('btn-reset-' + key);
+
+            if (customStats[key] !== undefined && customStats[key] !== null && customStats[key] !== '') {
+                // Display Custom Number chosen by Admin (e.g. 100)
+                if (statH3) statH3.textContent = customStats[key];
+                if (badgeMode) {
+                    badgeMode.textContent = 'Custom (' + customStats[key] + ')';
+                    badgeMode.style.background = '#fef3c7';
+                    badgeMode.style.color = '#b45309';
+                    badgeMode.style.border = '1px solid #fde68a';
+                }
+                if (resetBtn) resetBtn.style.display = 'inline-flex';
+            } else {
+                // Display original live database count
+                if (statH3) statH3.textContent = currentReal;
+                if (badgeMode) {
+                    badgeMode.textContent = 'Live DB';
+                    badgeMode.style.background = '#eff6ff';
+                    badgeMode.style.color = '#3b82f6';
+                    badgeMode.style.border = '1px solid #bfdbfe';
+                }
+                if (resetBtn) resetBtn.style.display = 'none';
+            }
+        }
+
+        function editStatNumber(key, label) {
+            const customStats = getCustomStats();
+            const currentVal = customStats[key] !== undefined ? customStats[key] : realCounts[key];
+            const userVal = prompt(`Type any custom number to display for ${label} (e.g. 100, 500, 2500):\n\n(Leave blank and click OK to revert back to live database count)`, currentVal);
+            
+            if (userVal === null) return; // User cancelled
+            
+            if (userVal.trim() === '') {
+                delete customStats[key];
+            } else {
+                customStats[key] = userVal.trim();
+            }
+            saveCustomStats(customStats);
+            updateStatDisplay(key);
+        }
+
+        function resetStatToOriginal(key) {
+            const customStats = getCustomStats();
+            delete customStats[key];
+            saveCustomStats(customStats);
+            updateStatDisplay(key);
+        }
+
+        function resetAllStatsToOriginal() {
+            localStorage.removeItem('rhnd_custom_stats');
+            ['members', 'news', 'requests', 'media'].forEach(k => {
+                updateStatDisplay(k);
+            });
+            alert('All counters have been reset to original live database count!');
+        }
+
         // Smooth scroll to manager on card click
         function scrollToManager() {
             const el = document.getElementById('overview-manager-section');
