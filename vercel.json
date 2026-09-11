@@ -8,6 +8,7 @@
         { "src": "/css/(.*)", "dest": "/public/css/$1" },
         { "src": "/js/(.*)", "dest": "/public/js/$1" },
         { "src": "/admin", "dest": "/public/admin.html" },
+        { "src": "/login", "dest": "/public/login.html" },
         { "src": "/register", "dest": "/public/register.html" },
         { "src": "/dashboard", "dest": "/public/member-dashboard.html" },
         { "src": "/(.*\\.html)", "dest": "/public/$1" },
