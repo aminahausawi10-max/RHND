@@ -160,3 +160,107 @@ a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
     .hero-buttons { flex-direction: column; }
     .footer-grid { grid-template-columns: 1fr; }
 }
+
+/* Floating Action Button (FAB) & Quick Actions */
+.fab-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    gap: 12px;
+    font-family: var(--font-main);
+}
+.fab-main-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--secondary-dark-green) 0%, var(--primary-green) 100%);
+    color: var(--primary-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 77, 46, 0.45);
+    cursor: pointer;
+    border: 2px solid var(--primary-gold);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.fab-main-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 15px 30px rgba(0, 77, 46, 0.65);
+}
+.fab-menu {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+    animation: fabFadeIn 0.25s ease forwards;
+}
+.fab-menu.active {
+    display: flex;
+}
+@keyframes fabFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.fab-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    color: var(--secondary-dark-green);
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.fab-item:hover {
+    background: var(--secondary-dark-green);
+    color: var(--primary-gold);
+    transform: translateX(-4px);
+}
+.fab-item i {
+    font-size: 1.1rem;
+    color: var(--primary-green);
+}
+.fab-item:hover i {
+    color: var(--primary-gold);
+}
+
+/* Modal for Quick Post News */
+.rhnd-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 10001;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.rhnd-modal-overlay.active {
+    display: flex;
+}
+.rhnd-modal-card {
+    background: white;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    border-top: 5px solid var(--primary-green);
+    animation: fabFadeIn 0.3s ease;
+}

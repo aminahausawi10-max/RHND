@@ -8,14 +8,24 @@ if (!$data || !isset($data["email"]) || !isset($data["password"])) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT id, password_hash FROM users WHERE email = ?");
+$stmt = $pdo->prepare("SELECT id, name, email, password_hash FROM users WHERE email = ?");
 $stmt->execute([$data["email"]]);
 $user = $stmt->fetch();
 
 if ($user && password_verify($data["password"], $user["password_hash"])) {
     session_regenerate_id(true);
     $_SESSION["user_id"] = $user["id"];
-    echo json_encode(["status" => "success"]);
+    $isAdmin = (strtolower(trim($user["email"])) === 'admin@rhnd.com' || strpos(strtolower($user["email"]), 'admin') !== false);
+    echo json_encode([
+        "status" => "success",
+        "role" => $isAdmin ? "admin" : "member",
+        "user" => [
+            "id" => $user["id"],
+            "name" => $user["name"] ?? ($isAdmin ? "Super Admin" : "Member"),
+            "email" => $user["email"],
+            "role" => $isAdmin ? "admin" : "member"
+        ]
+    ]);
 } else {
     http_response_code(401);
     echo json_encode(["error" => "Invalid credentials"]);

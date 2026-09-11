@@ -3,59 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RHND CMS | News Manager</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>RHND Super Admin Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { background-color: #f1f5f9; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .dashboard-container { display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { width: 280px; background: #0f172a; color: white; display: flex; flex-direction: column; z-index: 10; }
+        .sidebar-header { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px; background: white; border-radius: 50%; padding: 10px; }
+        .sidebar-nav { padding: 20px 0; flex-grow: 1; }
+        .nav-item { padding: 15px 30px; display: flex; align-items: center; gap: 15px; color: #94a3b8; cursor: pointer; transition: all 0.3s; font-weight: 500; border-left: 4px solid transparent; }
+        .nav-item:hover, .nav-item.active { background: #1e293b; color: white; border-left-color: var(--primary-gold); }
+        .nav-item i { font-size: 1.2rem; width: 24px; text-align: center; }
+        
+        /* Main Content */
+        .main-content { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+        .top-navbar { background: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.02); position: sticky; top: 0; z-index: 5; }
+        
+        /* Panels */
+        .panel { padding: 40px; display: none; animation: fadeIn 0.4s ease; }
+        .panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .stat-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--primary-green); }
+        .stat-card h3 { font-size: 2rem; color: #1e293b; margin-bottom: 5px; }
+        .stat-card p { color: #64748b; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; }
+        .stat-icon { width: 60px; height: 60px; border-radius: 50%; background: #f0fdf4; color: var(--primary-green); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+        
+        .content-card { background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; }
+        .content-card h3 { color: #0f172a; margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; }
+        
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th { background: #f8fafc; padding: 15px; text-align: left; color: #475569; font-weight: 600; }
+        .admin-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+        
+        .form-control { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-family: inherit; margin-bottom: 20px; }
+    </style>
 </head>
-<body style="background-color: var(--bg-light);">
-    <header class="main-header">
-        <div class="container header-inner" style="justify-content: space-between;">
-            <div class="logo-section">
-                <div class="logo-text">
-                    <h1>RHND Admin</h1>
-                    <h2>Content Management Portal</h2>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="images/logo.png" alt="RHND Logo">
+                <h3 style="font-weight: 700; color: white;">SUPER ADMIN</h3>
+            </div>
+            <div class="sidebar-nav">
+                <div class="nav-item active" onclick="switchAdminTab('overview')">
+                    <i class="fas fa-chart-pie"></i> Overview
+                </div>
+                <div class="nav-item" onclick="switchAdminTab('news')">
+                    <i class="fas fa-newspaper"></i> Manage News
+                </div>
+                <div class="nav-item" onclick="switchAdminTab('users')">
+                    <i class="fas fa-users"></i> Member Directory
+                </div>
+                <div class="nav-item" onclick="switchAdminTab('settings')">
+                    <i class="fas fa-cog"></i> Platform Settings
                 </div>
             </div>
-            <div>
-                <a href="index.html" class="btn btn-secondary">Back to Website</a>
+            <div style="padding: 20px;">
+                <button onclick="window.location.href='index.html'" style="width: 100%; padding: 12px; background: #e53e3e; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-sign-out-alt"></i> Exit Portal
+                </button>
             </div>
-        </div>
-    </header>
-
-    <div class="container section-padding">
-        <div class="cards-grid" style="grid-template-columns: 1fr;">
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-navbar">
+                <div style="font-weight: 600; font-size: 1.2rem; color: #0f172a;">RHND Content Management System</div>
+                <div style="color: var(--primary-green); font-weight: bold;"><i class="fas fa-shield-alt"></i> Secure Session</div>
+            </div>
             
-            <div class="update-card" style="padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-                <h3 style="color: var(--secondary-dark-green); border-bottom: 2px solid var(--primary-gold); padding-bottom: 10px; margin-bottom: 25px;">Publish New Update</h3>
-                <form id="add-post-form">
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #555;">News Title</label>
-                        <input type="text" id="post-title" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-family: inherit;">
+            <!-- Overview Tab -->
+            <div id="tab-overview" class="panel active">
+                <h2 style="margin-bottom: 30px; color: #0f172a;">Platform Statistics</h2>
+                <div class="stat-grid">
+                    <div class="stat-card" style="border-bottom-color: #3b82f6;">
+                        <div>
+                            <h3>1,204</h3>
+                            <p>Registered Members</p>
+                        </div>
+                        <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;"><i class="fas fa-users"></i></div>
                     </div>
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #555;">News Content</label>
-                        <textarea id="post-content" required rows="6" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-family: inherit; resize: vertical;"></textarea>
+                    <div class="stat-card" style="border-bottom-color: var(--primary-green);">
+                        <div>
+                            <h3 id="news-count">0</h3>
+                            <p>Published News</p>
+                        </div>
+                        <div class="stat-icon"><i class="fas fa-bullhorn"></i></div>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="font-size: 1rem;"><i class="fas fa-paper-plane"></i> Publish to Website</button>
-                    <span id="post-status" style="margin-left: 15px; color: var(--primary-green); font-weight: bold; display: none;">Successfully Published!</span>
-                </form>
-            </div>
-
-            <div class="update-card" style="padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 30px;">
-                <h3 style="color: var(--secondary-dark-green); border-bottom: 2px solid var(--primary-gold); padding-bottom: 10px; margin-bottom: 25px;">Manage Existing Content</h3>
-                <div id="posts-list">
-                    <p style="color: #666;">Loading content...</p>
+                    <div class="stat-card" style="border-bottom-color: #f59e0b;">
+                        <div>
+                            <h3>45</h3>
+                            <p>Pending Support</p>
+                        </div>
+                        <div class="stat-icon" style="background: #fef3c7; color: #f59e0b;"><i class="fas fa-ticket-alt"></i></div>
+                    </div>
+                </div>
+                
+                <div class="content-card">
+                    <h3>Recent Platform Activity</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Super Admin (You)</td><td>Logged into CMS</td><td>Just now</td></tr>
+                            <tr><td>System</td><td>Database Backup Completed</td><td>1 hour ago</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
-        </div>
+            
+            <!-- Manage News Tab -->
+            <div id="tab-news" class="panel">
+                <div class="content-card">
+                    <h3>Publish New Update</h3>
+                    <form id="add-post-form">
+                        <label style="font-weight: 600; color: #334155; margin-bottom: 8px; display: block;">News Title</label>
+                        <input type="text" id="post-title" class="form-control" required placeholder="Enter official announcement title">
+                        
+                        <label style="font-weight: 600; color: #334155; margin-bottom: 8px; display: block;">Content Body</label>
+                        <textarea id="post-content" class="form-control" required rows="6" placeholder="Write the full content here..."></textarea>
+                        
+                        <button type="submit" class="btn btn-primary" style="background: var(--primary-green); color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                            <i class="fas fa-paper-plane"></i> Publish Live
+                        </button>
+                        <span id="post-status" style="color: var(--primary-green); font-weight: bold; display: none; margin-left: 15px;">Published Successfully!</span>
+                    </form>
+                </div>
+                
+                <div class="content-card">
+                    <h3>Manage Published Content</h3>
+                    <div id="posts-list">Loading...</div>
+                </div>
+            </div>
+            
+            <!-- Manage Users Tab -->
+            <div id="tab-users" class="panel">
+                <div class="content-card">
+                    <h3>Member Directory</h3>
+                    <p style="color: #64748b; margin-bottom: 20px;">View and manage registered diaspora members.</p>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Super Admin</td>
+                                <td>admin@rhnd.com</td>
+                                <td><span style="background:#bbf7d0; color:#166534; padding:5px 10px; border-radius:20px; font-size:0.8rem; font-weight:bold;">Active</span></td>
+                                <td><button style="background:transparent; border:none; color:#3b82f6; cursor:pointer;">Edit</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div id="tab-settings" class="panel">
+                <div class="content-card">
+                    <h3>Platform Settings</h3>
+                    <p>System configuration options will appear here.</p>
+                </div>
+            </div>
+            
+        </main>
     </div>
-
+    
     <script>
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+        
+        
         // Very basic simple auth prompt for the static admin page
         let adminPwd = sessionStorage.getItem('rhnd_admin_pwd');
         if (!adminPwd) {
-            adminPwd = prompt("Welcome to the Admin Portal!\\nPlease enter the Admin Password:");
+            adminPwd = prompt("Welcome to the Admin Portal!\nPlease enter the Admin Password:");
             sessionStorage.setItem('rhnd_admin_pwd', adminPwd);
         }
         
@@ -128,6 +272,19 @@
         });
         
         fetchPosts();
+    
+        
+        // Slightly modify the fetchPosts to update the stats counter
+        const originalFetchPosts = fetchPosts;
+        fetchPosts = async function() {
+            await originalFetchPosts();
+            // Count divs inside posts-list
+            const list = document.getElementById('posts-list');
+            const count = list.querySelectorAll('div[style*="border-bottom"]').length;
+            if(document.getElementById('news-count')) {
+                document.getElementById('news-count').textContent = count;
+            }
+        }
     </script>
 </body>
 </html>
