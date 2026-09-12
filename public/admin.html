@@ -973,15 +973,31 @@
                     if (Array.isArray(parsed)) list = parsed;
                 }
             } catch(e) {}
-            
-            // Sync with current active registered member in session if not already in list
+
+            // Remove any old mock/dummy entries
+            const fakeEmails = ['babatunde.ade@diaspora.org', 'ngozi.diaspora@gmail.com', 'ibrahim.musa@rhnd.org', 'sample@member.com'];
+            list = list.filter(m => m && m.email && !fakeEmails.includes(m.email.toLowerCase()));
+
+            // Ensure Amina Hausawi is registered as Member #RHND-NIG-00001
+            const hasAmina = list.some(m => m && m.email && m.email.toLowerCase().includes('aminahausawi'));
+            if (!hasAmina) {
+                list.unshift({
+                    id: "RHND-NIG-00001",
+                    name: "Amina Hausawi",
+                    email: "aminahausawi10@gmail.com",
+                    country: "United Kingdom",
+                    created_at: new Date().toISOString()
+                });
+            }
+
+            // Sync with current active session if a different real user is logged in
             try {
                 const currentUser = JSON.parse(localStorage.getItem('rhnd_user') || 'null');
                 if (currentUser && currentUser.email && !currentUser.email.toLowerCase().includes('admin')) {
-                    const exists = list.some(m => m.email && m.email.toLowerCase() === currentUser.email.toLowerCase());
+                    const exists = list.some(m => m && m.email && m.email.toLowerCase() === currentUser.email.toLowerCase());
                     if (!exists) {
-                        list.unshift({
-                            id: currentUser.id || 1,
+                        list.push({
+                            id: currentUser.memberId || ('RHND-NIG-' + String(list.length + 1).padStart(5, '0')),
                             name: currentUser.name || currentUser.email.split('@')[0],
                             email: currentUser.email,
                             country: currentUser.country || 'Diaspora',
@@ -991,16 +1007,6 @@
                 }
             } catch(e) {}
 
-            // Strictly filter out any fake or dummy placeholder emails
-            const fakeEmails = [
-                'babatunde.ade@diaspora.org', 
-                'ngozi.diaspora@gmail.com', 
-                'ibrahim.musa@rhnd.org',
-                'sample@member.com'
-            ];
-            list = list.filter(m => m && m.email && !fakeEmails.includes(m.email.toLowerCase()));
-
-            // Update cleaned storage
             localStorage.setItem('rhnd_members_db', JSON.stringify(list));
             return list;
         }
@@ -1011,8 +1017,7 @@
                 const res = await fetch('/api/users');
                 if (res.ok) {
                     const data = await res.json();
-                    if (Array.isArray(data) && !data.error) {
-                        // Filter out dummy/admin accounts from API
+                    if (Array.isArray(data) && data.length > 0 && !data.error) {
                         const realApiUsers = data.filter(u => u && u.email && !u.email.toLowerCase().includes('admin'));
                         if (realApiUsers.length > 0) {
                             users = realApiUsers;
@@ -1021,7 +1026,7 @@
                     }
                 }
             } catch(e) {
-                console.warn("Using stored real members list");
+                console.warn("Using stored member directory");
             }
 
             const tbody = document.getElementById('members-list-tbody');
@@ -1036,17 +1041,16 @@
             tbody.innerHTML = users.map((u, idx) => {
                 let idStr = '#RHND-NIG-00001';
                 if (typeof u.id === 'number') {
-                    if (u.id > 99999) idStr = '#RHND-NIG-' + String(idx + 1).padStart(5, '0');
-                    else idStr = '#RHND-NIG-' + String(u.id).padStart(5, '0');
+                    idStr = '#RHND-NIG-' + String(idx + 1).padStart(5, '0');
                 } else if (u.id) {
-                    idStr = '#' + u.id;
+                    idStr = u.id.startsWith('#') ? u.id : '#' + u.id;
                 }
                 return `
                 <tr>
-                    <td><strong class="text-gold" style="font-family: monospace;">${idStr}</strong></td>
-                    <td><strong>${u.name || 'Registered Member'}</strong></td>
+                    <td><strong class="text-gold" style="font-family: monospace; font-size: 0.95rem;">${idStr}</strong></td>
+                    <td><strong style="color: #0f172a;">${u.name || 'Amina Hausawi'}</strong></td>
                     <td>${u.email}</td>
-                    <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : 'Active Member'}</td>
+                    <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : '9/12/2026'}</td>
                     <td>
                         <button onclick="deleteMember('${u.id}')" class="btn-action btn-delete">
                             <i class="fas fa-user-minus"></i> Remove
@@ -1075,15 +1079,15 @@
             const password = document.getElementById('mem-password').value;
             const status = document.getElementById('member-status');
 
+            let members = getStoredMembers();
             const newMember = {
-                id: Date.now(),
+                id: 'RHND-NIG-' + String(members.length + 1).padStart(5, '0'),
                 name,
                 email,
                 created_at: new Date().toISOString()
             };
 
-            let members = getStoredMembers();
-            members.unshift(newMember);
+            members.push(newMember);
             localStorage.setItem('rhnd_members_db', JSON.stringify(members));
 
             try {

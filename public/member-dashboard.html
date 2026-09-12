@@ -862,7 +862,7 @@
                             <div class="id-details-list">
                                 <div class="id-field-group">
                                     <span class="id-label">Full Name</span>
-                                    <div class="id-val-name" id="card-val-name">REGISTERED MEMBER</div>
+                                    <div class="id-val-name" id="card-val-name">AMINA HAUSAWI</div>
                                 </div>
 
                                 <div class="id-field-group">
@@ -1175,10 +1175,16 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             const rawUser = localStorage.getItem("rhnd_user");
-            let currentUser = null;
+            let currentUser = {
+                name: "Amina Hausawi",
+                email: "aminahausawi10@gmail.com",
+                country: "United Kingdom",
+                memberId: "RHND-NIG-00001"
+            };
             if (rawUser) {
                 try {
-                    currentUser = JSON.parse(rawUser);
+                    const parsed = JSON.parse(rawUser);
+                    if (parsed && parsed.email) currentUser = { ...currentUser, ...parsed };
                     const name = currentUser.name || (currentUser.email ? currentUser.email.split('@')[0] : 'Member');
                     const email = currentUser.email || 'member@rhnd.com';
 
