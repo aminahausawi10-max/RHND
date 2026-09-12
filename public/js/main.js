@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
 window.rhndLogout = function() {
     localStorage.removeItem("rhnd_user");
     sessionStorage.removeItem("rhnd_admin_pwd");
-    window.location.reload();
+    window.location.href = "index.html";
 };
 
 function setupAuthState() {
