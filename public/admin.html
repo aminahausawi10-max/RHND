@@ -36,12 +36,18 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RHND Super Admin Portal</title>
+    <title>RHND Super Admin Portal - Diaspora Administration Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        body { background-color: #f1f5f9; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        :root {
+            --primary-green: #008751;
+            --secondary-dark-green: #004d2e;
+            --primary-gold: #d4af37;
+            --accent-gold: #b38f2a;
+        }
+        body { background-color: #f1f5f9; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; color: #1e293b; }
         .dashboard-container { display: flex; min-height: 100vh; }
         
         /* Sidebar */
@@ -56,16 +62,17 @@
         
         /* Main Content */
         .main-content { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; background: #f8fafc; }
-        .top-navbar { background: white; padding: 18px 35px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 5; border-bottom: 1px solid #e2e8f0; }
+        .top-navbar { background: white; padding: 16px 35px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 5; border-bottom: 1px solid #e2e8f0; }
         
         /* Panels */
-        .panel { padding: 35px; display: none; animation: fadeIn 0.3s ease; }
+        .panel { padding: 32px; display: none; animation: fadeIn 0.3s ease; }
         .panel.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         
         /* Stats Grid */
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 35px; }
-        .stat-card { background: white; border-radius: 14px; padding: 22px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--primary-green); border: 1px solid #edf2f7; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; border-radius: 14px; padding: 22px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--primary-green); border: 1px solid #edf2f7; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-2px); }
         .stat-card h3 { font-size: 2.2rem; color: #0f172a; margin-bottom: 4px; font-weight: 800; }
         .stat-card p { color: #64748b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
         .stat-icon { width: 55px; height: 55px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
@@ -84,7 +91,7 @@
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; font-weight: 600; color: #334155; margin-bottom: 7px; font-size: 0.9rem; }
-        .form-control { width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-family: inherit; font-size: 0.95rem; transition: border-color 0.2s; }
+        .form-control { width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-family: inherit; font-size: 0.95rem; transition: border-color 0.2s; box-sizing: border-box; }
         .form-control:focus { border-color: var(--primary-green); box-shadow: 0 0 0 3px rgba(0,135,81,0.1); }
         
         /* Badges & Buttons */
@@ -119,9 +126,7 @@
             z-index: 999 !important;
             display: none;
         }
-        .sidebar-overlay.active {
-            display: block !important;
-        }
+        .sidebar-overlay.active { display: block !important; }
         .mobile-menu-btn {
             display: none;
             background: #0b1329 !important;
@@ -164,7 +169,7 @@
             <div class="sidebar-header">
                 <img src="images/logo.png" alt="RHND Logo">
                 <h3 style="font-weight: 800; color: white; font-size: 1.15rem; margin-bottom: 2px;">SUPER ADMIN</h3>
-                <div style="color: var(--primary-gold); font-size: 0.8rem; font-weight: 600; letter-spacing: 1px;">DIASPORA CMS</div>
+                <div style="color: var(--primary-gold); font-size: 0.8rem; font-weight: 600; letter-spacing: 1px;">DIASPORA CMS & HUB</div>
             </div>
             <div class="sidebar-nav">
                 <div class="nav-item active" onclick="switchAdminTab('overview')">
@@ -185,7 +190,7 @@
                 <div class="nav-item" onclick="switchAdminTab('broadcast')">
                     <i class="fas fa-bullhorn"></i> Broadcast Alert
                 </div>
-                                <div class="nav-item" onclick="switchAdminTab('entities')">
+                <div class="nav-item" onclick="switchAdminTab('entities')">
                     <i class="fas fa-landmark"></i> Ministries & Agencies
                 </div>
                 <div class="nav-item" onclick="switchAdminTab('settings')">
@@ -210,11 +215,16 @@
                         <i class="fas fa-sliders-h text-gold" style="margin-right: 8px;"></i> RHND Admin Hub
                     </div>
                 </div>
-                                <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                     <span style="color: var(--primary-green); font-weight: 700; font-size: 0.85rem; background: #f0fdf4; padding: 6px 12px; border-radius: 20px; border: 1px solid #bbf7d0;">
-                        <i class="fas fa-shield-alt"></i> Authenticated Admin
+                        <i class="fas fa-shield-alt"></i> Super Admin
                     </span>
-                    <a href="index.html" class="btn btn-secondary" style="padding: 7px 14px; font-size: 0.85rem;">View Site</a>
+                    <a href="member-dashboard.html" class="btn btn-secondary" style="padding: 7px 12px; font-size: 0.85rem; text-decoration: none;">
+                        <i class="fas fa-id-card"></i> Member Portal
+                    </a>
+                    <a href="index.html" class="btn btn-secondary" style="padding: 7px 12px; font-size: 0.85rem; text-decoration: none;">
+                        <i class="fas fa-globe"></i> View Site
+                    </a>
                     <button onclick="rhndLogout()" class="btn-action btn-delete" style="padding: 7px 14px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
@@ -223,7 +233,7 @@
             
             <!-- 1. OVERVIEW TAB -->
             <div id="tab-overview" class="panel active">
-                                <h2 style="margin-bottom: 25px; color: #0f172a; font-weight: 800; font-size: 1.6rem;">Platform Performance</h2>
+                <h2 style="margin-bottom: 25px; color: #0f172a; font-weight: 800; font-size: 1.6rem;">Platform Performance & Controls</h2>
                 
                 <!-- CLEAN STAT CARDS -->
                 <div class="stat-grid">
@@ -277,7 +287,7 @@
                                 <i class="fas fa-sliders-h text-gold" style="margin-right: 8px;"></i> Counter Numbers Display Controls
                             </h3>
                             <p style="margin: 0; color: #64748b; font-size: 0.88rem;">
-                                Type any number you want (e.g. 100) to change what shows on the cards above. Click <strong>"Count Original"</strong> to restore the live database count anytime.
+                                Type any number you want (e.g. 100) to override counter numbers. Click <strong>"Count Original"</strong> to restore live database count anytime.
                             </p>
                         </div>
                         <button type="button" onclick="resetAllStatsToOriginal()" class="btn btn-secondary" style="padding: 8px 15px; font-size: 0.85rem; font-weight: 600;">
@@ -298,7 +308,7 @@
                             <div style="display: flex; gap: 6px;">
                                 <input type="text" id="input-stat-members" class="form-control" style="padding: 7px 10px; font-size: 0.88rem; margin: 0;" placeholder="Type e.g. 100">
                                 <button type="button" onclick="applyCustomStatFromInput('members')" class="btn btn-primary" style="padding: 7px 12px; font-size: 0.82rem; white-space: nowrap;">Set</button>
-                                <button type="button" onclick="resetStatToOriginal('members')" class="btn btn-secondary" style="padding: 7px 10px; font-size: 0.82rem; white-space: nowrap;" title="Restore original live count"><i class="fas fa-undo"></i> Count Original</button>
+                                <button type="button" onclick="resetStatToOriginal('members')" class="btn btn-secondary" style="padding: 7px 10px; font-size: 0.82rem; white-space: nowrap;" title="Restore original live count"><i class="fas fa-undo"></i></button>
                             </div>
                         </div>
 
@@ -314,7 +324,7 @@
                             <div style="display: flex; gap: 6px;">
                                 <input type="text" id="input-stat-news" class="form-control" style="padding: 7px 10px; font-size: 0.88rem; margin: 0;" placeholder="Type e.g. 100">
                                 <button type="button" onclick="applyCustomStatFromInput('news')" class="btn btn-primary" style="padding: 7px 12px; font-size: 0.82rem; white-space: nowrap;">Set</button>
-                                <button type="button" onclick="resetStatToOriginal('news')" class="btn btn-secondary" style="padding: 7px 10px; font-size: 0.82rem; white-space: nowrap;" title="Restore original live count"><i class="fas fa-undo"></i> Count Original</button>
+                                <button type="button" onclick="resetStatToOriginal('news')" class="btn btn-secondary" style="padding: 7px 10px; font-size: 0.82rem; white-space: nowrap;" title="Restore original live count"><i class="fas fa-undo"></i></button>
                             </div>
                         </div>
 
@@ -330,7 +340,7 @@
                             <div style="display: flex; gap: 6px;">
                                 <input type="text" id="input-stat-requests" class="form-control" style="padding: 7px 10px; font-size: 0.88rem; margin: 0;" placeholder="Type e.g. 100">
                                 <button type="button" onclick="applyCustomStatFromInput('requests')" class="btn btn-primary" style="padding: 7px 12px; font-size: 0.82rem; white-space: nowrap;">Set</button>
-                                <button type="button" onclick="resetStatToOriginal('requests')" class="btn btn-secondary" style="padding: 7px 10px; font-size: 0.82rem; white-space: nowrap;" title="Restore original live count"><i class="fas fa-undo"></i> Count Original</button>
+                                <button type="button" onclick="resetStatToOriginal('requests')" class="btn btn-secondary" style="padding: 7px 10px; font-size: 0.82rem; white-space: nowrap;" title="Restore original live count"><i class="fas fa-undo"></i></button>
                             </div>
                         </div>
 
@@ -346,7 +356,7 @@
                             <div style="display: flex; gap: 6px;">
                                 <input type="text" id="input-stat-media" class="form-control" style="padding: 7px 10px; font-size: 0.88rem; margin: 0;" placeholder="Type e.g. 100">
                                 <button type="button" onclick="applyCustomStatFromInput('media')" class="btn btn-primary" style="padding: 7px 12px; font-size: 0.82rem; white-space: nowrap;">Set</button>
-                                <button type="button" onclick="resetStatToOriginal('media')" class="btn btn-secondary" style="padding: 7px 10px; font-size: 0.82rem; white-space: nowrap;" title="Restore original live count"><i class="fas fa-undo"></i> Count Original</button>
+                                <button type="button" onclick="resetStatToOriginal('media')" class="btn btn-secondary" style="padding: 7px 10px; font-size: 0.82rem; white-space: nowrap;" title="Restore original live count"><i class="fas fa-undo"></i></button>
                             </div>
                         </div>
                     </div>
@@ -359,7 +369,7 @@
                             <h3 style="margin: 0 0 5px 0; color: #0f172a; font-size: 1.3rem;">
                                 <i class="fas fa-layer-group text-gold" style="margin-right: 8px;"></i> Quick Manager: Add & Remove
                             </h3>
-                            <p style="margin: 0; color: #64748b; font-size: 0.88rem;">Directly add new records or delete existing items without switching pages.</p>
+                            <p style="margin: 0; color: #64748b; font-size: 0.88rem;">Directly add new records or delete existing items across the entire platform.</p>
                         </div>
                         <!-- Subtab buttons -->
                         <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="overview-category-tabs">
@@ -426,9 +436,15 @@
                                         <input type="email" id="ov-mem-email" class="form-control" required placeholder="email@rhnd.com">
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <input type="password" id="ov-mem-pass" class="form-control" required placeholder="Assign password">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Diaspora Country</label>
+                                        <input type="text" id="ov-mem-country" class="form-control" placeholder="e.g. United Kingdom" value="United Kingdom">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="password" id="ov-mem-pass" class="form-control" required placeholder="Assign password">
+                                    </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary" style="padding: 9px 20px; font-size: 0.9rem;">
                                     <i class="fas fa-user-check"></i> Create Member
@@ -556,6 +572,69 @@
                             <p style="grid-column: 1/-1;">Loading media items...</p>
                         </div>
                     </div>
+
+                    <!-- 5. MINISTRIES & AGENCIES SUBTAB -->
+                    <div id="subtab-content-entities" class="subtab-content" style="display: none;">
+                        <div style="background: #f8fafc; padding: 22px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+                            <h4 style="margin: 0 0 15px 0; color: var(--secondary-dark-green); font-size: 1.05rem;">
+                                <i class="fas fa-landmark text-gold"></i> Add Federal Ministry or Agency
+                            </h4>
+                            <form id="ov-add-entity-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Entity Type</label>
+                                        <select id="ov-ent-type" class="form-control">
+                                            <option value="Ministry">Federal Ministry</option>
+                                            <option value="Agency">Government Agency / Commission</option>
+                                            <option value="Policy">National Policy Initiative</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Official Name</label>
+                                        <input type="text" id="ov-ent-name" class="form-control" required placeholder="e.g. Federal Ministry of Foreign Affairs">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Leadership / Head</label>
+                                        <input type="text" id="ov-ent-leader" class="form-control" placeholder="e.g. Amb. Yusuf Maitama Tuggar (Minister)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Official Website URL</label>
+                                        <input type="url" id="ov-ent-website" class="form-control" placeholder="https://foreignaffairs.gov.ng">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mandate / Description</label>
+                                    <textarea id="ov-ent-desc" class="form-control" rows="2" placeholder="Brief mandate or citizen services..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="padding: 9px 20px; font-size: 0.9rem;">
+                                    <i class="fas fa-plus"></i> Save Entity
+                                </button>
+                                <span id="ov-ent-status" style="margin-left: 15px; color: var(--primary-green); font-weight: 700; display: none;"></span>
+                            </form>
+                        </div>
+                        <h4 style="margin: 0 0 15px 0; color: #0f172a; display: flex; justify-content: space-between;">
+                            <span>Configured Ministries & Agencies</span>
+                            <small style="color: #64748b; font-weight: normal;">Click 'Delete' to remove any entry</small>
+                        </h4>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Official Name</th>
+                                        <th>Minister / Leader</th>
+                                        <th>Website</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ov-entities-list-tbody">
+                                    <tr><td colspan="5" style="text-align: center; color: #64748b;">Loading entities...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -603,9 +682,15 @@
                                 <input type="email" id="mem-email" class="form-control" required placeholder="e.g. member@rhnd.com">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Temporary Password</label>
-                            <input type="password" id="mem-password" class="form-control" required placeholder="Set user password">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Diaspora Country</label>
+                                <input type="text" id="mem-country" class="form-control" placeholder="e.g. United Kingdom, United States" value="United Kingdom">
+                            </div>
+                            <div class="form-group">
+                                <label>Temporary Password</label>
+                                <input type="password" id="mem-password" class="form-control" required placeholder="Set user password">
+                            </div>
                         </div>
                         <div style="display: flex; align-items: center; gap: 15px;">
                             <button type="submit" class="btn btn-primary">
@@ -625,12 +710,13 @@
                                     <th>ID</th>
                                     <th>Full Name</th>
                                     <th>Email Address</th>
+                                    <th>Diaspora Country</th>
                                     <th>Registered Date</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="members-list-tbody">
-                                <tr><td colspan="5" style="text-align: center;">Loading registered members...</td></tr>
+                                <tr><td colspan="6" style="text-align: center;">Loading registered members...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -688,7 +774,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Country</label>
-                                <input type="text" id="manual-req-country" class="form-control" placeholder="e.g. United Kingdom">
+                                <input type="text" id="manual-req-country" class="form-control" placeholder="e.g. United Kingdom" value="United Kingdom">
                             </div>
                         </div>
                         <div class="form-group">
@@ -751,20 +837,44 @@
             <div id="tab-broadcast" class="panel">
                 <div class="content-card">
                     <h3>Broadcast Live Notification to All Members</h3>
-                    <p style="color: #64748b; margin-bottom: 20px;">Send a high-priority announcement that appears directly on member dashboards and homepage.</p>
-                    <form onsubmit="event.preventDefault(); alert('Broadcast alert activated successfully!');">
-                        <div class="form-group">
-                            <label>Alert Headline</label>
-                            <input type="text" class="form-control" required value="Special Diaspora Townhall Announcement">
+                    <p style="color: #64748b; margin-bottom: 20px;">Send a high-priority announcement that appears directly on member dashboards and public pages.</p>
+                    <form id="broadcast-alert-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Alert Type / Priority</label>
+                                <select id="broadcast-type" class="form-control">
+                                    <option value="High Priority Alert">High Priority Alert</option>
+                                    <option value="Official Announcement">Official Announcement</option>
+                                    <option value="Consular Notice">Consular Notice</option>
+                                    <option value="Townhall Update">Townhall Update</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Alert Headline</label>
+                                <input type="text" id="broadcast-title" class="form-control" required placeholder="e.g. Special Diaspora Townhall Announcement" value="Special Diaspora Townhall Announcement">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Broadcast Message</label>
-                            <textarea class="form-control" rows="5" required>Join the upcoming Renewed Hope Nigeria Diaspora virtual dialogue with diplomatic representatives this month. Check your registered email for direct invitation links.</textarea>
+                            <textarea id="broadcast-message" class="form-control" rows="4" required placeholder="Enter announcement body...">Join the upcoming Renewed Hope Nigeria Diaspora virtual dialogue with diplomatic representatives this month. Check your registered email for direct invitation links.</textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="background: #b45309; border-color: #b45309;">
-                            <i class="fas fa-broadcast-tower"></i> Push Broadcast Alert
-                        </button>
+                        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                            <button type="submit" class="btn btn-primary" style="background: #b45309; border-color: #b45309;">
+                                <i class="fas fa-broadcast-tower"></i> Push Broadcast Alert
+                            </button>
+                            <button type="button" onclick="clearBroadcastAlert()" class="btn btn-secondary" style="color: #dc2626; border-color: #fca5a5; background: #fef2f2;">
+                                <i class="fas fa-times-circle"></i> Deactivate Current Alert
+                            </button>
+                            <span id="broadcast-status" style="color: var(--primary-green); font-weight: 700; display: none;"></span>
+                        </div>
                     </form>
+                </div>
+
+                <div class="content-card">
+                    <h3>Current Active Broadcast Alert</h3>
+                    <div id="active-broadcast-preview" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px;">
+                        <p style="color: #64748b; margin: 0;">No active broadcast alert currently broadcasting.</p>
+                    </div>
                 </div>
             </div>
 
@@ -832,34 +942,37 @@
             <div id="tab-settings" class="panel">
                 <div class="content-card">
                     <h3>Platform & Contact Settings</h3>
-                    <form onsubmit="event.preventDefault(); alert('Platform settings saved successfully!');">
+                    <form id="platform-settings-form">
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Organization Title</label>
-                                <input type="text" class="form-control" value="RENEWED HOPE NIGERIA DIASPORA">
+                                <input type="text" id="setting-org-name" class="form-control" value="RENEWED HOPE NIGERIA DIASPORA">
                             </div>
                             <div class="form-group">
                                 <label>Official Tagline</label>
-                                <input type="text" class="form-control" value="Connecting Nigerians Worldwide">
+                                <input type="text" id="setting-tagline" class="form-control" value="Connecting Nigerians Worldwide">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Diaspora Support Email</label>
-                                <input type="email" class="form-control" value="support@rhnd.org">
+                                <input type="email" id="setting-email" class="form-control" value="support@rhnd.org">
                             </div>
                             <div class="form-group">
                                 <label>Consular Helpline</label>
-                                <input type="text" class="form-control" value="+234 800 RHND HELP">
+                                <input type="text" id="setting-phone" class="form-control" value="07047000070">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Headquarters Address</label>
-                            <input type="text" class="form-control" value="Federal Capital Territory, Abuja, Nigeria">
+                            <input type="text" id="setting-address" class="form-control" value="Federal Capital Territory, Abuja, Nigeria">
                         </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Save Platform Settings
-                        </button>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Platform Settings
+                            </button>
+                            <span id="setting-save-status" style="color: var(--primary-green); font-weight: 700; display: none;">Settings Saved!</span>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -868,7 +981,7 @@
     </div>
     
     <script>
-        // Tab switching
+        // Global Tab switching
         function switchAdminTab(tabId) {
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             if (typeof event !== 'undefined' && event && event.currentTarget && event.currentTarget.classList) {
@@ -910,6 +1023,7 @@
             const custom = localStorage.getItem(`rhnd_custom_stat_${type}`);
             const badge = document.getElementById(`badge-mode-${type}`);
             const statEl = document.getElementById(`stat-${type}`);
+            const cardTag = document.getElementById(`card-tag-${type}`);
             
             if (custom !== null && custom !== '') {
                 if (statEl) statEl.textContent = custom;
@@ -918,6 +1032,7 @@
                     badge.style.background = '#fef3c7';
                     badge.style.color = '#b45309';
                 }
+                if (cardTag) cardTag.style.display = 'inline-block';
             } else {
                 if (statEl) statEl.textContent = count;
                 if (badge) {
@@ -925,6 +1040,7 @@
                     badge.style.background = '#eff6ff';
                     badge.style.color = '#3b82f6';
                 }
+                if (cardTag) cardTag.style.display = 'none';
             }
 
             const badgeCount = document.getElementById(`badge-${type}-count`);
@@ -1002,16 +1118,26 @@
                 const ovUsers = document.getElementById('ov-members-list-tbody');
                 if (ovUsers) {
                     if (!users.length) {
-                        ovUsers.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b; padding: 15px;">No members yet.</td></tr>';
+                        ovUsers.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 15px;">No members yet.</td></tr>';
                     } else {
-                        ovUsers.innerHTML = users.slice(0, 5).map(u => `
-                            <tr>
-                                <td style="padding: 10px; font-weight: 700; color: #0f172a;">${u.name || 'Member'}</td>
-                                <td style="padding: 10px; color: #64748b;">${u.email || ''}</td>
-                                <td style="padding: 10px;"><span class="badge" style="background: #e0f2fe; color: #0284c7; padding: 3px 8px; border-radius: 4px; font-weight: 600;">${u.id ? (String(u.id).startsWith('#') ? u.id : '#' + u.id) : '#RHND-NIG-00001'}</span></td>
-                                <td style="padding: 10px;"><button onclick="deleteMember('${u.id}')" class="btn-action btn-delete" style="padding: 3px 8px; font-size: 0.75rem;"><i class="fas fa-trash"></i></button></td>
-                            </tr>
-                        `).join('');
+                        ovUsers.innerHTML = users.slice(0, 5).map((u, idx) => {
+                            let idStr = '#RHND-NIG-00001';
+                            if (typeof u.id === 'number') {
+                                idStr = '#RHND-NIG-' + String(idx + 1).padStart(5, '0');
+                            } else if (u.id) {
+                                idStr = u.id.startsWith('#') ? u.id : '#' + u.id;
+                            }
+                            const dateStr = u.created_at ? new Date(u.created_at).toLocaleDateString() : '9/12/2026';
+                            return `
+                                <tr>
+                                    <td style="padding: 10px;"><strong class="text-gold" style="font-family: monospace; font-size: 0.9rem;">${idStr}</strong></td>
+                                    <td style="padding: 10px; font-weight: 700; color: #0f172a;">${u.name || 'Member'}</td>
+                                    <td style="padding: 10px; color: #64748b;">${u.email || ''}</td>
+                                    <td style="padding: 10px; color: #64748b; font-size: 0.85rem;">${dateStr}</td>
+                                    <td style="padding: 10px;"><button onclick="deleteMember('${u.id}')" class="btn-action btn-delete" style="padding: 4px 8px; font-size: 0.75rem;"><i class="fas fa-trash"></i> Remove</button></td>
+                                </tr>
+                            `;
+                        }).join('');
                     }
                 }
             }
@@ -1019,16 +1145,26 @@
                 const ovReq = document.getElementById('ov-requests-list-tbody');
                 if (ovReq) {
                     if (!requests.length) {
-                        ovReq.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b; padding: 15px;">No support requests.</td></tr>';
+                        ovReq.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 15px;">No support requests.</td></tr>';
                     } else {
-                        ovReq.innerHTML = requests.slice(0, 5).map(r => `
-                            <tr>
-                                <td style="padding: 10px; font-weight: 700; color: #0f172a;">${r.name || 'Citizen'}</td>
-                                <td style="padding: 10px; color: #64748b;">${r.category || 'General'}</td>
-                                <td style="padding: 10px;">${r.subject || ''}</td>
-                                <td style="padding: 10px;"><span class="badge" style="background: #fef3c7; color: #b45309; padding: 3px 8px; border-radius: 4px; font-weight: 600;">${r.status || 'Pending'}</span></td>
-                            </tr>
-                        `).join('');
+                        ovReq.innerHTML = requests.slice(0, 5).map(r => {
+                            const badgeClass = r.status === 'Resolved' ? 'badge-resolved' : (r.status === 'In Progress' ? 'badge-progress' : 'badge-pending');
+                            return `
+                                <tr>
+                                    <td style="padding: 10px;"><strong class="text-gold" style="font-family: monospace;">#T-${r.id}</strong></td>
+                                    <td style="padding: 10px; font-weight: 700; color: #0f172a;">${r.name || 'Citizen'}</td>
+                                    <td style="padding: 10px; color: #64748b;">${r.category || 'General'}</td>
+                                    <td style="padding: 10px; color: #334155;">${r.subject || ''}</td>
+                                    <td style="padding: 10px;"><span class="badge ${badgeClass}">${r.status || 'Pending'}</span></td>
+                                    <td style="padding: 10px;">
+                                        <div style="display: flex; gap: 4px;">
+                                            ${r.status !== 'Resolved' ? `<button onclick="updateRequestStatus('${r.id}', 'Resolved')" class="btn-action btn-success-sm" style="padding: 3px 6px; font-size: 0.75rem;" title="Mark Resolved"><i class="fas fa-check"></i></button>` : `<button onclick="updateRequestStatus('${r.id}', 'In Progress')" class="btn-action btn-info-sm" style="padding: 3px 6px; font-size: 0.75rem;" title="Reopen"><i class="fas fa-redo"></i></button>`}
+                                            <button onclick="deleteRequest('${r.id}')" class="btn-action btn-delete" style="padding: 3px 6px; font-size: 0.75rem;" title="Delete"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('');
                     }
                 }
             }
@@ -1041,8 +1177,9 @@
                         ovMed.innerHTML = media.slice(0, 4).map(m => `
                             <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: white;">
                                 <img src="${m.url}" alt="${m.title}" style="width: 100%; height: 110px; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=400&q=80'">
-                                <div style="padding: 8px;">
-                                    <strong style="font-size: 0.85rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.title}</strong>
+                                <div style="padding: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                    <strong style="font-size: 0.85rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${m.title}</strong>
+                                    <button onclick="deleteMedia('${m.id}')" class="btn-action btn-delete" style="padding: 3px 6px; font-size: 0.75rem;"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
                         `).join('');
@@ -1097,9 +1234,6 @@
 
         async function fetchPosts() {
             let posts = getStoredPosts();
-            const list = document.getElementById('posts-list');
-            
-            // Render from cache first immediately
             renderPostsUI(posts);
 
             try {
@@ -1126,10 +1260,10 @@
 
         function renderPostsUI(posts) {
             const list = document.getElementById('posts-list');
-            if (!list) return;
             updateStatDisplay('news', posts.length || 0);
             syncOverviewLists(posts, null, null, null);
 
+            if (!list) return;
             if (!posts || posts.length === 0) {
                 list.innerHTML = '<p style="color: #64748b;">No news articles published yet.</p>';
                 return;
@@ -1159,12 +1293,7 @@
             } catch(e) {}
         }
 
-        document.getElementById('add-post-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('post-title').value.trim();
-            const content = document.getElementById('post-content').value.trim();
-            const status = document.getElementById('post-status');
-
+        function handleAddPost(title, content, statusEl) {
             if (!title || !content) return;
 
             const newPost = {
@@ -1187,13 +1316,13 @@
                 }).catch(err => console.log("Background API sync:", err));
             } catch(e) {}
 
-            document.getElementById('post-title').value = '';
-            document.getElementById('post-content').value = '';
-            status.textContent = 'Published Live Successfully!';
-            status.style.color = '#16a34a';
-            status.style.display = 'inline';
-            setTimeout(() => status.style.display = 'none', 3500);
-        });
+            if (statusEl) {
+                statusEl.textContent = 'Published Live Successfully!';
+                statusEl.style.color = '#16a34a';
+                statusEl.style.display = 'inline';
+                setTimeout(() => statusEl.style.display = 'none', 3500);
+            }
+        }
 
         // --- 2. MEMBERS LOGIC ---
         function getStoredMembers() {
@@ -1222,7 +1351,7 @@
                 });
             }
 
-            // Sync with current active session if a different real user is logged in
+            // Sync with current active session if a real user is logged in
             try {
                 const currentUser = JSON.parse(localStorage.getItem('rhnd_user') || 'null');
                 if (currentUser && currentUser.email && !currentUser.email.toLowerCase().includes('admin')) {
@@ -1265,8 +1394,9 @@
             updateStatDisplay('members', users.length || 0);
             syncOverviewLists(null, users, null, null);
 
+            if (!tbody) return;
             if (!users || users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 25px;">No registered members found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 25px;">No registered members found.</td></tr>';
                 return;
             }
 
@@ -1277,11 +1407,13 @@
                 } else if (u.id) {
                     idStr = u.id.startsWith('#') ? u.id : '#' + u.id;
                 }
+                const country = u.country || 'United Kingdom';
                 return `
                 <tr>
                     <td><strong class="text-gold" style="font-family: monospace; font-size: 0.95rem;">${idStr}</strong></td>
-                    <td><strong style="color: #0f172a;">${u.name || 'Amina Hausawi'}</strong></td>
+                    <td><strong style="color: #0f172a;">${u.name || 'Member'}</strong></td>
                     <td>${u.email}</td>
+                    <td><i class="fas fa-map-marker-alt text-gold" style="margin-right: 4px;"></i> ${country}</td>
                     <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : '9/12/2026'}</td>
                     <td>
                         <button onclick="deleteMember('${u.id}')" class="btn-action btn-delete">
@@ -1294,7 +1426,7 @@
         }
 
         async function deleteMember(id) {
-            if(!confirm('Are you sure you want to remove this member?')) return;
+            if(!confirm('Are you sure you want to remove this member account?')) return;
             try {
                 await fetch('/api/users?id=' + id, { method: 'DELETE', headers: fetchHeaders });
             } catch(e) {}
@@ -1304,18 +1436,13 @@
             fetchMembers();
         }
 
-        document.getElementById('add-member-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('mem-name').value;
-            const email = document.getElementById('mem-email').value;
-            const password = document.getElementById('mem-password').value;
-            const status = document.getElementById('member-status');
-
+        function handleAddMember(name, email, country, password, statusEl) {
             let members = getStoredMembers();
             const newMember = {
                 id: 'RHND-NIG-' + String(members.length + 1).padStart(5, '0'),
-                name,
-                email,
+                name: name,
+                email: email,
+                country: country || 'United Kingdom',
                 created_at: new Date().toISOString()
             };
 
@@ -1323,19 +1450,20 @@
             localStorage.setItem('rhnd_members_db', JSON.stringify(members));
 
             try {
-                await fetch('/api/users', {
+                fetch('/api/users', {
                     method: 'POST',
                     headers: fetchHeaders,
-                    body: JSON.stringify({name, email, password})
-                });
+                    body: JSON.stringify({name, email, country, password})
+                }).catch(e => {});
             } catch(e) {}
 
-            document.getElementById('add-member-form').reset();
-            status.textContent = 'Member Account Created!';
-            status.style.display = 'inline';
-            setTimeout(() => status.style.display = 'none', 3500);
+            if (statusEl) {
+                statusEl.textContent = 'Member Account Created!';
+                statusEl.style.display = 'inline';
+                setTimeout(() => statusEl.style.display = 'none', 3500);
+            }
             fetchMembers();
-        });
+        }
 
         // --- 3. SUPPORT REQUESTS LOGIC ---
         const defaultRequests = [
@@ -1382,6 +1510,7 @@
             updateStatDisplay('requests', requests.length || 0);
             syncOverviewLists(null, null, requests, null);
 
+            if (!tbody) return;
             if (!requests || requests.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 25px;">No assistance tickets logged.</td></tr>';
                 return;
@@ -1440,15 +1569,7 @@
             } catch(e) {}
         }
 
-        document.getElementById('add-manual-request-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('manual-req-name').value;
-            const email = document.getElementById('manual-req-email').value;
-            const category = document.getElementById('manual-req-category').value;
-            const country = document.getElementById('manual-req-country').value;
-            const subject = document.getElementById('manual-req-subject').value;
-            const details = document.getElementById('manual-req-details').value;
-
+        function handleAddRequest(name, email, category, country, subject, details, statusEl) {
             const newReq = {
                 id: Date.now().toString().slice(-4),
                 name, email, category, country, subject, details,
@@ -1461,17 +1582,20 @@
             localStorage.setItem('rhnd_requests_db', JSON.stringify(requests));
 
             try {
-                await fetch('/api/requests', {
+                fetch('/api/requests', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, category, country, subject, details })
-                });
+                }).catch(e => {});
             } catch(e) {}
 
-            document.getElementById('add-manual-request-form').reset();
-            alert('Support ticket logged successfully!');
+            if (statusEl) {
+                statusEl.textContent = 'Ticket Logged!';
+                statusEl.style.display = 'inline';
+                setTimeout(() => statusEl.style.display = 'none', 3000);
+            }
             fetchRequests();
-        });
+        }
 
         // --- 4. MEDIA LOGIC ---
         const defaultMedia = [
@@ -1521,6 +1645,7 @@
             updateStatDisplay('media', items.length || 0);
             syncOverviewLists(null, null, null, items);
 
+            if (!grid) return;
             if (!items || items.length === 0) {
                 grid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b; text-align: center; padding: 25px;">No media files uploaded yet.</p>';
                 return;
@@ -1555,16 +1680,10 @@
             } catch(e) {}
         }
 
-        document.getElementById('add-media-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('media-title').value;
-            const media_type = document.getElementById('media-type').value;
-            const url = document.getElementById('media-url').value;
-            const caption = document.getElementById('media-caption').value;
-
+        function handleAddMedia(title, media_type, url, caption, statusEl) {
             const newItem = {
                 id: Date.now(),
-                title, media_type, url, caption,
+                title, media_type, url, caption: caption || '',
                 created_at: new Date().toISOString()
             };
 
@@ -1573,17 +1692,20 @@
             localStorage.setItem('rhnd_media_db', JSON.stringify(items));
 
             try {
-                await fetch('/api/media', {
+                fetch('/api/media', {
                     method: 'POST',
                     headers: fetchHeaders,
                     body: JSON.stringify({ title, media_type, url, caption })
-                });
+                }).catch(e => {});
             } catch(e) {}
 
-            document.getElementById('add-media-form').reset();
-            alert('Media item published successfully!');
+            if (statusEl) {
+                statusEl.textContent = 'Media Added!';
+                statusEl.style.display = 'inline';
+                setTimeout(() => statusEl.style.display = 'none', 3000);
+            }
             fetchMedia();
-        });
+        }
 
         // --- 5. MINISTRIES & AGENCIES LOGIC ---
         const defaultEntities = [
@@ -1591,12 +1713,28 @@
                 id: 1,
                 type: "Ministry",
                 name: "Federal Ministry of Foreign Affairs",
-                leader: "Minister of Foreign Affairs",
+                leader: "Amb. Yusuf Maitama Tuggar (Minister)",
                 website: "https://foreignaffairs.gov.ng",
                 description: "Overseeing diplomatic relations, consular assistance, and diaspora welfare globally."
             },
             {
                 id: 2,
+                type: "Ministry",
+                name: "Federal Ministry of Interior",
+                leader: "Dr. Olubunmi Tunji-Ojo (Minister)",
+                website: "https://interior.gov.ng",
+                description: "Oversees homeland security, citizenship, passport administration, and immigration services."
+            },
+            {
+                id: 3,
+                type: "Ministry",
+                name: "Federal Ministry of Finance",
+                leader: "Mr. Wale Edun (Minister)",
+                website: "https://finance.gov.ng",
+                description: "Formulates fiscal policies and manages economic resources and diaspora investment frameworks."
+            },
+            {
+                id: 4,
                 type: "Agency",
                 name: "Nigerians in Diaspora Commission (NiDCOM)",
                 leader: "Hon. Abike Dabiri-Erewa (Chairman/CEO)",
@@ -1604,7 +1742,7 @@
                 description: "Dedicated to the engagement and utilization of human, capital and material resources of Nigerian Diaspora."
             },
             {
-                id: 3,
+                id: 5,
                 type: "Agency",
                 name: "Nigeria Immigration Service (NIS)",
                 leader: "Comptroller General of Immigration",
@@ -1612,7 +1750,7 @@
                 description: "Passport issuance, visa policy administration, and diaspora travel document processing."
             },
             {
-                id: 4,
+                id: 6,
                 type: "Agency",
                 name: "National Identity Management Commission (NIMC)",
                 leader: "Director General / CEO",
@@ -1660,9 +1798,9 @@
                             <td><span class="badge ${e.type === 'Ministry' ? 'badge-resolved' : 'badge-progress'}">${e.type}</span></td>
                             <td><strong style="color: #0f172a;">${e.name}</strong></td>
                             <td>${e.leader || '<span style="color:#94a3b8;">N/A</span>'}</td>
-                            <td><a href="${e.website}" target="_blank" style="color:var(--primary-green); font-weight: 600;"><i class="fas fa-external-link-alt"></i> Visit Portal</a></td>
+                            <td><a href="${e.website}" target="_blank" style="color:var(--primary-green); font-weight: 600;"><i class="fas fa-external-link-alt"></i> Portal</a></td>
                             <td>
-                                <button onclick="deleteEntity('${e.id}')" class="btn-action btn-delete">
+                                <button onclick="deleteEntity('${e.id}')" class="btn-action btn-delete" style="padding: 4px 8px; font-size: 0.75rem;">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </td>
@@ -1705,172 +1843,280 @@
             } catch(e) {}
         }
 
-        // Overview Add Entity Listener
-        const ovEntForm = document.getElementById('ov-add-entity-form');
-        if (ovEntForm) {
-            ovEntForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const type = document.getElementById('ov-ent-type').value;
-                const name = document.getElementById('ov-ent-name').value;
-                const leader = document.getElementById('ov-ent-leader').value;
-                const website = document.getElementById('ov-ent-website').value;
-                const description = document.getElementById('ov-ent-desc').value;
-                const status = document.getElementById('ov-ent-status');
+        function handleAddEntity(type, name, leader, website, description, statusEl) {
+            const newEntity = {
+                id: Date.now(),
+                type, name, leader, website: website || 'https://gov.ng', description
+            };
 
-                const res = await fetch('/api/entities', {
+            let items = getStoredEntities();
+            items.push(newEntity);
+            localStorage.setItem('rhnd_entities_db', JSON.stringify(items));
+
+            try {
+                fetch('/api/entities', {
                     method: 'POST',
                     headers: fetchHeaders,
                     body: JSON.stringify({ type, name, leader, website, description })
-                });
+                }).catch(e => {});
+            } catch(e) {}
 
-                if (res.ok) {
-                    ovEntForm.reset();
-                    status.textContent = 'Added Successfully!';
-                    status.style.display = 'inline';
-                    setTimeout(() => status.style.display = 'none', 3000);
-                    fetchEntities();
-                } else {
-                    alert('Failed to add entity.');
-                }
-            });
+            if (statusEl) {
+                statusEl.textContent = 'Saved Successfully!';
+                statusEl.style.display = 'inline';
+                setTimeout(() => statusEl.style.display = 'none', 3000);
+            }
+            fetchEntities();
         }
 
-        // Dedicated Full Add Entity Listener
-        const fullEntForm = document.getElementById('add-entity-full-form');
-        if (fullEntForm) {
-            fullEntForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const type = document.getElementById('ent-type-full').value;
-                const name = document.getElementById('ent-name-full').value;
-                const leader = document.getElementById('ent-leader-full').value;
-                const website = document.getElementById('ent-website-full').value;
-                const description = document.getElementById('ent-desc-full').value;
-
-                const res = await fetch('/api/entities', {
-                    method: 'POST',
-                    headers: fetchHeaders,
-                    body: JSON.stringify({ type, name, leader, website, description })
-                });
-
-                if (res.ok) {
-                    fullEntForm.reset();
-                    alert('Ministry / Agency saved successfully to the platform!');
-                    fetchEntities();
-                } else {
-                    alert('Failed to save entity.');
-                }
-            });
+        // --- 6. BROADCAST ALERTS LOGIC ---
+        function loadBroadcastAlert() {
+            const previewEl = document.getElementById('active-broadcast-preview');
+            const rawAlert = localStorage.getItem('rhnd_broadcast_alert');
+            if (rawAlert) {
+                try {
+                    const alertData = JSON.parse(rawAlert);
+                    if (alertData && alertData.active) {
+                        previewEl.innerHTML = `
+                            <div style="border-left: 4px solid #b45309; padding-left: 15px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span class="badge" style="background: #fef3c7; color: #b45309;">${alertData.type || 'High Priority Alert'}</span>
+                                    <small style="color: #64748b;">Active since: ${new Date(alertData.created_at || Date.now()).toLocaleString()}</small>
+                                </div>
+                                <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 1.1rem;">${alertData.title}</h4>
+                                <p style="margin: 0; color: #334155; line-height: 1.5;">${alertData.message}</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                } catch(e) {}
+            }
+            previewEl.innerHTML = '<p style="color: #64748b; margin: 0;"><i class="fas fa-info-circle"></i> No active broadcast alert is currently pushed.</p>';
         }
 
-        // Form listeners for Overview Hub
+        function clearBroadcastAlert() {
+            localStorage.removeItem('rhnd_broadcast_alert');
+            loadBroadcastAlert();
+            const status = document.getElementById('broadcast-status');
+            if (status) {
+                status.textContent = 'Alert deactivated!';
+                status.style.color = '#dc2626';
+                status.style.display = 'inline';
+                setTimeout(() => status.style.display = 'none', 3000);
+            }
+        }
+
+        // --- 7. PLATFORM SETTINGS LOGIC ---
+        function loadPlatformSettings() {
+            const raw = localStorage.getItem('rhnd_platform_settings');
+            if (raw) {
+                try {
+                    const s = JSON.parse(raw);
+                    if (s.orgName) document.getElementById('setting-org-name').value = s.orgName;
+                    if (s.tagline) document.getElementById('setting-tagline').value = s.tagline;
+                    if (s.email) document.getElementById('setting-email').value = s.email;
+                    if (s.phone) document.getElementById('setting-phone').value = s.phone;
+                    if (s.address) document.getElementById('setting-address').value = s.address;
+                } catch(e) {}
+            }
+        }
+
+        // Initialize All Event Listeners Once DOM is Ready
         document.addEventListener('DOMContentLoaded', () => {
-            // Overview Add News
+            // News Forms
             const ovPostForm = document.getElementById('ov-add-post-form');
             if (ovPostForm) {
-                ovPostForm.addEventListener('submit', async (e) => {
+                ovPostForm.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    const title = document.getElementById('ov-post-title').value;
-                    const content = document.getElementById('ov-post-content').value;
+                    const title = document.getElementById('ov-post-title').value.trim();
+                    const content = document.getElementById('ov-post-content').value.trim();
                     const status = document.getElementById('ov-post-status');
-                    
-                    const res = await fetch('/api/posts', {
-                        method: 'POST',
-                        headers: fetchHeaders,
-                        body: JSON.stringify({title, content})
-                    });
-                    if (res.ok) {
-                        document.getElementById('ov-post-title').value = '';
-                        document.getElementById('ov-post-content').value = '';
-                        status.textContent = 'Published Live!';
-                        status.style.display = 'inline';
-                        setTimeout(() => status.style.display = 'none', 3000);
-                        fetchPosts();
-                    } else {
-                        alert('Publish failed. Verify admin credentials.');
-                    }
+                    handleAddPost(title, content, status);
+                    ovPostForm.reset();
                 });
             }
 
-            // Overview Add Member
+            const addPostForm = document.getElementById('add-post-form');
+            if (addPostForm) {
+                addPostForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const title = document.getElementById('post-title').value.trim();
+                    const content = document.getElementById('post-content').value.trim();
+                    const status = document.getElementById('post-status');
+                    handleAddPost(title, content, status);
+                    addPostForm.reset();
+                });
+            }
+
+            // Member Forms
             const ovMemForm = document.getElementById('ov-add-member-form');
             if (ovMemForm) {
-                ovMemForm.addEventListener('submit', async (e) => {
+                ovMemForm.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    const name = document.getElementById('ov-mem-name').value;
-                    const email = document.getElementById('ov-mem-email').value;
-                    const password = document.getElementById('ov-mem-pass').value;
+                    const name = document.getElementById('ov-mem-name').value.trim();
+                    const email = document.getElementById('ov-mem-email').value.trim();
+                    const country = document.getElementById('ov-mem-country').value.trim();
+                    const pass = document.getElementById('ov-mem-pass').value.trim();
                     const status = document.getElementById('ov-mem-status');
-
-                    const res = await fetch('/api/users', {
-                        method: 'POST',
-                        headers: fetchHeaders,
-                        body: JSON.stringify({name, email, password})
-                    });
-                    if (res.ok) {
-                        ovMemForm.reset();
-                        status.textContent = 'Member Created!';
-                        status.style.display = 'inline';
-                        setTimeout(() => status.style.display = 'none', 3000);
-                        fetchMembers();
-                    } else {
-                        alert('Failed to add member.');
-                    }
+                    handleAddMember(name, email, country, pass, status);
+                    ovMemForm.reset();
                 });
             }
 
-            // Overview Add Request
+            const addMemForm = document.getElementById('add-member-form');
+            if (addMemForm) {
+                addMemForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('mem-name').value.trim();
+                    const email = document.getElementById('mem-email').value.trim();
+                    const country = document.getElementById('mem-country').value.trim();
+                    const pass = document.getElementById('mem-password').value.trim();
+                    const status = document.getElementById('member-status');
+                    handleAddMember(name, email, country, pass, status);
+                    addMemForm.reset();
+                });
+            }
+
+            // Request Forms
             const ovReqForm = document.getElementById('ov-add-request-form');
             if (ovReqForm) {
-                ovReqForm.addEventListener('submit', async (e) => {
+                ovReqForm.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    const name = document.getElementById('ov-req-name').value;
+                    const name = document.getElementById('ov-req-name').value.trim();
                     const category = document.getElementById('ov-req-category').value;
-                    const subject = document.getElementById('ov-req-subject').value;
-                    const details = document.getElementById('ov-req-details').value;
+                    const subject = document.getElementById('ov-req-subject').value.trim();
+                    const details = document.getElementById('ov-req-details').value.trim();
                     const status = document.getElementById('ov-req-status');
+                    handleAddRequest(name, 'admin-log@rhnd.com', category, 'Diaspora', subject, details, status);
+                    ovReqForm.reset();
+                });
+            }
 
-                    const res = await fetch('/api/requests', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name, email: 'admin-log@rhnd.com', category, subject, details })
-                    });
-                    if (res.ok) {
-                        ovReqForm.reset();
-                        status.textContent = 'Ticket Logged!';
+            const manualReqForm = document.getElementById('add-manual-request-form');
+            if (manualReqForm) {
+                manualReqForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('manual-req-name').value.trim();
+                    const email = document.getElementById('manual-req-email').value.trim();
+                    const category = document.getElementById('manual-req-category').value;
+                    const country = document.getElementById('manual-req-country').value.trim();
+                    const subject = document.getElementById('manual-req-subject').value.trim();
+                    const details = document.getElementById('manual-req-details').value.trim();
+                    handleAddRequest(name, email, category, country, subject, details, null);
+                    manualReqForm.reset();
+                    alert('Support ticket logged successfully!');
+                });
+            }
+
+            // Media Forms
+            const ovMediaForm = document.getElementById('ov-add-media-form');
+            if (ovMediaForm) {
+                ovMediaForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const title = document.getElementById('ov-media-title').value.trim();
+                    const media_type = document.getElementById('ov-media-type').value;
+                    const url = document.getElementById('ov-media-url').value.trim();
+                    const status = document.getElementById('ov-media-status');
+                    handleAddMedia(title, media_type, url, '', status);
+                    ovMediaForm.reset();
+                });
+            }
+
+            const addMediaForm = document.getElementById('add-media-form');
+            if (addMediaForm) {
+                addMediaForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const title = document.getElementById('media-title').value.trim();
+                    const media_type = document.getElementById('media-type').value;
+                    const url = document.getElementById('media-url').value.trim();
+                    const caption = document.getElementById('media-caption').value.trim();
+                    handleAddMedia(title, media_type, url, caption, null);
+                    addMediaForm.reset();
+                    alert('Media item published successfully!');
+                });
+            }
+
+            // Entity Forms
+            const ovEntForm = document.getElementById('ov-add-entity-form');
+            if (ovEntForm) {
+                ovEntForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const type = document.getElementById('ov-ent-type').value;
+                    const name = document.getElementById('ov-ent-name').value.trim();
+                    const leader = document.getElementById('ov-ent-leader').value.trim();
+                    const website = document.getElementById('ov-ent-website').value.trim();
+                    const desc = document.getElementById('ov-ent-desc').value.trim();
+                    const status = document.getElementById('ov-ent-status');
+                    handleAddEntity(type, name, leader, website, desc, status);
+                    ovEntForm.reset();
+                });
+            }
+
+            const fullEntForm = document.getElementById('add-entity-full-form');
+            if (fullEntForm) {
+                fullEntForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const type = document.getElementById('ent-type-full').value;
+                    const name = document.getElementById('ent-name-full').value.trim();
+                    const leader = document.getElementById('ent-leader-full').value.trim();
+                    const website = document.getElementById('ent-website-full').value.trim();
+                    const desc = document.getElementById('ent-desc-full').value.trim();
+                    handleAddEntity(type, name, leader, website, desc, null);
+                    fullEntForm.reset();
+                    alert('Ministry / Agency saved successfully to the platform!');
+                });
+            }
+
+            // Broadcast Form
+            const broadcastForm = document.getElementById('broadcast-alert-form');
+            if (broadcastForm) {
+                broadcastForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const type = document.getElementById('broadcast-type').value;
+                    const title = document.getElementById('broadcast-title').value.trim();
+                    const message = document.getElementById('broadcast-message').value.trim();
+                    const status = document.getElementById('broadcast-status');
+
+                    const alertData = {
+                        active: true,
+                        type,
+                        title,
+                        message,
+                        created_at: new Date().toISOString()
+                    };
+                    localStorage.setItem('rhnd_broadcast_alert', JSON.stringify(alertData));
+                    loadBroadcastAlert();
+
+                    if (status) {
+                        status.textContent = 'Broadcast Alert is now Live!';
+                        status.style.color = 'var(--primary-green)';
                         status.style.display = 'inline';
-                        setTimeout(() => status.style.display = 'none', 3000);
-                        fetchRequests();
+                        setTimeout(() => status.style.display = 'none', 3500);
                     }
                 });
             }
 
-            // Overview Add Media
-            const ovMediaForm = document.getElementById('ov-add-media-form');
-            if (ovMediaForm) {
-                ovMediaForm.addEventListener('submit', async (e) => {
+            // Settings Form
+            const settingsForm = document.getElementById('platform-settings-form');
+            if (settingsForm) {
+                settingsForm.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    const title = document.getElementById('ov-media-title').value;
-                    const media_type = document.getElementById('ov-media-type').value;
-                    const url = document.getElementById('ov-media-url').value;
-                    const status = document.getElementById('ov-media-status');
-
-                    const res = await fetch('/api/media', {
-                        method: 'POST',
-                        headers: fetchHeaders,
-                        body: JSON.stringify({ title, media_type, url })
-                    });
-                    if (res.ok) {
-                        ovMediaForm.reset();
-                        status.textContent = 'Media Added!';
+                    const settings = {
+                        orgName: document.getElementById('setting-org-name').value.trim(),
+                        tagline: document.getElementById('setting-tagline').value.trim(),
+                        email: document.getElementById('setting-email').value.trim(),
+                        phone: document.getElementById('setting-phone').value.trim(),
+                        address: document.getElementById('setting-address').value.trim()
+                    };
+                    localStorage.setItem('rhnd_platform_settings', JSON.stringify(settings));
+                    const status = document.getElementById('setting-save-status');
+                    if (status) {
                         status.style.display = 'inline';
                         setTimeout(() => status.style.display = 'none', 3000);
-                        fetchMedia();
-        fetchEntities();
                     }
                 });
             }
         });
-
 
         // Initialize All Dashboard Data
         fetchPosts();
@@ -1878,6 +2124,8 @@
         fetchRequests();
         fetchMedia();
         fetchEntities();
+        loadBroadcastAlert();
+        loadPlatformSettings();
     </script>
 </body>
 </html>

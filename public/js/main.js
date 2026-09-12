@@ -33,6 +33,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // Floating Action Button (FAB) & Quick Post News
     setupFloatingPortalButton();
 
+    // Broadcast Alert Banner
+    setupBroadcastBanner();
     
     // Require login for subpages while allowing public home page view
     checkPageAccess();
@@ -335,3 +337,51 @@ function checkPageAccess() {
         });
     }
 }
+
+function setupBroadcastBanner() {
+    const raw = localStorage.getItem('rhnd_broadcast_alert');
+    if (!raw) return;
+    try {
+        const alertData = JSON.parse(raw);
+        if (!alertData || !alertData.active || !alertData.title) return;
+
+        const dismissed = sessionStorage.getItem('rhnd_broadcast_dismissed');
+        if (dismissed === alertData.title) return;
+
+        const existing = document.getElementById('rhnd-broadcast-banner');
+        if (existing) existing.remove();
+
+        const banner = document.createElement('div');
+        banner.id = 'rhnd-broadcast-banner';
+        banner.style.cssText = 'background: linear-gradient(90deg, #78350f 0%, #b45309 50%, #d97706 100%); color: white; padding: 12px 20px; font-size: 0.92rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: relative; z-index: 1000; border-bottom: 2px solid var(--primary-gold);';
+        
+        banner.innerHTML = `
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                    <span style="background: rgba(0,0,0,0.3); color: var(--primary-gold); font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; border: 1px solid rgba(212,175,55,0.4);">
+                        <i class="fas fa-bullhorn"></i> ${alertData.type || 'Official Alert'}
+                    </span>
+                    <strong style="color: white;">${alertData.title}:</strong>
+                    <span style="color: rgba(255,255,255,0.92);">${alertData.message}</span>
+                </div>
+                <button type="button" onclick="dismissBroadcast('${alertData.title.replace(/'/g, "\\'")}')" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.1rem; opacity: 0.85; padding: 4px;" title="Dismiss alert">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+
+        const topBar = document.querySelector('.top-bar') || document.body.firstChild;
+        if (topBar && topBar.parentNode) {
+            topBar.parentNode.insertBefore(banner, topBar);
+        } else {
+            document.body.prepend(banner);
+        }
+    } catch(e) {}
+}
+
+window.dismissBroadcast = function(title) {
+    sessionStorage.setItem('rhnd_broadcast_dismissed', title);
+    const banner = document.getElementById('rhnd-broadcast-banner');
+    if (banner) banner.remove();
+};
+

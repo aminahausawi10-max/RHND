@@ -1376,7 +1376,8 @@
         }
 
         function renderMembersDirectory(members) {
-            const totalCount = members.length;
+            const customMembers = localStorage.getItem('rhnd_custom_stat_members');
+            const totalCount = (customMembers !== null && customMembers !== '') ? customMembers : members.length;
             
             const statEl = document.getElementById('stat-total-members-count');
             if (statEl) statEl.textContent = totalCount;

@@ -322,7 +322,8 @@
             }
 
             function renderHomeMembers(members) {
-                const total = members.length;
+                const customMembers = localStorage.getItem('rhnd_custom_stat_members');
+                const total = (customMembers !== null && customMembers !== '') ? customMembers : members.length;
                 const counter = document.getElementById('home-total-members-counter');
                 if (counter) counter.textContent = total;
                 const sectionCounter = document.getElementById('section-total-members-count');

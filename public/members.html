@@ -171,8 +171,10 @@
         }
 
         function renderPublicMembers(members) {
+            const customMembers = localStorage.getItem('rhnd_custom_stat_members');
+            const total = (customMembers !== null && customMembers !== '') ? customMembers : members.length;
             const countEl = document.getElementById('membership-total-count');
-            if (countEl) countEl.textContent = members.length;
+            if (countEl) countEl.textContent = total;
 
             const tbody = document.getElementById('public-members-directory-tbody');
             if (!tbody) return;
