@@ -58,24 +58,33 @@ function setupAuthState() {
 
     const isAdmin = (user && (user.role === "admin" || (user.email && user.email.toLowerCase().includes("admin")))) || (adminPwd === "Admin@RHND2026");
 
-    const authContainer = document.querySelector(".auth-buttons");
+    let authContainer = document.querySelector(".top-bar-right .auth-buttons") || document.querySelector(".auth-buttons");
+    const topBarRight = document.querySelector(".top-bar-right");
+
+    if (topBarRight && !document.querySelector(".top-bar-right .auth-buttons")) {
+        const div = document.createElement("div");
+        div.className = "auth-buttons";
+        topBarRight.appendChild(div);
+        authContainer = div;
+    }
+
     if (authContainer) {
         if (user) {
             if (isAdmin) {
                 authContainer.innerHTML = `
-                    <a href="admin.html" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.88rem; background: var(--secondary-dark-green); border: 1px solid var(--primary-gold);">
-                        <i class="fas fa-crown text-gold"></i> Admin Portal
+                    <a href="admin.html" class="btn btn-primary" style="padding: 5px 12px; font-size: 0.78rem; background: var(--primary-green); border: 1px solid var(--primary-gold); color: white;">
+                        <i class="fas fa-crown text-gold"></i> Admin
                     </a>
-                    <button onclick="rhndLogout()" class="btn btn-login" style="padding: 8px 12px; font-size: 0.85rem; border: none; background: transparent; cursor: pointer; color: #e53e3e;">
+                    <button onclick="rhndLogout()" style="padding: 5px 10px; font-size: 0.78rem; border: 1px solid rgba(239,68,68,0.5); background: rgba(239,68,68,0.2); color: #f87171; border-radius: 6px; cursor: pointer; font-weight: 700;">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 `;
             } else {
                 authContainer.innerHTML = `
-                    <a href="member-dashboard.html" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.88rem;">
-                        <i class="fas fa-user-circle"></i> My Dashboard
+                    <a href="member-dashboard.html" class="btn btn-primary" style="padding: 5px 12px; font-size: 0.78rem; background: var(--primary-green); border: 1px solid var(--primary-gold); color: white;">
+                        <i class="fas fa-user-circle"></i> Dashboard
                     </a>
-                    <button onclick="rhndLogout()" class="btn btn-login" style="padding: 8px 12px; font-size: 0.85rem; border: none; background: transparent; cursor: pointer; color: #e53e3e;">
+                    <button onclick="rhndLogout()" style="padding: 5px 10px; font-size: 0.78rem; border: 1px solid rgba(239,68,68,0.5); background: rgba(239,68,68,0.2); color: #f87171; border-radius: 6px; cursor: pointer; font-weight: 700;">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 `;
@@ -88,18 +97,18 @@ function setupAuthState() {
         }
     }
 
-    // Top Bar Link - ONLY for authenticated Admin!
+    // Top Bar Admin Link
     const existingAdminLink = document.getElementById("top-admin-link");
     const existingDivider = document.getElementById("top-admin-divider");
     if (isAdmin) {
-        const topBarRight = document.querySelector(".top-bar-right");
         if (topBarRight && !existingAdminLink) {
             const adminLink = document.createElement("a");
             adminLink.id = "top-admin-link";
             adminLink.href = "admin.html";
             adminLink.style.color = "var(--primary-gold)";
             adminLink.style.fontWeight = "600";
-            adminLink.innerHTML = '<i class="fas fa-shield-alt"></i> Admin Portal';
+            adminLink.style.fontSize = "0.8rem";
+            adminLink.innerHTML = '<i class="fas fa-shield-alt"></i> Admin';
             
             const divider = document.createElement("span");
             divider.id = "top-admin-divider";

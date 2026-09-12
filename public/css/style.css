@@ -94,7 +94,7 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
 /* Main Sticky Header */
 .main-header { 
     background-color: var(--primary-white); 
-    position: sticky; 
+    position: relative; 
     top: 0; 
     z-index: 1000; 
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06); 
@@ -527,4 +527,39 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
     .id-field.full-width {
         grid-column: span 1 !important;
     }
+}
+
+
+/* Top Bar Auth Buttons */
+.top-bar .auth-buttons {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
+.top-bar .btn-login {
+    padding: 5px 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--primary-gold);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+}
+.top-bar .btn-login:hover {
+    background: var(--primary-gold);
+    color: #0f172a;
+}
+.top-bar .btn-register {
+    padding: 5px 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: white;
+    background: var(--primary-green);
+    border: 1px solid var(--primary-green);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(5, 104, 57, 0.3);
+}
+.top-bar .btn-register:hover {
+    background: var(--secondary-dark-green);
 }
