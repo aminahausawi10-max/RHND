@@ -22,6 +22,26 @@
             window.location.href = "login.html";
         }
     })();
+    
+        function toggleMobileSidebar(show) {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar || !overlay) return;
+            if (typeof show === 'boolean') {
+                if (show) { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); }
+                else { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
+            } else {
+                sidebar.classList.toggle('mobile-open'); overlay.classList.toggle('active');
+            }
+        }
+        
+        const origSwitchAdminTab = window.switchAdminTab;
+        if (typeof origSwitchAdminTab === 'function') {
+            window.switchAdminTab = function(tabId) {
+                origSwitchAdminTab(tabId);
+                toggleMobileSidebar(false);
+            }
+        }
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -95,9 +115,58 @@
         .media-info { padding: 15px; }
         .media-info h4 { margin: 0 0 6px 0; font-size: 1rem; color: #1e293b; }
         .media-info p { margin: 0 0 12px 0; color: #64748b; font-size: 0.85rem; }
+    
+        /* Mobile Overlay & Drawer Navigation */
+        .sidebar-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(2px) !important;
+            z-index: 999 !important;
+            display: none;
+        }
+        .sidebar-overlay.active {
+            display: block !important;
+        }
+        .mobile-menu-btn {
+            display: none;
+            background: #0b1329 !important;
+            color: var(--primary-gold) !important;
+            border: 1px solid var(--primary-gold) !important;
+            border-radius: 8px !important;
+            padding: 8px 12px !important;
+            font-size: 1.1rem !important;
+            cursor: pointer !important;
+        }
+        @media (max-width: 768px) {
+            html, body { overflow-x: hidden !important; max-width: 100vw !important; }
+            .dashboard-container { flex-direction: column !important; min-height: 100vh !important; }
+            .sidebar {
+                position: fixed !important;
+                top: 0 !important;
+                left: -300px !important;
+                width: 290px !important;
+                height: 100vh !important;
+                z-index: 1000 !important;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                box-shadow: 5px 0 25px rgba(0,0,0,0.5) !important;
+            }
+            .sidebar.mobile-open { left: 0 !important; }
+            .main-content { width: 100% !important; max-width: 100vw !important; overflow-x: hidden !important; height: auto !important; min-height: 100vh !important; }
+            .mobile-menu-btn { display: inline-flex !important; }
+            .top-navbar { padding: 12px 16px !important; width: 100% !important; box-sizing: border-box !important; }
+            .panel { padding: 16px 12px !important; }
+            .content-card { padding: 20px 14px !important; }
+            .stat-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .form-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+        }
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleMobileSidebar(false)"></div>
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -142,8 +211,13 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="top-navbar">
-                <div style="font-weight: 700; font-size: 1.15rem; color: #0f172a;">
-                    <i class="fas fa-sliders-h text-gold" style="margin-right: 8px;"></i> RHND Administration Hub
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="mobile-menu-btn" onclick="toggleMobileSidebar(true)" aria-label="Toggle navigation menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div style="font-weight: 700; font-size: 1.05rem; color: #0f172a; display: flex; align-items: center;">
+                        <i class="fas fa-sliders-h text-gold" style="margin-right: 8px;"></i> RHND Admin Hub
+                    </div>
                 </div>
                                 <div style="display: flex; align-items: center; gap: 15px;">
                     <span style="color: var(--primary-green); font-weight: 700; font-size: 0.85rem; background: #f0fdf4; padding: 6px 12px; border-radius: 20px; border: 1px solid #bbf7d0;">

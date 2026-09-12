@@ -489,43 +489,16 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
         grid-template-columns: 1fr !important;
         gap: 10px !important;
     }
-    .dashboard-container {
-        flex-direction: column !important;
-    }
-    .sidebar {
-        width: 100% !important;
-        height: auto !important;
-    }
-    .sidebar-nav {
-        display: flex !important;
-        overflow-x: auto !important;
-        padding: 12px 16px !important;
-        gap: 8px !important;
-        scrollbar-width: none;
-    }
-    .sidebar-nav::-webkit-scrollbar {
-        display: none;
-    }
-    .sidebar-nav .nav-item {
-        white-space: nowrap !important;
-        padding: 10px 16px !important;
-        border-radius: 20px !important;
-        border-left: none !important;
-        background: rgba(255,255,255,0.15) !important;
-        font-size: 0.85rem !important;
-    }
-    .diaspora-id-card {
-        padding: 16px !important;
-    }
-    .id-card-body {
-        flex-direction: column !important;
-        text-align: center;
-    }
-    .id-details-grid {
+    /* Form and Card Responsive Adjustments */
+    .form-row {
         grid-template-columns: 1fr !important;
+        gap: 10px !important;
     }
-    .id-field.full-width {
-        grid-column: span 1 !important;
+    @media(max-width: 576px) {
+        .update-card {
+            padding: 30px 20px !important;
+            box-sizing: border-box;
+        }
     }
 }
 
