@@ -896,6 +896,163 @@
             'X-Admin-Password': adminPwd
         };
 
+        // --- STATS & OVERVIEW MANAGER LOGIC ---
+        const liveCounts = {
+            news: 0,
+            members: 0,
+            requests: 0,
+            media: 0
+        };
+
+        function updateStatDisplay(type, count) {
+            liveCounts[type] = count;
+            const origEl = document.getElementById(`orig-stat-${type}`);
+            if (origEl) origEl.textContent = count;
+            
+            const custom = localStorage.getItem(`rhnd_custom_stat_${type}`);
+            const badge = document.getElementById(`badge-mode-${type}`);
+            const statEl = document.getElementById(`stat-${type}`);
+            
+            if (custom !== null && custom !== '') {
+                if (statEl) statEl.textContent = custom;
+                if (badge) {
+                    badge.textContent = 'Custom';
+                    badge.style.background = '#fef3c7';
+                    badge.style.color = '#b45309';
+                }
+            } else {
+                if (statEl) statEl.textContent = count;
+                if (badge) {
+                    badge.textContent = 'Live DB';
+                    badge.style.background = '#eff6ff';
+                    badge.style.color = '#3b82f6';
+                }
+            }
+
+            const badgeCount = document.getElementById(`badge-${type}-count`);
+            if (badgeCount) badgeCount.textContent = count;
+        }
+
+        function applyCustomStatFromInput(type) {
+            const input = document.getElementById(`input-stat-${type}`);
+            if (!input || !input.value.trim()) return;
+            const val = input.value.trim();
+            localStorage.setItem(`rhnd_custom_stat_${type}`, val);
+            updateStatDisplay(type, liveCounts[type] || 0);
+            input.value = '';
+        }
+
+        function resetStatToOriginal(type) {
+            localStorage.removeItem(`rhnd_custom_stat_${type}`);
+            updateStatDisplay(type, liveCounts[type] || 0);
+        }
+
+        function resetAllStatsToOriginal() {
+            ['members', 'news', 'requests', 'media'].forEach(type => {
+                localStorage.removeItem(`rhnd_custom_stat_${type}`);
+                updateStatDisplay(type, liveCounts[type] || 0);
+            });
+        }
+
+        function scrollToManager() {
+            const el = document.getElementById('overview-manager-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function switchOverviewSubTab(subtab) {
+            const tabs = ['news', 'members', 'requests', 'media', 'entities'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`subtab-btn-${t}`);
+                const content = document.getElementById(`subtab-content-${t}`);
+                if (btn) {
+                    if (t === subtab) {
+                        btn.classList.add('active-subtab');
+                        btn.style.background = 'var(--secondary-dark-green)';
+                        btn.style.color = 'var(--primary-gold)';
+                    } else {
+                        btn.classList.remove('active-subtab');
+                        btn.style.background = '#e2e8f0';
+                        btn.style.color = '#334155';
+                    }
+                }
+                if (content) {
+                    content.style.display = (t === subtab) ? 'block' : 'none';
+                }
+            });
+        }
+
+        function syncOverviewLists(posts, users, requests, media) {
+            if (posts) {
+                const ovPosts = document.getElementById('ov-posts-list');
+                if (ovPosts) {
+                    if (!posts.length) {
+                        ovPosts.innerHTML = '<p style="color: #64748b;">No news articles yet.</p>';
+                    } else {
+                        ovPosts.innerHTML = posts.slice(0, 5).map(post => `
+                            <div style="border-bottom: 1px solid #e2e8f0; padding: 12px 0; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: #0f172a; font-size: 0.95rem;">${post.title}</strong>
+                                    <div style="color: #64748b; font-size: 0.8rem;"><i class="far fa-calendar-alt"></i> ${new Date(post.created_at || Date.now()).toLocaleDateString()}</div>
+                                </div>
+                                <button onclick="deletePost(${post.id})" class="btn-action btn-delete" style="padding: 4px 10px; font-size: 0.8rem;"><i class="fas fa-trash"></i> Delete</button>
+                            </div>
+                        `).join('');
+                    }
+                }
+            }
+            if (users) {
+                const ovUsers = document.getElementById('ov-members-list-tbody');
+                if (ovUsers) {
+                    if (!users.length) {
+                        ovUsers.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b; padding: 15px;">No members yet.</td></tr>';
+                    } else {
+                        ovUsers.innerHTML = users.slice(0, 5).map(u => `
+                            <tr>
+                                <td style="padding: 10px; font-weight: 700; color: #0f172a;">${u.name || 'Member'}</td>
+                                <td style="padding: 10px; color: #64748b;">${u.email || ''}</td>
+                                <td style="padding: 10px;"><span class="badge" style="background: #e0f2fe; color: #0284c7; padding: 3px 8px; border-radius: 4px; font-weight: 600;">${u.id ? (String(u.id).startsWith('#') ? u.id : '#' + u.id) : '#RHND-NIG-00001'}</span></td>
+                                <td style="padding: 10px;"><button onclick="deleteMember('${u.id}')" class="btn-action btn-delete" style="padding: 3px 8px; font-size: 0.75rem;"><i class="fas fa-trash"></i></button></td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+            }
+            if (requests) {
+                const ovReq = document.getElementById('ov-requests-list-tbody');
+                if (ovReq) {
+                    if (!requests.length) {
+                        ovReq.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b; padding: 15px;">No support requests.</td></tr>';
+                    } else {
+                        ovReq.innerHTML = requests.slice(0, 5).map(r => `
+                            <tr>
+                                <td style="padding: 10px; font-weight: 700; color: #0f172a;">${r.name || 'Citizen'}</td>
+                                <td style="padding: 10px; color: #64748b;">${r.category || 'General'}</td>
+                                <td style="padding: 10px;">${r.subject || ''}</td>
+                                <td style="padding: 10px;"><span class="badge" style="background: #fef3c7; color: #b45309; padding: 3px 8px; border-radius: 4px; font-weight: 600;">${r.status || 'Pending'}</span></td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+            }
+            if (media) {
+                const ovMed = document.getElementById('ov-media-library-grid');
+                if (ovMed) {
+                    if (!media.length) {
+                        ovMed.innerHTML = '<p style="color: #64748b; grid-column: 1/-1;">No media files uploaded.</p>';
+                    } else {
+                        ovMed.innerHTML = media.slice(0, 4).map(m => `
+                            <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: white;">
+                                <img src="${m.url}" alt="${m.title}" style="width: 100%; height: 110px; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=400&q=80'">
+                                <div style="padding: 8px;">
+                                    <strong style="font-size: 0.85rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.title}</strong>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            }
+        }
+
         // --- 1. NEWS LOGIC ---
         const defaultNews = [
             {
