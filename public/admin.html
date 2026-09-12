@@ -929,12 +929,23 @@
     </div>
     
     <script>
+        function rhndLogout() {
+            sessionStorage.removeItem('rhnd_admin_pwd');
+            localStorage.removeItem('rhnd_admin_pwd');
+            localStorage.removeItem('rhnd_user');
+            window.location.href = 'login.html';
+        }
+
         // Global Tab switching
         function switchAdminTab(tabId) {
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if (typeof event !== 'undefined' && event && event.currentTarget && event.currentTarget.classList) {
-                event.currentTarget.classList.add('active');
+            const tabMap = { 'overview': 0, 'news': 1, 'members': 2, 'requests': 3, 'media': 4, 'broadcast': 5 };
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(el => el.classList.remove('active'));
+            
+            if (tabMap[tabId] !== undefined && navItems[tabMap[tabId]]) {
+                navItems[tabMap[tabId]].classList.add('active');
             }
+            
             document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
             const targetPanel = document.getElementById('tab-' + tabId);
             if (targetPanel) {
@@ -1532,9 +1543,6 @@
                 statusEl.textContent = 'Published Live Successfully with Attachments!';
                 statusEl.style.color = '#16a34a';
                 statusEl.style.display = 'inline';
-                setTimeout(() => statusEl.style.display = 'none', 3500);
-            }
-        }
                 setTimeout(() => statusEl.style.display = 'none', 3500);
             }
         }
