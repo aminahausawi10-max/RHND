@@ -91,35 +91,43 @@
         {
             id: 101,
             title: "Federal Government Launches Special Diaspora Housing Scheme",
-            content: "The Federal Ministry of Housing and Urban Development has unveiled an exclusive mortgage scheme tailored for Nigerians living abroad. The initiative aims to provide secure property ownership and transparent investment opportunities.
-
-Under this scheme, registered diaspora citizens can apply for federal home loans with flexible repayment terms, verified land titles, and direct consular assistance. Key partner banks and mortgage institutions have integrated automated diaspora verification protocols to prevent fraud and ensure seamless allocation.
-
-Interested applicants can initiate their requests directly through the Diaspora Services section of the RHND portal.",
+            content: "The Federal Ministry of Housing and Urban Development has unveiled an exclusive mortgage scheme tailored for Nigerians living abroad. The initiative aims to provide secure property ownership and transparent investment opportunities.\n\nUnder this scheme, registered diaspora citizens can apply for federal home loans with flexible repayment terms, verified land titles, and direct consular assistance. Key partner banks and mortgage institutions have integrated automated diaspora verification protocols to prevent fraud and ensure seamless allocation.\n\nInterested applicants can initiate their requests directly through the Diaspora Services section of the RHND portal.",
             created_at: new Date().toISOString()
         },
         {
             id: 102,
             title: "NiDCOM Announces Virtual Diaspora Townhall Dialogue",
-            content: "The Nigerians in Diaspora Commission (NiDCOM) invites all citizens overseas to participate in the upcoming quarterly virtual townhall meeting with diplomatic representatives and policy makers.
-
-The interactive session will focus on consular welfare, passport renewal acceleration, voting rights advocacy, and foreign investment security. Registration is free and open to all registered community members.",
+            content: "The Nigerians in Diaspora Commission (NiDCOM) invites all citizens overseas to participate in the upcoming quarterly virtual townhall meeting with diplomatic representatives and policy makers.\n\nThe interactive session will focus on consular welfare, passport renewal acceleration, voting rights advocacy, and foreign investment security. Registration is free and open to all registered community members.",
             created_at: new Date().toISOString()
         },
         {
             id: 103,
             title: "Nigeria Immigration Service Expands Diaspora Passport Centres",
-            content: "New passport enrollment and renewal processing centers have been established across strategic international locations to reduce processing wait times for diaspora citizens.
-
-Citizens living in North America, Europe, the Middle East, and Asia-Pacific regions can now access fast-track biometric capture appointments at authorized consular processing desks.",
+            content: "New passport enrollment and renewal processing centers have been established across strategic international locations to reduce processing wait times for diaspora citizens.\n\nCitizens living in North America, Europe, the Middle East, and Asia-Pacific regions can now access fast-track biometric capture appointments at authorized consular processing desks.",
             created_at: new Date().toISOString()
         }
     ];
 
-    let allNewsPosts = [...defaultNews];
+    function getStoredNews() {
+        let posts = [];
+        try {
+            const raw = localStorage.getItem('rhnd_news_db');
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed) && parsed.length > 0) posts = parsed;
+            }
+        } catch(e) {}
+        if (posts.length === 0) {
+            posts = [...defaultNews];
+            try { localStorage.setItem('rhnd_news_db', JSON.stringify(posts)); } catch(e) {}
+        }
+        return posts;
+    }
+
+    let allNewsPosts = getStoredNews();
 
     function renderNews(posts) {
-        allNewsPosts = Array.isArray(posts) && posts.length > 0 ? posts : defaultNews;
+        allNewsPosts = Array.isArray(posts) && posts.length > 0 ? posts : getStoredNews();
         const list = document.getElementById('public-news-list');
         if (!list) return;
         
@@ -128,7 +136,7 @@ Citizens living in North America, Europe, the Middle East, and Asia-Pacific regi
                 <div class="card-content">
                     <div class="category">Official Update</div>
                     <h3>${post.title}</h3>
-                    <p>${post.content.length > 140 ? post.content.substring(0, 140) + '...' : post.content}</p>
+                    <p>${(post.content || '').length > 140 ? (post.content || '').substring(0, 140) + '...' : (post.content || '')}</p>
                     <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
                         <span style="color: #718096; font-size: 0.85rem;">${new Date(post.created_at || Date.now()).toLocaleDateString()}</span>
                         <a href="javascript:void(0)" onclick="event.stopPropagation(); openNewsArticle(${post.id})" class="read-more" style="color: var(--primary-green); font-weight: 700; text-decoration: none;">
@@ -169,19 +177,27 @@ Citizens living in North America, Europe, the Middle East, and Asia-Pacific regi
     });
 
     async function loadNews() {
-        let posts = defaultNews;
+        let posts = getStoredNews();
+        renderNews(posts);
         try {
             const res = await fetch('/api/posts');
             if (res.ok) {
                 const data = await res.json();
                 if (Array.isArray(data) && data.length > 0 && !data.error) {
-                    posts = data;
+                    const combined = [...data];
+                    posts.forEach(p => {
+                        if (!combined.some(c => c.id == p.id || c.title === p.title)) {
+                            combined.push(p);
+                        }
+                    });
+                    posts = combined;
+                    try { localStorage.setItem('rhnd_news_db', JSON.stringify(posts)); } catch(e) {}
+                    renderNews(posts);
                 }
             }
         } catch(e) {
             console.warn("Using default news dataset");
         }
-        renderNews(posts);
     }
     loadNews();
 </script><!-- Footer -->
