@@ -96,6 +96,9 @@ function setupFloatingPortalButton() {
             <a href="${isDashboard ? "javascript:switchTab('dashboard')" : "member-dashboard.html#dashboard"}" class="fab-item" onclick="if(window.closeFabMenu) window.closeFabMenu()">
                 <i class="fas fa-home"></i> <span>Dashboard Overview</span>
             </a>
+            <a href="${isDashboard ? "javascript:switchTab('members')" : "member-dashboard.html#members"}" class="fab-item" onclick="if(window.closeFabMenu) window.closeFabMenu()">
+                <i class="fas fa-users"></i> <span>Registered Members</span>
+            </a>
             <a href="${isDashboard ? "javascript:switchTab('profile')" : "member-dashboard.html#profile"}" class="fab-item" onclick="if(window.closeFabMenu) window.closeFabMenu()">
                 <i class="fas fa-user-edit"></i> <span>My Profile</span>
             </a>
