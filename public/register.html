@@ -121,6 +121,17 @@
             role: isAdmin ? 'admin' : 'member'
         };
         localStorage.setItem('rhnd_user', JSON.stringify(userObj));
+        try {
+            let membersList = JSON.parse(localStorage.getItem('rhnd_members_db') || '[]');
+            if (!Array.isArray(membersList)) membersList = [];
+            membersList.unshift({
+                id: userObj.id,
+                name: fullName,
+                email: email,
+                created_at: new Date().toISOString()
+            });
+            localStorage.setItem('rhnd_members_db', JSON.stringify(membersList));
+        } catch(err) {}
         successDiv.style.display = 'block';
         successDiv.textContent = 'Account created successfully! Redirecting to dashboard...';
         setTimeout(() => {
