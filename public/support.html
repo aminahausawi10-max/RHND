@@ -89,10 +89,110 @@
     <!-- Main Content Area -->
     <section class="section-padding">
         <div class="container">
-            <div class="cards-grid">
-                <div class="update-card" style="padding: 60px; text-align: center; border: 2px dashed #cbd5e1; background: transparent; box-shadow: none; grid-column: 1 / -1;">
-                    <h3 style="color: var(--text-light); margin-bottom: 10px;">Content for Help & Support is being updated.</h3>
-                    <p style="color: #94a3b8;">Our administrators are currently populating this section with official data.</p>
+            <!-- Quick Help Cards -->
+            <div class="cards-grid" style="margin-bottom: 40px;">
+                <div class="update-card" style="text-align: center; padding: 35px 25px;">
+                    <i class="fas fa-headset" style="font-size: 2.5rem; color: var(--primary-green); margin-bottom: 15px; display: block;"></i>
+                    <h3 style="margin-bottom: 8px; color: #0f172a;">24/7 Diaspora Helpline</h3>
+                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 15px;">Reach our dedicated support team for urgent consular and welfare assistance.</p>
+                    <a href="tel:+2349000000000" class="btn btn-primary" style="padding: 10px 20px;">
+                        <i class="fas fa-phone"></i> Call Helpline
+                    </a>
+                </div>
+                <div class="update-card" style="text-align: center; padding: 35px 25px;">
+                    <i class="fas fa-envelope-open-text" style="font-size: 2.5rem; color: #3b82f6; margin-bottom: 15px; display: block;"></i>
+                    <h3 style="margin-bottom: 8px; color: #0f172a;">Email Support</h3>
+                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 15px;">Send us a detailed message and our team will respond within 24–48 hours.</p>
+                    <a href="mailto:support@rhnd.gov.ng" class="btn btn-primary" style="padding: 10px 20px; background: #3b82f6; border-color: #3b82f6;">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </a>
+                </div>
+                <div class="update-card" style="text-align: center; padding: 35px 25px;">
+                    <i class="fas fa-ticket-alt" style="font-size: 2.5rem; color: #f59e0b; margin-bottom: 15px; display: block;"></i>
+                    <h3 style="margin-bottom: 8px; color: #0f172a;">Submit a Ticket</h3>
+                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 15px;">Log in to your member dashboard and submit a support ticket for tracking.</p>
+                    <a href="member-dashboard.html" class="btn btn-primary" style="padding: 10px 20px; background: #f59e0b; border-color: #f59e0b;">
+                        <i class="fas fa-external-link-alt"></i> Go to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div style="max-width: 800px; margin: 0 auto 40px auto;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h2 style="color: var(--secondary-dark-green); font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">Frequently Asked Questions</h2>
+                    <p style="color: #64748b;">Find answers to common questions about diaspora services and this platform.</p>
+                    <div class="line" style="margin: 12px auto 0 auto;"></div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                            How do I register on the RHND platform?
+                        </summary>
+                        <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
+                            Click the <strong>"Join Community"</strong> button on the homepage or navigate to the <a href="register.html" style="color: var(--primary-green); font-weight: 600;">Registration Page</a>. Fill in your full name, email, and create a password. Once registered, you will be automatically signed in and redirected to your Member Dashboard.
+                        </div>
+                    </details>
+
+                    <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                            How do I apply for passport renewal assistance?
+                        </summary>
+                        <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
+                            Log in to your <strong>Member Dashboard</strong>, go to <strong>Diaspora Services</strong>, and select <strong>"Passport Renewal Assistance"</strong>. This will open a pre-filled support ticket for our admin team to process your request.
+                        </div>
+                    </details>
+
+                    <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                            What is the Diaspora Membership ID Card?
+                        </summary>
+                        <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
+                            Every registered member receives a <strong>Digital Diaspora Membership ID</strong> with a unique number (e.g. RHND-NIG-00001). This official credential can be used for accessing diaspora services, consular support, and priority government assistance programs.
+                        </div>
+                    </details>
+
+                    <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                            How do I contact the Nigerian Embassy or Consulate?
+                        </summary>
+                        <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
+                            Visit the <a href="diaspora.html" style="color: var(--primary-green); font-weight: 600;">Diaspora Services</a> page for a directory of embassies and consulates worldwide. You can also submit a ticket through your dashboard and our team will connect you with the appropriate consular office.
+                        </div>
+                    </details>
+
+                    <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                            Is this platform affiliated with the Federal Government of Nigeria?
+                        </summary>
+                        <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
+                            The <strong>Renewed Hope Nigeria Diaspora (RHND)</strong> platform is a community-driven information hub that aggregates verified government policies and resources. It is designed to support and empower Nigerians living abroad.
+                        </div>
+                    </details>
+
+                    <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                            I forgot my password. How can I reset it?
+                        </summary>
+                        <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
+                            Currently, please contact our support team via email at <strong>support@rhnd.gov.ng</strong> or call the Diaspora Helpline to request a password reset. A self-service password reset feature will be available in a future update.
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Contact Info Section -->
+            <div style="background: linear-gradient(135deg, #022615 0%, #056839 100%); border-radius: 18px; padding: 40px 35px; color: white; text-align: center;">
+                <h2 style="color: var(--primary-gold); font-weight: 800; margin-bottom: 10px; font-size: 1.6rem;">Still Need Help?</h2>
+                <p style="color: rgba(255,255,255,0.8); margin-bottom: 25px; max-width: 550px; margin-left: auto; margin-right: auto;">Our dedicated diaspora support team is available to assist you with any questions or concerns.</p>
+                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <a href="mailto:support@rhnd.gov.ng" class="btn btn-secondary" style="padding: 12px 24px; font-weight: 700; font-size: 0.95rem;">
+                        <i class="fas fa-envelope"></i> support@rhnd.gov.ng
+                    </a>
+                    <a href="tel:+2349000000000" class="btn btn-primary" style="padding: 12px 24px; font-weight: 700; font-size: 0.95rem;">
+                        <i class="fas fa-phone"></i> +234 900 000 0000
+                    </a>
                 </div>
             </div>
         </div>
