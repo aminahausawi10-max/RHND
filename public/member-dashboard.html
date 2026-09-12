@@ -292,7 +292,7 @@
                         <h2 id="dash-welcome-heading">Welcome to your Diaspora Dashboard!</h2>
                         <p>Access government services, manage your registered diaspora profile, and get priority assistance.</p>
                     </div>
-                    <div class="id-badge"><i class="fas fa-id-card"></i> ID: RHND-849201</div>
+                    <div class="id-badge"><i class="fas fa-id-card"></i> ID: RHND-NIG-00001</div>
                 </div>
                 
                 <div class="quick-stats">
@@ -376,7 +376,7 @@
 
                                 <div class="id-field">
                                     <span class="id-label">MEMBER ID NO.</span>
-                                    <strong class="id-val id-gold-text" id="card-val-id">RHND-NIG-2026-849201</strong>
+                                    <strong class="id-val id-gold-text" id="card-val-id">RHND-NIG-00001</strong>
                                 </div>
 
                                 <div class="id-field">
@@ -404,7 +404,7 @@
                         <!-- Card Footer with Security Hologram Seal -->
                         <div class="id-card-footer">
                             <div class="id-security-code">
-                                AUTH-HASH: 8492-9102-RHND-SECURE
+                                AUTH-HASH: 00001-RHND-SECURE
                             </div>
                             <div class="id-hologram-stamp">
                                 <i class="fas fa-shield-halved"></i> OFFICIAL STAMP
@@ -587,7 +587,7 @@
             const name = user.name || (user.email ? user.email.split('@')[0] : 'REGISTERED MEMBER');
             const phone = user.phone || '+44 7123 456789';
             const country = user.country || 'United Kingdom (Diaspora)';
-            const idNum = user.id ? ('RHND-NIG-2026-' + String(user.id).slice(-6)) : 'RHND-NIG-2026-849201';
+            const idNum = user.id ? ('RHND-NIG-2026-' + String(user.id).slice(-6)) : 'RHND-NIG-00001';
 
             const nameEl = document.getElementById('card-val-name');
             if (nameEl) nameEl.textContent = name.toUpperCase();
