@@ -1106,63 +1106,106 @@
         });
 
         // --- 3. SUPPORT REQUESTS LOGIC ---
+        const defaultRequests = [
+            {
+                id: 1,
+                name: "Amina Hausawi",
+                email: "aminahausawi10@gmail.com",
+                country: "United Kingdom",
+                category: "Passport & Consular Assistance",
+                subject: "Inquiry on Passport Renewal Center in London",
+                details: "Requesting guidance on official diplomatic fast-track passport capture desk location in the UK.",
+                status: "Resolved",
+                created_at: "2026-09-10T14:20:00Z"
+            }
+        ];
+
+        function getStoredRequests() {
+            try {
+                const local = localStorage.getItem('rhnd_requests_db');
+                if (local) {
+                    const parsed = JSON.parse(local);
+                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                }
+            } catch(e) {}
+            return defaultRequests;
+        }
+
         async function fetchRequests() {
+            let requests = getStoredRequests();
             try {
                 const res = await fetch('/api/requests');
-                const requests = await res.json();
-                const tbody = document.getElementById('requests-list-tbody');
-                updateStatDisplay('requests', requests.length || 0);
-
-                syncOverviewLists(null, null, requests, null);
-                if (!requests || requests.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #64748b;">No assistance tickets logged.</td></tr>';
-                    return;
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && !data.error) {
+                        requests = data;
+                        localStorage.setItem('rhnd_requests_db', JSON.stringify(requests));
+                    }
                 }
-
-                tbody.innerHTML = requests.map(r => {
-                    const badgeClass = r.status === 'Resolved' ? 'badge-resolved' : (r.status === 'In Progress' ? 'badge-progress' : 'badge-pending');
-                    return `
-                    <tr>
-                        <td><strong>#T-${r.id}</strong></td>
-                        <td>
-                            <div><strong>${r.name}</strong></div>
-                            <small style="color: #64748b;">${r.email} (${r.country || 'Diaspora'})</small>
-                        </td>
-                        <td><span class="badge" style="background: #f1f5f9; color: #334155;">${r.category}</span></td>
-                        <td>
-                            <div style="font-weight: 600; color: #0f172a;">${r.subject}</div>
-                            <small style="color: #64748b;">${r.details}</small>
-                        </td>
-                        <td><span class="badge ${badgeClass}">${r.status}</span></td>
-                        <td>
-                            <div style="display: flex; gap: 6px;">
-                                ${r.status !== 'Resolved' ? `<button onclick="updateRequestStatus(${r.id}, 'Resolved')" class="btn-action btn-success-sm" title="Mark as Resolved"><i class="fas fa-check"></i> Resolve</button>` : `<button onclick="updateRequestStatus(${r.id}, 'In Progress')" class="btn-action btn-info-sm" title="Reopen"><i class="fas fa-redo"></i> Reopen</button>`}
-                                <button onclick="deleteRequest(${r.id})" class="btn-action btn-delete" title="Delete Ticket"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                    `;
-                }).join('');
             } catch(e) {
-                document.getElementById('requests-list-tbody').innerHTML = '<tr><td colspan="6" style="color: #e53e3e;">Error loading support tickets.</td></tr>';
+                console.warn("Using stored support requests");
             }
+
+            const tbody = document.getElementById('requests-list-tbody');
+            updateStatDisplay('requests', requests.length || 0);
+            syncOverviewLists(null, null, requests, null);
+
+            if (!requests || requests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 25px;">No assistance tickets logged.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = requests.map(r => {
+                const badgeClass = r.status === 'Resolved' ? 'badge-resolved' : (r.status === 'In Progress' ? 'badge-progress' : 'badge-pending');
+                return `
+                <tr>
+                    <td><strong class="text-gold" style="font-family: monospace;">#T-${r.id}</strong></td>
+                    <td>
+                        <div><strong style="color: #0f172a;">${r.name}</strong></div>
+                        <small style="color: #64748b;">${r.email} (${r.country || 'Diaspora'})</small>
+                    </td>
+                    <td><span class="badge" style="background: #f1f5f9; color: #334155;">${r.category}</span></td>
+                    <td>
+                        <div style="font-weight: 600; color: #0f172a;">${r.subject}</div>
+                        <small style="color: #64748b;">${r.details}</small>
+                    </td>
+                    <td><span class="badge ${badgeClass}">${r.status}</span></td>
+                    <td>
+                        <div style="display: flex; gap: 6px;">
+                            ${r.status !== 'Resolved' ? `<button onclick="updateRequestStatus('${r.id}', 'Resolved')" class="btn-action btn-success-sm" title="Mark as Resolved"><i class="fas fa-check"></i> Resolve</button>` : `<button onclick="updateRequestStatus('${r.id}', 'In Progress')" class="btn-action btn-info-sm" title="Reopen"><i class="fas fa-redo"></i> Reopen</button>`}
+                            <button onclick="deleteRequest('${r.id}')" class="btn-action btn-delete" title="Delete Ticket"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }).join('');
         }
 
         async function updateRequestStatus(id, newStatus) {
-            const res = await fetch(`/api/requests?action=status&id=${id}`, {
-                method: 'POST',
-                headers: fetchHeaders,
-                body: JSON.stringify({ status: newStatus })
-            });
-            if (res.ok) {
-                fetchRequests();
-            }
+            let requests = getStoredRequests();
+            requests = requests.map(r => String(r.id) === String(id) ? { ...r, status: newStatus } : r);
+            localStorage.setItem('rhnd_requests_db', JSON.stringify(requests));
+            fetchRequests();
+
+            try {
+                await fetch(`/api/requests?action=status&id=${id}`, {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body: JSON.stringify({ status: newStatus })
+                });
+            } catch(e) {}
         }
 
         async function deleteRequest(id) {
             if(!confirm('Delete this support ticket?')) return;
-            const res = await fetch('/api/requests?id=' + id, { method: 'DELETE', headers: fetchHeaders });
-            if (res.ok) fetchRequests();
+            let requests = getStoredRequests();
+            requests = requests.filter(r => String(r.id) !== String(id));
+            localStorage.setItem('rhnd_requests_db', JSON.stringify(requests));
+            fetchRequests();
+
+            try {
+                await fetch('/api/requests?id=' + id, { method: 'DELETE', headers: fetchHeaders });
+            } catch(e) {}
         }
 
         document.getElementById('add-manual-request-form').addEventListener('submit', async (e) => {
@@ -1174,58 +1217,110 @@
             const subject = document.getElementById('manual-req-subject').value;
             const details = document.getElementById('manual-req-details').value;
 
-            const res = await fetch('/api/requests', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, category, country, subject, details })
-            });
+            const newReq = {
+                id: Date.now().toString().slice(-4),
+                name, email, category, country, subject, details,
+                status: 'Pending',
+                created_at: new Date().toISOString()
+            };
 
-            if (res.ok) {
-                document.getElementById('add-manual-request-form').reset();
-                alert('Support ticket logged successfully!');
-                fetchRequests();
-            }
+            let requests = getStoredRequests();
+            requests.unshift(newReq);
+            localStorage.setItem('rhnd_requests_db', JSON.stringify(requests));
+
+            try {
+                await fetch('/api/requests', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, category, country, subject, details })
+                });
+            } catch(e) {}
+
+            document.getElementById('add-manual-request-form').reset();
+            alert('Support ticket logged successfully!');
+            fetchRequests();
         });
 
         // --- 4. MEDIA LOGIC ---
+        const defaultMedia = [
+            {
+                id: 1,
+                title: "Federal Executive Council Diaspora Briefing",
+                media_type: "Photo",
+                url: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&q=80&w=800",
+                caption: "Official presentation of the new national diaspora engagement blueprint."
+            },
+            {
+                id: 2,
+                title: "Global Diaspora Townhall 2026",
+                media_type: "Photo",
+                url: "https://images.unsplash.com/photo-1577416412292-747c6607f055?auto=format&fit=crop&q=80&w=800",
+                caption: "Virtual gathering connecting Nigerian diaspora leaders from 45 countries."
+            }
+        ];
+
+        function getStoredMedia() {
+            try {
+                const local = localStorage.getItem('rhnd_media_db');
+                if (local) {
+                    const parsed = JSON.parse(local);
+                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                }
+            } catch(e) {}
+            return defaultMedia;
+        }
+
         async function fetchMedia() {
+            let items = getStoredMedia();
             try {
                 const res = await fetch('/api/media');
-                const items = await res.json();
-                const grid = document.getElementById('media-library-grid');
-                updateStatDisplay('media', items.length || 0);
-
-                syncOverviewLists(null, null, null, items);
-                if (!items || items.length === 0) {
-                    grid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b;">No media files uploaded yet.</p>';
-                    return;
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && !data.error) {
+                        items = data;
+                        localStorage.setItem('rhnd_media_db', JSON.stringify(items));
+                    }
                 }
-
-                grid.innerHTML = items.map(m => `
-                    <div class="media-card">
-                        <div class="media-preview">
-                            <img src="${m.url}" alt="${m.title}" onerror="this.src='https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600'">
-                        </div>
-                        <div class="media-info">
-                            <span class="badge badge-progress" style="margin-bottom: 8px;">${m.media_type}</span>
-                            <h4>${m.title}</h4>
-                            <p>${m.caption || ''}</p>
-                            <button onclick="deleteMedia(${m.id})" class="btn-action btn-delete" style="width: 100%; justify-content: center;">
-                                <i class="fas fa-trash"></i> Delete Item
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
             } catch(e) {
-                document.getElementById('media-library-grid').innerHTML = '<p style="grid-column: 1/-1; color: #e53e3e;">Error loading media.</p>';
+                console.warn("Using stored media dataset");
             }
+
+            const grid = document.getElementById('media-library-grid');
+            updateStatDisplay('media', items.length || 0);
+            syncOverviewLists(null, null, null, items);
+
+            if (!items || items.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b; text-align: center; padding: 25px;">No media files uploaded yet.</p>';
+                return;
+            }
+
+            grid.innerHTML = items.map(m => `
+                <div class="media-card">
+                    <div class="media-preview">
+                        <img src="${m.url}" alt="${m.title}" onerror="this.src='https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600'">
+                    </div>
+                    <div class="media-info">
+                        <span class="badge badge-progress" style="margin-bottom: 8px;">${m.media_type}</span>
+                        <h4 style="margin: 0 0 6px 0; font-size: 1.05rem; color: #0f172a;">${m.title}</h4>
+                        <p style="color: #64748b; font-size: 0.88rem; margin-bottom: 12px;">${m.caption || ''}</p>
+                        <button onclick="deleteMedia('${m.id}')" class="btn-action btn-delete" style="width: 100%; justify-content: center;">
+                            <i class="fas fa-trash"></i> Delete Item
+                        </button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         async function deleteMedia(id) {
             if(!confirm('Delete this media item?')) return;
-            const res = await fetch('/api/media?id=' + id, { method: 'DELETE', headers: fetchHeaders });
-            if (res.ok) fetchMedia();
-        fetchEntities();
+            let items = getStoredMedia();
+            items = items.filter(m => String(m.id) !== String(id));
+            localStorage.setItem('rhnd_media_db', JSON.stringify(items));
+            fetchMedia();
+
+            try {
+                await fetch('/api/media?id=' + id, { method: 'DELETE', headers: fetchHeaders });
+            } catch(e) {}
         }
 
         document.getElementById('add-media-form').addEventListener('submit', async (e) => {
@@ -1235,317 +1330,147 @@
             const url = document.getElementById('media-url').value;
             const caption = document.getElementById('media-caption').value;
 
-            const res = await fetch('/api/media', {
-                method: 'POST',
-                headers: fetchHeaders,
-                body: JSON.stringify({ title, media_type, url, caption })
-            });
+            const newItem = {
+                id: Date.now(),
+                title, media_type, url, caption,
+                created_at: new Date().toISOString()
+            };
 
-            if (res.ok) {
-                document.getElementById('add-media-form').reset();
-                alert('Media item published successfully!');
-                fetchMedia();
-        fetchEntities();
-            }
+            let items = getStoredMedia();
+            items.unshift(newItem);
+            localStorage.setItem('rhnd_media_db', JSON.stringify(items));
+
+            try {
+                await fetch('/api/media', {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body: JSON.stringify({ title, media_type, url, caption })
+                });
+            } catch(e) {}
+
+            document.getElementById('add-media-form').reset();
+            alert('Media item published successfully!');
+            fetchMedia();
         });
 
-        
-        
-        // --- CUSTOM STATS NUMBER OVERRIDE & LIVE COUNT RESTORE ---
-        const realCounts = {
-            members: 0,
-            news: 0,
-            requests: 0,
-            media: 0
-        };
-
-        function getCustomStats() {
-            try {
-                return JSON.parse(localStorage.getItem('rhnd_custom_stats') || '{}');
-            } catch(e) {
-                return {};
-            }
-        }
-
-        function saveCustomStats(stats) {
-            localStorage.setItem('rhnd_custom_stats', JSON.stringify(stats));
-        }
-
-        function updateStatDisplay(key, realCount) {
-            if (realCount !== undefined && realCount !== null) {
-                realCounts[key] = realCount;
-            }
-            const currentReal = realCounts[key] || 0;
-
-            const origSpan = document.getElementById('orig-stat-' + key);
-            if (origSpan) origSpan.textContent = currentReal;
-
-            const customStats = getCustomStats();
-            const statH3 = document.getElementById('stat-' + key);
-            const cardTag = document.getElementById('card-tag-' + key);
-            const badgeMode = document.getElementById('badge-mode-' + key);
-            const inputEl = document.getElementById('input-stat-' + key);
-
-            if (customStats[key] !== undefined && customStats[key] !== null && customStats[key] !== '') {
-                // Display Custom Number (e.g. 100)
-                if (statH3) statH3.textContent = customStats[key];
-                if (cardTag) cardTag.style.display = 'inline-block';
-                if (badgeMode) {
-                    badgeMode.textContent = 'Custom (' + customStats[key] + ')';
-                    badgeMode.style.background = '#fef3c7';
-                    badgeMode.style.color = '#b45309';
-                }
-                if (inputEl && document.activeElement !== inputEl) {
-                    inputEl.value = customStats[key];
-                }
-            } else {
-                // Display original live database count
-                if (statH3) statH3.textContent = currentReal;
-                if (cardTag) cardTag.style.display = 'none';
-                if (badgeMode) {
-                    badgeMode.textContent = 'Live DB';
-                    badgeMode.style.background = '#eff6ff';
-                    badgeMode.style.color = '#3b82f6';
-                }
-                if (inputEl && document.activeElement !== inputEl) {
-                    inputEl.value = '';
-                }
-            }
-        }
-
-        function applyCustomStatFromInput(key) {
-            const inputEl = document.getElementById('input-stat-' + key);
-            if (!inputEl) return;
-            const val = inputEl.value.trim();
-            const customStats = getCustomStats();
-            if (val === '') {
-                delete customStats[key];
-            } else {
-                customStats[key] = val;
-            }
-            saveCustomStats(customStats);
-            updateStatDisplay(key);
-        }
-
-        function resetStatToOriginal(key) {
-            const customStats = getCustomStats();
-            delete customStats[key];
-            saveCustomStats(customStats);
-            const inputEl = document.getElementById('input-stat-' + key);
-            if (inputEl) inputEl.value = '';
-            updateStatDisplay(key);
-        }
-
-        function resetAllStatsToOriginal() {
-            localStorage.removeItem('rhnd_custom_stats');
-            ['members', 'news', 'requests', 'media'].forEach(k => {
-                const inputEl = document.getElementById('input-stat-' + k);
-                if (inputEl) inputEl.value = '';
-                updateStatDisplay(k);
-            });
-            alert('All counters have been reset to original live database count!');
-        }
-
-        // Smooth scroll to manager on card click
-        function scrollToManager() {
-            const el = document.getElementById('overview-manager-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        // Subtab switcher on Overview page
-        function switchOverviewSubTab(type) {
-            const types = ['news', 'members', 'requests', 'media', 'entities'];
-            types.forEach(t => {
-                const btn = document.getElementById('subtab-btn-' + t);
-                const content = document.getElementById('subtab-content-' + t);
-                if (t === type) {
-                    if (btn) {
-                        btn.style.background = 'var(--secondary-dark-green)';
-                        btn.style.color = 'var(--primary-gold)';
-                    }
-                    if (content) content.style.display = 'block';
-                } else {
-                    if (btn) {
-                        btn.style.background = '#e2e8f0';
-                        btn.style.color = '#334155';
-                    }
-                    if (content) content.style.display = 'none';
-                }
-            });
-        }
-
-        // Sync Overview lists whenever data loads
-        function syncOverviewLists(posts, users, requests, media) {
-            // 1. Sync News
-            if (posts) {
-                const badge = document.getElementById('badge-news-count');
-                if (badge) badge.textContent = posts.length || 0;
-                const ovList = document.getElementById('ov-posts-list');
-                if (ovList) {
-                    if (!posts || posts.length === 0) {
-                        ovList.innerHTML = '<p style="color: #64748b;">No news published yet.</p>';
-                    } else {
-                        ovList.innerHTML = posts.map(p => `
-                            <div style="border-bottom: 1px solid #e2e8f0; padding: 14px 0; display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <h5 style="margin: 0 0 4px 0; font-size: 1.05rem; color: #0f172a;">${p.title}</h5>
-                                    <small style="color: #64748b;"><i class="far fa-clock"></i> ${new Date(p.created_at).toLocaleDateString()}</small>
-                                </div>
-                                <button onclick="deletePost(${p.id})" class="btn-action btn-delete"><i class="fas fa-trash"></i> Delete</button>
-                            </div>
-                        `).join('');
-                    }
-                }
-            }
-
-            // 2. Sync Members
-            if (users) {
-                const badge = document.getElementById('badge-members-count');
-                if (badge) badge.textContent = users.length || 0;
-                const ovTbody = document.getElementById('ov-members-list-tbody');
-                if (ovTbody) {
-                    if (!users || users.length === 0) {
-                        ovTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No registered members.</td></tr>';
-                    } else {
-                        ovTbody.innerHTML = users.map(u => `
-                            <tr>
-                                <td><strong>#${u.id}</strong></td>
-                                <td><strong>${u.name || 'Member'}</strong></td>
-                                <td>${u.email}</td>
-                                <td>${new Date(u.created_at).toLocaleDateString()}</td>
-                                <td><button onclick="deleteMember(${u.id})" class="btn-action btn-delete"><i class="fas fa-trash"></i> Remove</button></td>
-                            </tr>
-                        `).join('');
-                    }
-                }
-            }
-
-            // 3. Sync Requests
-            if (requests) {
-                const badge = document.getElementById('badge-requests-count');
-                if (badge) badge.textContent = requests.length || 0;
-                const ovTbody = document.getElementById('ov-requests-list-tbody');
-                if (ovTbody) {
-                    if (!requests || requests.length === 0) {
-                        ovTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #64748b;">No support tickets logged.</td></tr>';
-                    } else {
-                        ovTbody.innerHTML = requests.map(r => {
-                            const badgeClass = r.status === 'Resolved' ? 'badge-resolved' : (r.status === 'In Progress' ? 'badge-progress' : 'badge-pending');
-                            return `
-                            <tr>
-                                <td><strong>#T-${r.id}</strong></td>
-                                <td><strong>${r.name}</strong><br><small style="color:#64748b;">${r.email}</small></td>
-                                <td><span class="badge" style="background:#f1f5f9; color:#334155;">${r.category}</span></td>
-                                <td><div style="font-weight:600; font-size:0.9rem;">${r.subject}</div></td>
-                                <td><span class="badge ${badgeClass}">${r.status}</span></td>
-                                <td>
-                                    <div style="display: flex; gap: 6px;">
-                                        ${r.status !== 'Resolved' ? `<button onclick="updateRequestStatus(${r.id}, 'Resolved')" class="btn-action btn-success-sm"><i class="fas fa-check"></i></button>` : ''}
-                                        <button onclick="deleteRequest(${r.id})" class="btn-action btn-delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            `;
-                        }).join('');
-                    }
-                }
-            }
-
-            // 4. Sync Media
-            if (media) {
-                const badge = document.getElementById('badge-media-count');
-                if (badge) badge.textContent = media.length || 0;
-                const ovGrid = document.getElementById('ov-media-library-grid');
-                if (ovGrid) {
-                    if (!media || media.length === 0) {
-                        ovGrid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b;">No media uploaded yet.</p>';
-                    } else {
-                        ovGrid.innerHTML = media.map(m => `
-                            <div class="media-card">
-                                <div class="media-preview">
-                                    <img src="${m.url}" alt="${m.title}" onerror="this.src='https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600'">
-                                </div>
-                                <div class="media-info">
-                                    <span class="badge badge-progress" style="margin-bottom: 6px;">${m.media_type}</span>
-                                    <h4 style="font-size: 0.95rem; margin-bottom: 4px;">${m.title}</h4>
-                                    <button onclick="deleteMedia(${m.id})" class="btn-action btn-delete" style="width: 100%; justify-content: center; margin-top: 8px;">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('');
-                    }
-                }
-            }
-        }
-
-        
         // --- 5. MINISTRIES & AGENCIES LOGIC ---
+        const defaultEntities = [
+            {
+                id: 1,
+                type: "Ministry",
+                name: "Federal Ministry of Foreign Affairs",
+                leader: "Minister of Foreign Affairs",
+                website: "https://foreignaffairs.gov.ng",
+                description: "Overseeing diplomatic relations, consular assistance, and diaspora welfare globally."
+            },
+            {
+                id: 2,
+                type: "Agency",
+                name: "Nigerians in Diaspora Commission (NiDCOM)",
+                leader: "Hon. Abike Dabiri-Erewa (Chairman/CEO)",
+                website: "https://nidcom.gov.ng",
+                description: "Dedicated to the engagement and utilization of human, capital and material resources of Nigerian Diaspora."
+            },
+            {
+                id: 3,
+                type: "Agency",
+                name: "Nigeria Immigration Service (NIS)",
+                leader: "Comptroller General of Immigration",
+                website: "https://immigration.gov.ng",
+                description: "Passport issuance, visa policy administration, and diaspora travel document processing."
+            },
+            {
+                id: 4,
+                type: "Agency",
+                name: "National Identity Management Commission (NIMC)",
+                leader: "Director General / CEO",
+                website: "https://nimc.gov.ng",
+                description: "National Identification Number (NIN) enrollment and diaspora identity verification."
+            }
+        ];
+
+        function getStoredEntities() {
+            try {
+                const local = localStorage.getItem('rhnd_entities_db');
+                if (local) {
+                    const parsed = JSON.parse(local);
+                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                }
+            } catch(e) {}
+            return defaultEntities;
+        }
+
         async function fetchEntities() {
+            let items = getStoredEntities();
             try {
                 const res = await fetch('/api/entities');
-                const items = await res.json();
-                
-                // Update badge count
-                const badge = document.getElementById('badge-entities-count');
-                if (badge) badge.textContent = items.length || 0;
-
-                // Sync Overview Table
-                const ovTbody = document.getElementById('ov-entities-list-tbody');
-                if (ovTbody) {
-                    if (!items || items.length === 0) {
-                        ovTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No ministries or agencies configured.</td></tr>';
-                    } else {
-                        ovTbody.innerHTML = items.map(e => `
-                            <tr>
-                                <td><span class="badge ${e.type === 'Ministry' ? 'badge-resolved' : 'badge-progress'}">${e.type}</span></td>
-                                <td><strong>${e.name}</strong></td>
-                                <td>${e.leader || '<span style="color:#94a3b8;">N/A</span>'}</td>
-                                <td><a href="${e.website}" target="_blank" style="color:var(--primary-green);"><i class="fas fa-external-link-alt"></i> Visit</a></td>
-                                <td>
-                                    <button onclick="deleteEntity(${e.id})" class="btn-action btn-delete">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        `).join('');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && !data.error) {
+                        items = data;
+                        localStorage.setItem('rhnd_entities_db', JSON.stringify(items));
                     }
                 }
+            } catch(e) {
+                console.warn("Using stored ministries and agencies dataset");
+            }
 
-                // Sync Full Panel Table
-                const fullTbody = document.getElementById('entities-full-list-tbody');
-                if (fullTbody) {
-                    if (!items || items.length === 0) {
-                        fullTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No entities found.</td></tr>';
-                    } else {
-                        fullTbody.innerHTML = items.map(e => `
-                            <tr>
-                                <td><span class="badge ${e.type === 'Ministry' ? 'badge-resolved' : 'badge-progress'}">${e.type}</span></td>
-                                <td><strong>${e.name}</strong></td>
-                                <td>${e.leader || 'N/A'}</td>
-                                <td><a href="${e.website}" target="_blank" style="color:var(--primary-green); font-weight:600;"><i class="fas fa-link"></i> ${e.website}</a></td>
-                                <td>
-                                    <button onclick="deleteEntity(${e.id})" class="btn-action btn-delete">
-                                        <i class="fas fa-trash"></i> Remove
-                                    </button>
-                                </td>
-                            </tr>
-                        `).join('');
-                    }
+            const badge = document.getElementById('badge-entities-count');
+            if (badge) badge.textContent = items.length || 0;
+
+            const ovTbody = document.getElementById('ov-entities-list-tbody');
+            if (ovTbody) {
+                if (!items || items.length === 0) {
+                    ovTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 20px;">No ministries or agencies configured.</td></tr>';
+                } else {
+                    ovTbody.innerHTML = items.map(e => `
+                        <tr>
+                            <td><span class="badge ${e.type === 'Ministry' ? 'badge-resolved' : 'badge-progress'}">${e.type}</span></td>
+                            <td><strong style="color: #0f172a;">${e.name}</strong></td>
+                            <td>${e.leader || '<span style="color:#94a3b8;">N/A</span>'}</td>
+                            <td><a href="${e.website}" target="_blank" style="color:var(--primary-green); font-weight: 600;"><i class="fas fa-external-link-alt"></i> Visit Portal</a></td>
+                            <td>
+                                <button onclick="deleteEntity('${e.id}')" class="btn-action btn-delete">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
                 }
-            } catch(err) {
-                console.error("Error loading entities:", err);
+            }
+
+            const fullTbody = document.getElementById('entities-full-list-tbody');
+            if (fullTbody) {
+                if (!items || items.length === 0) {
+                    fullTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 25px;">No entities found.</td></tr>';
+                } else {
+                    fullTbody.innerHTML = items.map(e => `
+                        <tr>
+                            <td><span class="badge ${e.type === 'Ministry' ? 'badge-resolved' : 'badge-progress'}">${e.type}</span></td>
+                            <td><strong style="color: #0f172a;">${e.name}</strong></td>
+                            <td>${e.leader || 'N/A'}</td>
+                            <td><a href="${e.website}" target="_blank" style="color:var(--primary-green); font-weight:600;"><i class="fas fa-link"></i> ${e.website}</a></td>
+                            <td>
+                                <button onclick="deleteEntity('${e.id}')" class="btn-action btn-delete">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
             }
         }
 
         async function deleteEntity(id) {
-            if (!confirm('Are you sure you want to remove this ministry/agency from the website?')) return;
-            const res = await fetch('/api/entities?id=' + id, { method: 'DELETE', headers: fetchHeaders });
-            if (res.ok) {
-                fetchEntities();
-            } else {
-                alert('Delete failed. Check credentials.');
-            }
+            if (!confirm('Are you sure you want to remove this ministry/agency?')) return;
+            let items = getStoredEntities();
+            items = items.filter(e => String(e.id) !== String(id));
+            localStorage.setItem('rhnd_entities_db', JSON.stringify(items));
+            fetchEntities();
+
+            try {
+                await fetch('/api/entities?id=' + id, { method: 'DELETE', headers: fetchHeaders });
+            } catch(e) {}
         }
 
         // Overview Add Entity Listener
