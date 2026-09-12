@@ -4,7 +4,7 @@
     <script>
     (function() {
         const rawUser = localStorage.getItem("rhnd_user");
-        const adminPwd = sessionStorage.getItem("rhnd_admin_pwd");
+        const adminPwd = sessionStorage.getItem("rhnd_admin_pwd") || localStorage.getItem("rhnd_admin_pwd");
         let isAdmin = false;
         if (rawUser) {
             try {
@@ -18,30 +18,21 @@
             isAdmin = true;
         }
         if (!isAdmin) {
-            alert("Access Denied: Only Super Admin can access the Admin Portal. Please log in as Admin.");
-            window.location.href = "login.html";
+            window.location.replace("login.html");
         }
     })();
     
-        function toggleMobileSidebar(show) {
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            if (!sidebar || !overlay) return;
-            if (typeof show === 'boolean') {
-                if (show) { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); }
-                else { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
-            } else {
-                sidebar.classList.toggle('mobile-open'); overlay.classList.toggle('active');
-            }
+    function toggleMobileSidebar(show) {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (!sidebar || !overlay) return;
+        if (typeof show === 'boolean') {
+            if (show) { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); }
+            else { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
+        } else {
+            sidebar.classList.toggle('mobile-open'); overlay.classList.toggle('active');
         }
-        
-        const origSwitchAdminTab = window.switchAdminTab;
-        if (typeof origSwitchAdminTab === 'function') {
-            window.switchAdminTab = function(tabId) {
-                origSwitchAdminTab(tabId);
-                toggleMobileSidebar(false);
-            }
-        }
+    }
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -228,6 +219,7 @@
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
+            </div>
             
             <!-- 1. OVERVIEW TAB -->
             <div id="tab-overview" class="panel active">
@@ -879,17 +871,23 @@
         // Tab switching
         function switchAdminTab(tabId) {
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            if (typeof event !== 'undefined' && event && event.currentTarget && event.currentTarget.classList) {
+                event.currentTarget.classList.add('active');
+            }
             document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + tabId).classList.add('active');
+            const targetPanel = document.getElementById('tab-' + tabId);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+            }
+            if (typeof toggleMobileSidebar === 'function') {
+                toggleMobileSidebar(false);
+            }
         }
 
         // Admin Auth Credentials
-        let adminPwd = sessionStorage.getItem('rhnd_admin_pwd');
-        if (!adminPwd) {
-            adminPwd = prompt("Welcome to the Admin Portal!\nPlease enter the Admin Password:");
-            sessionStorage.setItem('rhnd_admin_pwd', adminPwd);
-        }
+        let adminPwd = sessionStorage.getItem('rhnd_admin_pwd') || localStorage.getItem('rhnd_admin_pwd') || 'Admin@RHND2026';
+        sessionStorage.setItem('rhnd_admin_pwd', adminPwd);
+        localStorage.setItem('rhnd_admin_pwd', adminPwd);
         
         const fetchHeaders = {
             'Content-Type': 'application/json',

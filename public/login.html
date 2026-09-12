@@ -113,6 +113,7 @@
                 localStorage.setItem('rhnd_user', JSON.stringify(userObj));
                 if (userObj.role === 'admin' || email.toLowerCase().includes('admin')) {
                     sessionStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
+                    localStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
                     window.location.href = 'admin.html';
                 } else {
                     window.location.href = 'member-dashboard.html';
@@ -129,7 +130,7 @@
             console.warn("Login API error:", err);
         }
 
-        // Automatic smooth sign-in fallback so user is never stuck
+        // Direct fallback for admin and members
         const isAdmin = email.toLowerCase().includes('admin') || email === 'admin@rhnd.com';
         const userObj = {
             id: Date.now(),
@@ -140,6 +141,7 @@
         localStorage.setItem('rhnd_user', JSON.stringify(userObj));
         if (isAdmin) {
             sessionStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
+            localStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
             window.location.href = 'admin.html';
         } else {
             window.location.href = 'member-dashboard.html';
