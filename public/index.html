@@ -112,7 +112,6 @@
                         <span class="category">Presidency</span>
                         <h3>Presidential Address on Diaspora Affairs</h3>
                         <p>Summary of the recent activities and policies benefiting the Nigerian diaspora worldwide.</p>
-                        <a href="#" class="read-more">Read Official Source <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
 
@@ -125,7 +124,6 @@
                         <span class="category">Federal Executive Council</span>
                         <h3>New Economic Development Policies</h3>
                         <p>Highlights from the latest FEC meeting concerning national economic development and growth.</p>
-                        <a href="#" class="read-more">Read Official Source <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
 
@@ -138,7 +136,6 @@
                         <span class="category">Foreign Affairs</span>
                         <h3>New Diaspora Investment Program</h3>
                         <p>Details about the newly launched investment opportunities designed exclusively for Nigerians abroad.</p>
-                        <a href="#" class="read-more">Read Official Source <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -265,16 +262,10 @@
                 try {
                     const user = JSON.parse(rawUser);
                     if (user && user.email) {
-                        // User is logged in — change hero buttons
-                        const btnPrimary = document.getElementById("hero-btn-primary");
-                        const btnSecondary = document.getElementById("hero-btn-secondary");
-                        if (btnPrimary) {
-                            btnPrimary.href = "member-dashboard.html";
-                            btnPrimary.innerHTML = '<i class="fas fa-tachometer-alt"></i> My Dashboard';
-                        }
-                        if (btnSecondary) {
-                            btnSecondary.href = "news.html";
-                            btnSecondary.innerHTML = '<i class="fas fa-newspaper"></i> Browse News';
+                        // User is registered/logged in — do not show the hero CTA buttons on the home page
+                        const heroCta = document.getElementById("hero-cta-buttons");
+                        if (heroCta) {
+                            heroCta.style.display = "none";
                         }
                     }
                 } catch(e) {}
