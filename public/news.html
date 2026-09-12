@@ -85,19 +85,31 @@
         {
             id: 101,
             title: "Federal Government Launches Special Diaspora Housing Scheme",
+            category: "Official Policy Announcement",
+            photo: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1000&q=80",
+            video: "",
+            audio: "",
             content: "The Federal Ministry of Housing and Urban Development has unveiled an exclusive mortgage scheme tailored for Nigerians living abroad. The initiative aims to provide secure property ownership and transparent investment opportunities.\n\nUnder this scheme, registered diaspora citizens can apply for federal home loans with flexible repayment terms, verified land titles, and direct consular assistance. Key partner banks and mortgage institutions have integrated automated diaspora verification protocols to prevent fraud and ensure seamless allocation.\n\nInterested applicants can initiate their requests directly through the Diaspora Services section of the RHND portal.",
             created_at: new Date().toISOString()
         },
         {
             id: 102,
             title: "NiDCOM Announces Virtual Diaspora Townhall Dialogue",
+            category: "Townhall Update",
+            photo: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1000&q=80",
+            video: "https://www.w3schools.com/html/mov_bbb.mp4",
+            audio: "",
             content: "The Nigerians in Diaspora Commission (NiDCOM) invites all citizens overseas to participate in the upcoming quarterly virtual townhall meeting with diplomatic representatives and policy makers.\n\nThe interactive session will focus on consular welfare, passport renewal acceleration, voting rights advocacy, and foreign investment security. Registration is free and open to all registered community members.",
             created_at: new Date().toISOString()
         },
         {
             id: 103,
             title: "Nigeria Immigration Service Expands Diaspora Passport Centres",
-            content: "New passport enrollment and renewal processing centers have been established across strategic international locations to reduce processing wait times for diaspora citizens.\n\nCitizens living in North America, Europe, the Middle East, and Asia-Pacific regions can now access fast-track biometric capture appointments at authorized consular processing desks.",
+            category: "Consular Notice",
+            photo: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1000&q=80",
+            video: "",
+            audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+            content: "New passport enrollment and renewal processing centers have been established across strategic international locations to reduce processing wait times for diaspora citizens.\n\nCitizens living in North America, Europe, the Middle East, and Asia-Pacific regions can now access fast-track biometric capture appointments at authorized consular processing desks. Listen to the official audio briefing attached for complete step-by-step instructions.",
             created_at: new Date().toISOString()
         }
     ];
@@ -125,21 +137,47 @@
         const list = document.getElementById('public-news-list');
         if (!list) return;
         
-        list.innerHTML = allNewsPosts.map(post => `
-            <div class="update-card" style="cursor: pointer;" onclick="openNewsArticle(${post.id})">
-                <div class="card-content">
-                    <div class="category">Official Update</div>
-                    <h3>${post.title}</h3>
-                    <p>${(post.content || '').length > 140 ? (post.content || '').substring(0, 140) + '...' : (post.content || '')}</p>
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #718096; font-size: 0.85rem;">${new Date(post.created_at || Date.now()).toLocaleDateString()}</span>
-                        <a href="javascript:void(0)" onclick="event.stopPropagation(); openNewsArticle(${post.id})" class="read-more" style="color: var(--primary-green); font-weight: 700; text-decoration: none;">
+        list.innerHTML = allNewsPosts.map(post => {
+            const hasPhoto = !!post.photo;
+            const hasVideo = !!post.video;
+            const hasAudio = !!post.audio;
+            const category = post.category || 'Official Update';
+
+            return `
+            <div class="update-card" style="cursor: pointer; overflow: hidden; display: flex; flex-direction: column; border-radius: 14px; border: 1px solid #edf2f7; box-shadow: 0 4px 15px rgba(0,0,0,0.04); background: white; transition: transform 0.2s ease, box-shadow 0.2s ease;" onclick="openNewsArticle(${post.id})">
+                ${hasPhoto ? `
+                <div style="width: 100%; height: 190px; overflow: hidden; background: #0f172a; position: relative;">
+                    <img src="${post.photo}" alt="${post.title}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onerror="this.parentElement.style.display='none'">
+                    <div style="position: absolute; bottom: 10px; left: 10px; display: flex; gap: 6px;">
+                        ${hasVideo ? '<span style="background: rgba(37,99,235,0.9); color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 4px;"><i class="fas fa-video"></i> Video</span>' : ''}
+                        ${hasAudio ? '<span style="background: rgba(217,119,6,0.9); color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 4px;"><i class="fas fa-microphone"></i> Voice Note</span>' : ''}
+                    </div>
+                </div>
+                ` : ''}
+                <div class="card-content" style="padding: 22px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+                            <span class="category" style="font-size: 0.76rem; font-weight: 800; color: var(--primary-green); background: #f0fdf4; padding: 3px 10px; border-radius: 20px; border: 1px solid #dcfce7; text-transform: uppercase;">${category}</span>
+                            ${!hasPhoto && (hasVideo || hasAudio) ? `
+                            <div style="display: flex; gap: 6px;">
+                                ${hasVideo ? '<span style="background: #eff6ff; color: #2563eb; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;"><i class="fas fa-video"></i> Video</span>' : ''}
+                                ${hasAudio ? '<span style="background: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;"><i class="fas fa-microphone"></i> Voice Note</span>' : ''}
+                            </div>
+                            ` : ''}
+                        </div>
+                        <h3 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0 0 10px 0; line-height: 1.4;">${post.title}</h3>
+                        <p style="color: #64748b; font-size: 0.92rem; line-height: 1.5; margin: 0 0 16px 0;">${(post.content || '').length > 130 ? (post.content || '').substring(0, 130) + '...' : (post.content || '')}</p>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 12px;">
+                        <span style="color: #94a3b8; font-size: 0.82rem; font-weight: 600;"><i class="far fa-calendar-alt"></i> ${new Date(post.created_at || Date.now()).toLocaleDateString()}</span>
+                        <span class="read-more" style="color: var(--primary-green); font-weight: 700; font-size: 0.88rem; text-decoration: none; display: flex; align-items: center; gap: 5px;">
                             Read More <i class="fas fa-arrow-right"></i>
-                        </a>
+                        </span>
                     </div>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     function openNewsArticle(postId) {
@@ -147,9 +185,70 @@
         if (!post) return;
         
         document.getElementById('modal-article-title').textContent = post.title;
+        document.getElementById('modal-article-category').textContent = post.category || 'Official Update';
         document.getElementById('modal-article-date').textContent = new Date(post.created_at || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        document.getElementById('modal-article-content').textContent = post.content;
+        document.getElementById('modal-article-content').innerHTML = (post.content || '').split('\n\n').map(p => `<p style="margin-bottom: 14px; line-height: 1.7; color: #334155; font-size: 1rem;">${p}</p>`).join('');
         
+        // Media container
+        const mediaWrap = document.getElementById('modal-media-wrapper');
+        if (mediaWrap) {
+            let mediaHTML = '';
+            
+            // Photo
+            if (post.photo) {
+                mediaHTML += `
+                <div style="margin: 0 0 20px 0; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; max-height: 380px; background: #0f172a;">
+                    <img src="${post.photo}" alt="${post.title}" style="width: 100%; height: 100%; max-height: 380px; object-fit: contain;">
+                </div>
+                `;
+            }
+            
+            // Video
+            if (post.video) {
+                const isYouTube = post.video.includes('youtube.com') || post.video.includes('youtu.be');
+                if (isYouTube) {
+                    let ytUrl = post.video;
+                    if (ytUrl.includes('watch?v=')) ytUrl = ytUrl.replace('watch?v=', 'embed/');
+                    if (ytUrl.includes('youtu.be/')) ytUrl = ytUrl.replace('youtu.be/', 'www.youtube.com/embed/');
+                    mediaHTML += `
+                    <div style="margin: 0 0 20px 0; border-radius: 12px; overflow: hidden; position: relative; padding-bottom: 56.25%; height: 0; background: #000;">
+                        <iframe src="${ytUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+                    </div>
+                    `;
+                } else {
+                    mediaHTML += `
+                    <div style="margin: 0 0 20px 0; border-radius: 12px; overflow: hidden; background: #000;">
+                        <video controls style="width: 100%; max-height: 360px; display: block;" src="${post.video}">
+                            Your browser does not support HTML video.
+                        </video>
+                    </div>
+                    `;
+                }
+            }
+
+            // Voice Note / Audio
+            if (post.audio) {
+                mediaHTML += `
+                <div style="margin: 0 0 20px 0; background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1px solid #fde68a; border-radius: 12px; padding: 16px 20px; box-shadow: 0 2px 8px rgba(245,158,11,0.1);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #d97706; color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                            <i class="fas fa-microphone-alt"></i>
+                        </div>
+                        <div>
+                            <strong style="color: #92400e; font-size: 0.95rem; display: block;">Official Voice Briefing</strong>
+                            <small style="color: #b45309;">Listen to voice note from diaspora representative</small>
+                        </div>
+                    </div>
+                    <audio controls style="width: 100%; border-radius: 30px;" src="${post.audio}">
+                        Your browser does not support audio playback.
+                    </audio>
+                </div>
+                `;
+            }
+
+            mediaWrap.innerHTML = mediaHTML;
+        }
+
         const modal = document.getElementById('newsArticleModal');
         if (modal) {
             modal.style.display = 'flex';
@@ -159,6 +258,11 @@
     function closeNewsArticleModal() {
         const modal = document.getElementById('newsArticleModal');
         if (modal) {
+            // Stop any playing audio/video inside modal
+            const v = modal.querySelector('video');
+            if (v) v.pause();
+            const a = modal.querySelector('audio');
+            if (a) a.pause();
             modal.style.display = 'none';
         }
     }
@@ -190,11 +294,32 @@
                 }
             }
         } catch(e) {
-            console.warn("Using default news dataset");
+            console.warn("Using local news cache");
         }
     }
     loadNews();
-</script><!-- Footer -->
+</script>
+
+<!-- News Article Modal -->
+<div id="newsArticleModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.7); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+    <div style="background: white; border-radius: 18px; max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.8); position: relative;">
+        <div style="padding: 25px 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; position: sticky; top: 0; background: white; z-index: 2; border-top-left-radius: 18px; border-top-right-radius: 18px;">
+            <div>
+                <span id="modal-article-category" style="font-size: 0.78rem; font-weight: 800; color: var(--primary-green); background: #f0fdf4; padding: 3px 12px; border-radius: 20px; border: 1px solid #dcfce7; text-transform: uppercase;">Official Update</span>
+                <h2 id="modal-article-title" style="margin: 8px 0 0 0; font-size: 1.45rem; color: #0f172a; font-weight: 800; line-height: 1.35;">News Headline</h2>
+                <div style="color: #64748b; font-size: 0.85rem; margin-top: 6px; font-weight: 600;"><i class="far fa-calendar-alt"></i> <span id="modal-article-date">Date</span></div>
+            </div>
+            <button type="button" onclick="closeNewsArticleModal()" style="background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.3rem; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">&times;</button>
+        </div>
+        <div style="padding: 25px 30px;">
+            <div id="modal-media-wrapper"></div>
+            <div id="modal-article-content"></div>
+        </div>
+        <div style="padding: 15px 30px 25px 30px; border-top: 1px solid #f1f5f9; text-align: right;">
+            <button type="button" onclick="closeNewsArticleModal()" class="btn btn-secondary" style="padding: 8px 22px; font-size: 0.9rem; font-weight: 700;">Close</button>
+        </div>
+    </div>
+</div><!-- Footer -->
     <footer class="main-footer">
         <div class="container footer-grid">
             <div class="footer-col brand-col">

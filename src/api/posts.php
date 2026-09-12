@@ -3,15 +3,21 @@ require __DIR__ . "/../../config/database.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Ensure posts table exists in PostgreSQL
+// Ensure posts table exists in PostgreSQL and has photo, video, audio columns
 try {
     $pdo->exec("CREATE TABLE IF NOT EXISTS posts (
         id SERIAL PRIMARY KEY,
         user_id INT NULL,
         title VARCHAR(255) NOT NULL,
         content TEXT NOT NULL,
+        photo TEXT NULL,
+        video TEXT NULL,
+        audio TEXT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
+    $pdo->exec("ALTER TABLE posts ADD COLUMN IF NOT EXISTS photo TEXT NULL");
+    $pdo->exec("ALTER TABLE posts ADD COLUMN IF NOT EXISTS video TEXT NULL");
+    $pdo->exec("ALTER TABLE posts ADD COLUMN IF NOT EXISTS audio TEXT NULL");
 } catch (\Exception $e) {
     // Ignore if table exists or permission quirks
 }
@@ -48,14 +54,26 @@ elseif ($method === 'POST') {
         exit;
     }
     
+    $photo = $data['photo'] ?? null;
+    $video = $data['video'] ?? null;
+    $audio = $data['audio'] ?? null;
+
     try {
-        $stmt = $pdo->prepare("INSERT INTO posts (title, content) VALUES (?, ?)");
-        $stmt->execute([$data['title'], $data['content']]);
+        $stmt = $pdo->prepare("INSERT INTO posts (title, content, photo, video, audio) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$data['title'], $data['content'], $photo, $video, $audio]);
         $newId = $pdo->lastInsertId();
         echo json_encode(["success" => true, "id" => $newId]);
     } catch (\Exception $e) {
-        http_response_code(500);
-        echo json_encode(["error" => "Failed to save post: " . $e->getMessage()]);
+        // Fallback for older schemas
+        try {
+            $stmt = $pdo->prepare("INSERT INTO posts (title, content) VALUES (?, ?)");
+            $stmt->execute([$data['title'], $data['content']]);
+            $newId = $pdo->lastInsertId();
+            echo json_encode(["success" => true, "id" => $newId]);
+        } catch (\Exception $e2) {
+            http_response_code(500);
+            echo json_encode(["error" => "Failed to save post: " . $e2->getMessage()]);
+        }
     }
 }
 elseif ($method === 'DELETE') {

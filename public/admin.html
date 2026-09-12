@@ -179,7 +179,7 @@
                     <i class="fas fa-newspaper"></i> Manage News
                 </div>
                 <div class="nav-item" onclick="switchAdminTab('members')">
-                    <i class="fas fa-users"></i> Member Directory
+                    <i class="fas fa-users"></i> Total Members
                 </div>
                 <div class="nav-item" onclick="switchAdminTab('requests')">
                     <i class="fas fa-hands-helping"></i> Support Desk
@@ -189,12 +189,6 @@
                 </div>
                 <div class="nav-item" onclick="switchAdminTab('broadcast')">
                     <i class="fas fa-bullhorn"></i> Broadcast Alert
-                </div>
-                <div class="nav-item" onclick="switchAdminTab('entities')">
-                    <i class="fas fa-landmark"></i> Ministries & Agencies
-                </div>
-                <div class="nav-item" onclick="switchAdminTab('settings')">
-                    <i class="fas fa-cog"></i> Platform Settings
                 </div>
             </div>
             <div style="padding: 20px;">
@@ -377,16 +371,13 @@
                                 <i class="fas fa-newspaper"></i> News (<span id="badge-news-count">0</span>)
                             </button>
                             <button type="button" onclick="switchOverviewSubTab('members')" id="subtab-btn-members" class="btn-action" style="padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; background: #e2e8f0; color: #334155;">
-                                <i class="fas fa-users"></i> Members (<span id="badge-members-count">0</span>)
+                                <i class="fas fa-users"></i> Total Members (<span id="badge-members-count">0</span>)
                             </button>
                             <button type="button" onclick="switchOverviewSubTab('requests')" id="subtab-btn-requests" class="btn-action" style="padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; background: #e2e8f0; color: #334155;">
                                 <i class="fas fa-ticket-alt"></i> Tickets (<span id="badge-requests-count">0</span>)
                             </button>
                             <button type="button" onclick="switchOverviewSubTab('media')" id="subtab-btn-media" class="btn-action" style="padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; background: #e2e8f0; color: #334155;">
                                 <i class="fas fa-photo-video"></i> Media (<span id="badge-media-count">0</span>)
-                            </button>
-                            <button type="button" onclick="switchOverviewSubTab('entities')" id="subtab-btn-entities" class="btn-action" style="padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; background: #e2e8f0; color: #334155;">
-                                <i class="fas fa-landmark"></i> Ministries & Agencies (<span id="badge-entities-count">0</span>)
                             </button>
                         </div>
                     </div>
@@ -395,17 +386,63 @@
                     <div id="subtab-content-news" class="subtab-content">
                         <div style="background: #f8fafc; padding: 22px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
                             <h4 style="margin: 0 0 15px 0; color: var(--secondary-dark-green); font-size: 1.05rem;">
-                                <i class="fas fa-plus-circle text-gold"></i> Add New News Article / Announcement
+                                <i class="fas fa-plus-circle text-gold"></i> Add New News Article (Photo, Video & Voice Note)
                             </h4>
                             <form id="ov-add-post-form">
-                                <div class="form-group">
-                                    <label>Article Headline</label>
-                                    <input type="text" id="ov-post-title" class="form-control" required placeholder="Enter news title...">
+                                <div class="form-row">
+                                    <div class="form-group" style="flex: 2;">
+                                        <label>Article Headline</label>
+                                        <input type="text" id="ov-post-title" class="form-control" required placeholder="Enter news title...">
+                                    </div>
+                                    <div class="form-group" style="flex: 1;">
+                                        <label>Category</label>
+                                        <select id="ov-post-category" class="form-control">
+                                            <option value="Official Update">Official Update</option>
+                                            <option value="Policy Announcement">Policy Announcement</option>
+                                            <option value="Townhall Update">Townhall Update</option>
+                                            <option value="Consular Notice">Consular Notice</option>
+                                            <option value="Diaspora Welfare">Diaspora Welfare</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label>Article Details</label>
                                     <textarea id="ov-post-content" class="form-control" required rows="3" placeholder="Enter article body..."></textarea>
                                 </div>
+
+                                <!-- Multimedia row -->
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 15px; background: white; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                    <div>
+                                        <label style="font-weight: 700; font-size: 0.82rem; color: var(--primary-green); margin-bottom: 4px; display: block;"><i class="fas fa-image"></i> Photo</label>
+                                        <input type="file" id="ov-post-photo-file" accept="image/*" class="form-control" style="font-size: 0.78rem; padding: 5px;">
+                                        <input type="url" id="ov-post-photo-url" class="form-control" placeholder="Or Image URL" style="font-size: 0.78rem; padding: 5px; margin-top: 4px;">
+                                        <div id="ov-post-photo-preview" style="display: none; margin-top: 5px; position: relative;">
+                                            <img id="ov-post-photo-img" src="" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;">
+                                            <button type="button" onclick="clearMedia('ov-post-photo')" style="position: absolute; top: 2px; right: 2px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; cursor: pointer;">&times;</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="font-weight: 700; font-size: 0.82rem; color: #2563eb; margin-bottom: 4px; display: block;"><i class="fas fa-video"></i> Video</label>
+                                        <input type="file" id="ov-post-video-file" accept="video/*" class="form-control" style="font-size: 0.78rem; padding: 5px;">
+                                        <input type="url" id="ov-post-video-url" class="form-control" placeholder="Or Video URL / MP4" style="font-size: 0.78rem; padding: 5px; margin-top: 4px;">
+                                        <div id="ov-post-video-preview" style="display: none; margin-top: 5px; position: relative;">
+                                            <video id="ov-post-video-elem" controls style="width: 100%; height: 75px; border-radius: 6px; background: #000;"></video>
+                                            <button type="button" onclick="clearMedia('ov-post-video')" style="position: absolute; top: 2px; right: 2px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; cursor: pointer;">&times;</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="font-weight: 700; font-size: 0.82rem; color: #b45309; margin-bottom: 4px; display: block;"><i class="fas fa-microphone"></i> Voice Note</label>
+                                        <button type="button" onclick="toggleVoiceRecording('ov-post')" class="btn btn-secondary" style="padding: 5px 8px; font-size: 0.75rem; width: 100%; margin-bottom: 4px; color: #b45309;">
+                                            <i class="fas fa-microphone" id="rec-icon-ov-post" style="color: #dc2626;"></i> <span id="rec-label-ov-post">Record Voice</span>
+                                        </button>
+                                        <input type="file" id="ov-post-audio-file" accept="audio/*" class="form-control" style="font-size: 0.78rem; padding: 5px;">
+                                        <div id="ov-post-audio-preview" style="display: none; margin-top: 5px; position: relative;">
+                                            <audio id="ov-post-audio-elem" controls style="width: 100%; height: 30px;"></audio>
+                                            <button type="button" onclick="clearMedia('ov-post-audio')" style="position: absolute; top: -5px; right: -5px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 0.65rem; cursor: pointer;">&times;</button>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <button type="submit" class="btn btn-primary" style="padding: 9px 20px; font-size: 0.9rem;">
                                     <i class="fas fa-paper-plane"></i> Publish Live
                                 </button>
@@ -573,67 +610,6 @@
                         </div>
                     </div>
 
-                    <!-- 5. MINISTRIES & AGENCIES SUBTAB -->
-                    <div id="subtab-content-entities" class="subtab-content" style="display: none;">
-                        <div style="background: #f8fafc; padding: 22px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
-                            <h4 style="margin: 0 0 15px 0; color: var(--secondary-dark-green); font-size: 1.05rem;">
-                                <i class="fas fa-landmark text-gold"></i> Add Federal Ministry or Agency
-                            </h4>
-                            <form id="ov-add-entity-form">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label>Entity Type</label>
-                                        <select id="ov-ent-type" class="form-control">
-                                            <option value="Ministry">Federal Ministry</option>
-                                            <option value="Agency">Government Agency / Commission</option>
-                                            <option value="Policy">National Policy Initiative</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Official Name</label>
-                                        <input type="text" id="ov-ent-name" class="form-control" required placeholder="e.g. Federal Ministry of Foreign Affairs">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label>Leadership / Head</label>
-                                        <input type="text" id="ov-ent-leader" class="form-control" placeholder="e.g. Amb. Yusuf Maitama Tuggar (Minister)">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Official Website URL</label>
-                                        <input type="url" id="ov-ent-website" class="form-control" placeholder="https://foreignaffairs.gov.ng">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Mandate / Description</label>
-                                    <textarea id="ov-ent-desc" class="form-control" rows="2" placeholder="Brief mandate or citizen services..."></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary" style="padding: 9px 20px; font-size: 0.9rem;">
-                                    <i class="fas fa-plus"></i> Save Entity
-                                </button>
-                                <span id="ov-ent-status" style="margin-left: 15px; color: var(--primary-green); font-weight: 700; display: none;"></span>
-                            </form>
-                        </div>
-                        <h4 style="margin: 0 0 15px 0; color: #0f172a; display: flex; justify-content: space-between;">
-                            <span>Configured Ministries & Agencies</span>
-                            <small style="color: #64748b; font-weight: normal;">Click 'Delete' to remove any entry</small>
-                        </h4>
-                        <div class="table-responsive">
-                            <table class="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>Category</th>
-                                        <th>Official Name</th>
-                                        <th>Minister / Leader</th>
-                                        <th>Website</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ov-entities-list-tbody">
-                                    <tr><td colspan="5" style="text-align: center; color: #64748b;">Loading entities...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
 
@@ -642,18 +618,89 @@
             <!-- 2. MANAGE NEWS TAB -->
             <div id="tab-news" class="panel">
                 <div class="content-card">
-                    <h3>Publish Official Update or Announcement</h3>
+                    <h3><i class="fas fa-bullhorn text-gold" style="margin-right: 8px;"></i> Publish Official News, Photo, Video & Voice Note</h3>
                     <form id="add-post-form">
-                        <div class="form-group">
-                            <label>News Headline / Title</label>
-                            <input type="text" id="post-title" class="form-control" required placeholder="e.g. Federal Government Launches New Diaspora Housing Initiative">
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 2;">
+                                <label>News Headline / Title</label>
+                                <input type="text" id="post-title" class="form-control" required placeholder="e.g. Federal Government Launches Special Diaspora Housing Scheme">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>Category / Type</label>
+                                <select id="post-category" class="form-control">
+                                    <option value="Official Update">Official Update</option>
+                                    <option value="Policy Announcement">Policy Announcement</option>
+                                    <option value="Townhall Update">Townhall Update</option>
+                                    <option value="Consular Notice">Consular Notice</option>
+                                    <option value="Diaspora Welfare">Diaspora Welfare</option>
+                                    <option value="Special Broadcast">Special Broadcast</option>
+                                </select>
+                            </div>
                         </div>
+
                         <div class="form-group">
                             <label>Article Content Body</label>
-                            <textarea id="post-content" class="form-control" required rows="6" placeholder="Write full details, official quotes, or policy guidelines..."></textarea>
+                            <textarea id="post-content" class="form-control" required rows="5" placeholder="Write full details, official quotes, or policy guidelines..."></textarea>
                         </div>
+
+                        <!-- MULTIMEDIA ATTACHMENTS (PHOTO, VIDEO, VOICE NOTE) -->
+                        <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 20px; margin-bottom: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+                            <div style="font-weight: 800; color: #0f172a; font-size: 0.95rem; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;">
+                                <span><i class="fas fa-paperclip text-gold"></i> Media Attachments (Photo, Video & Voice Note)</span>
+                                <span style="font-size: 0.78rem; font-weight: normal; color: #64748b;">Attach files directly or provide URLs</span>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+                                <!-- 1. PHOTO -->
+                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
+                                    <label style="font-weight: 700; color: var(--primary-green); font-size: 0.88rem; display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                                        <i class="fas fa-image"></i> 1. Upload Photo / Image
+                                    </label>
+                                    <input type="file" id="post-photo-file" accept="image/*" class="form-control" style="font-size: 0.8rem; padding: 6px 8px; margin-bottom: 8px;">
+                                    <input type="url" id="post-photo-url" class="form-control" placeholder="Or paste Image URL (https://...)" style="font-size: 0.82rem; padding: 7px 10px; margin: 0;">
+                                    <div id="post-photo-preview" style="margin-top: 10px; display: none; position: relative;">
+                                        <img id="post-photo-img" src="" style="width: 100%; height: 130px; object-fit: cover; border-radius: 8px; border: 1px solid #cbd5e1;">
+                                        <button type="button" onclick="clearMedia('post-photo')" style="position: absolute; top: 6px; right: 6px; background: rgba(220,38,38,0.9); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 0.8rem;" title="Remove Photo">&times;</button>
+                                    </div>
+                                </div>
+
+                                <!-- 2. VIDEO -->
+                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
+                                    <label style="font-weight: 700; color: #2563eb; font-size: 0.88rem; display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                                        <i class="fas fa-video"></i> 2. Upload Video (MP4 / Link)
+                                    </label>
+                                    <input type="file" id="post-video-file" accept="video/*" class="form-control" style="font-size: 0.8rem; padding: 6px 8px; margin-bottom: 8px;">
+                                    <input type="url" id="post-video-url" class="form-control" placeholder="Or paste Video URL (MP4 / YouTube)" style="font-size: 0.82rem; padding: 7px 10px; margin: 0;">
+                                    <div id="post-video-preview" style="margin-top: 10px; display: none; position: relative;">
+                                        <video id="post-video-elem" controls style="width: 100%; max-height: 130px; border-radius: 8px; background: #000;"></video>
+                                        <button type="button" onclick="clearMedia('post-video')" style="position: absolute; top: 6px; right: 6px; background: rgba(220,38,38,0.9); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 0.8rem;" title="Remove Video">&times;</button>
+                                    </div>
+                                </div>
+
+                                <!-- 3. VOICE NOTE / AUDIO -->
+                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <label style="font-weight: 700; color: #b45309; font-size: 0.88rem; display: flex; align-items: center; gap: 6px; margin: 0;">
+                                            <i class="fas fa-microphone-alt"></i> 3. Voice Note / Audio
+                                        </label>
+                                    </div>
+                                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                                        <button type="button" id="btn-record-voice" onclick="toggleVoiceRecording('post')" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.82rem; flex: 1; border-color: #f59e0b; color: #b45309;">
+                                            <i class="fas fa-microphone" id="rec-icon-post" style="color: #dc2626;"></i> <span id="rec-label-post">Record Live Voice Note</span>
+                                        </button>
+                                    </div>
+                                    <input type="file" id="post-audio-file" accept="audio/*" class="form-control" style="font-size: 0.8rem; padding: 6px 8px; margin-bottom: 8px;">
+                                    <input type="url" id="post-audio-url" class="form-control" placeholder="Or paste Audio/MP3 URL" style="font-size: 0.82rem; padding: 7px 10px; margin: 0;">
+                                    <div id="post-audio-preview" style="margin-top: 10px; display: none; position: relative;">
+                                        <audio id="post-audio-elem" controls style="width: 100%; height: 36px;"></audio>
+                                        <button type="button" onclick="clearMedia('post-audio')" style="position: absolute; top: -8px; right: -8px; background: rgba(220,38,38,0.9); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 0.75rem;" title="Remove Voice Note">&times;</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div style="display: flex; align-items: center; gap: 15px;">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" style="padding: 12px 28px; font-size: 0.95rem;">
                                 <i class="fas fa-paper-plane"></i> Publish Live Update
                             </button>
                             <span id="post-status" style="color: var(--primary-green); font-weight: 700; display: none;"></span>
@@ -877,105 +924,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 7. MINISTRIES & AGENCIES FULL PANEL -->
-            <div id="tab-entities" class="panel">
-                <div class="content-card">
-                    <h3>Add New Federal Ministry or Government Agency</h3>
-                    <form id="add-entity-full-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Entity Type</label>
-                                <select id="ent-type-full" class="form-control">
-                                    <option value="Ministry">Federal Ministry</option>
-                                    <option value="Agency">Government Agency / Commission</option>
-                                    <option value="Policy">National Policy Initiative</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Official Name</label>
-                                <input type="text" id="ent-name-full" class="form-control" required placeholder="e.g. Federal Ministry of Foreign Affairs">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Leadership / Head</label>
-                                <input type="text" id="ent-leader-full" class="form-control" placeholder="e.g. Amb. Yusuf Maitama Tuggar (Minister)">
-                            </div>
-                            <div class="form-group">
-                                <label>Official Website Link</label>
-                                <input type="url" id="ent-website-full" class="form-control" placeholder="https://foreignaffairs.gov.ng">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Mandate & Key Responsibilities</label>
-                            <textarea id="ent-desc-full" class="form-control" rows="3" placeholder="Brief mandate or citizen services..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Save to Official Platform
-                        </button>
-                    </form>
-                </div>
-
-                <div class="content-card">
-                    <h3>Published Ministries & Agencies List</h3>
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Official Name</th>
-                                    <th>Minister / Leader</th>
-                                    <th>Website</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="entities-full-list-tbody">
-                                <tr><td colspan="5" style="text-align: center;">Loading entities...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 8. PLATFORM SETTINGS TAB -->
-            <div id="tab-settings" class="panel">
-                <div class="content-card">
-                    <h3>Platform & Contact Settings</h3>
-                    <form id="platform-settings-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Organization Title</label>
-                                <input type="text" id="setting-org-name" class="form-control" value="RENEWED HOPE NIGERIA DIASPORA">
-                            </div>
-                            <div class="form-group">
-                                <label>Official Tagline</label>
-                                <input type="text" id="setting-tagline" class="form-control" value="Connecting Nigerians Worldwide">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Diaspora Support Email</label>
-                                <input type="email" id="setting-email" class="form-control" value="support@rhnd.org">
-                            </div>
-                            <div class="form-group">
-                                <label>Consular Helpline</label>
-                                <input type="text" id="setting-phone" class="form-control" value="07047000070">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Headquarters Address</label>
-                            <input type="text" id="setting-address" class="form-control" value="Federal Capital Territory, Abuja, Nigeria">
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Save Platform Settings
-                            </button>
-                            <span id="setting-save-status" style="color: var(--primary-green); font-weight: 700; display: none;">Settings Saved!</span>
-                        </div>
-                    </form>
-                </div>
-            </div>
             
         </main>
     </div>
@@ -1074,7 +1022,7 @@
         }
 
         function switchOverviewSubTab(subtab) {
-            const tabs = ['news', 'members', 'requests', 'media', 'entities'];
+            const tabs = ['news', 'members', 'requests', 'media'];
             tabs.forEach(t => {
                 const btn = document.getElementById(`subtab-btn-${t}`);
                 const content = document.getElementById(`subtab-content-${t}`);
@@ -1095,6 +1043,231 @@
             });
         }
 
+        // --- MULTIMEDIA (PHOTO, VIDEO, VOICE NOTE) ATTACHMENT STATE & HANDLERS ---
+        const newsMediaState = {
+            'post': { photo: '', video: '', audio: '' },
+            'ov-post': { photo: '', video: '', audio: '' }
+        };
+
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let recordInterval = null;
+        let recordSeconds = 0;
+        let activeRecordPrefix = null;
+
+        function clearMedia(key) {
+            // key example: 'post-photo', 'ov-post-video', 'post-audio'
+            const parts = key.split('-');
+            const prefix = parts.length === 3 ? parts[0] + '-' + parts[1] : parts[0];
+            const type = parts[parts.length - 1]; // photo, video, audio
+
+            if (newsMediaState[prefix]) {
+                newsMediaState[prefix][type] = '';
+            }
+
+            const preview = document.getElementById(`${key}-preview`);
+            if (preview) preview.style.display = 'none';
+
+            const fileInput = document.getElementById(`${key}-file`);
+            if (fileInput) fileInput.value = '';
+
+            const urlInput = document.getElementById(`${key}-url`);
+            if (urlInput) urlInput.value = '';
+
+            if (type === 'photo') {
+                const img = document.getElementById(`${key}-img`);
+                if (img) img.src = '';
+            } else if (type === 'video') {
+                const vid = document.getElementById(`${key}-elem`);
+                if (vid) { vid.pause(); vid.src = ''; }
+            } else if (type === 'audio') {
+                const aud = document.getElementById(`${key}-elem`);
+                if (aud) { aud.pause(); aud.src = ''; }
+            }
+        }
+
+        async function toggleVoiceRecording(prefix) {
+            const btnLabel = document.getElementById(`rec-label-${prefix}`);
+            const btnIcon = document.getElementById(`rec-icon-${prefix}`);
+
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                // Stop recording
+                mediaRecorder.stop();
+                clearInterval(recordInterval);
+                if (btnLabel) btnLabel.textContent = 'Record Live Voice Note';
+                if (btnIcon) {
+                    btnIcon.className = 'fas fa-microphone';
+                    btnIcon.style.color = '#dc2626';
+                }
+                return;
+            }
+
+            // Start recording
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                activeRecordPrefix = prefix;
+                recordSeconds = 0;
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const base64Audio = reader.result;
+                        newsMediaState[prefix].audio = base64Audio;
+                        const audElem = document.getElementById(`${prefix}-audio-elem`);
+                        const preview = document.getElementById(`${prefix}-audio-preview`);
+                        if (audElem && preview) {
+                            audElem.src = base64Audio;
+                            preview.style.display = 'block';
+                        }
+                    };
+                    reader.readAsDataURL(audioBlob);
+                    // Stop tracks
+                    stream.getTracks().forEach(t => t.stop());
+                };
+
+                mediaRecorder.start();
+                if (btnLabel) btnLabel.textContent = 'Recording 00:00... (Click to Stop)';
+                if (btnIcon) {
+                    btnIcon.className = 'fas fa-stop-circle';
+                    btnIcon.style.color = '#dc2626';
+                }
+
+                recordInterval = setInterval(() => {
+                    recordSeconds++;
+                    const mins = String(Math.floor(recordSeconds / 60)).padStart(2, '0');
+                    const secs = String(recordSeconds % 60).padStart(2, '0');
+                    if (btnLabel) btnLabel.textContent = `Recording ${mins}:${secs}... (Click to Stop)`;
+                }, 1000);
+
+            } catch (err) {
+                alert('Microphone access was denied or not available. You can upload an audio file instead.');
+                console.warn('Microphone error:', err);
+            }
+        }
+
+        function initMediaInputListeners(prefix) {
+            // Photo File
+            const photoFile = document.getElementById(`${prefix}-photo-file`);
+            if (photoFile) {
+                photoFile.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (evt) => {
+                            newsMediaState[prefix].photo = evt.target.result;
+                            const img = document.getElementById(`${prefix}-photo-img`);
+                            const prev = document.getElementById(`${prefix}-photo-preview`);
+                            if (img && prev) {
+                                img.src = evt.target.result;
+                                prev.style.display = 'block';
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Photo URL
+            const photoUrl = document.getElementById(`${prefix}-photo-url`);
+            if (photoUrl) {
+                photoUrl.addEventListener('input', (e) => {
+                    const val = e.target.value.trim();
+                    if (val) {
+                        newsMediaState[prefix].photo = val;
+                        const img = document.getElementById(`${prefix}-photo-img`);
+                        const prev = document.getElementById(`${prefix}-photo-preview`);
+                        if (img && prev) {
+                            img.src = val;
+                            prev.style.display = 'block';
+                        }
+                    }
+                });
+            }
+
+            // Video File
+            const videoFile = document.getElementById(`${prefix}-video-file`);
+            if (videoFile) {
+                videoFile.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (evt) => {
+                            newsMediaState[prefix].video = evt.target.result;
+                            const vid = document.getElementById(`${prefix}-video-elem`);
+                            const prev = document.getElementById(`${prefix}-video-preview`);
+                            if (vid && prev) {
+                                vid.src = evt.target.result;
+                                prev.style.display = 'block';
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Video URL
+            const videoUrl = document.getElementById(`${prefix}-video-url`);
+            if (videoUrl) {
+                videoUrl.addEventListener('input', (e) => {
+                    const val = e.target.value.trim();
+                    if (val) {
+                        newsMediaState[prefix].video = val;
+                        const vid = document.getElementById(`${prefix}-video-elem`);
+                        const prev = document.getElementById(`${prefix}-video-preview`);
+                        if (vid && prev) {
+                            vid.src = val;
+                            prev.style.display = 'block';
+                        }
+                    }
+                });
+            }
+
+            // Audio File
+            const audioFile = document.getElementById(`${prefix}-audio-file`);
+            if (audioFile) {
+                audioFile.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (evt) => {
+                            newsMediaState[prefix].audio = evt.target.result;
+                            const aud = document.getElementById(`${prefix}-audio-elem`);
+                            const prev = document.getElementById(`${prefix}-audio-preview`);
+                            if (aud && prev) {
+                                aud.src = evt.target.result;
+                                prev.style.display = 'block';
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Audio URL
+            const audioUrl = document.getElementById(`${prefix}-audio-url`);
+            if (audioUrl) {
+                audioUrl.addEventListener('input', (e) => {
+                    const val = e.target.value.trim();
+                    if (val) {
+                        newsMediaState[prefix].audio = val;
+                        const aud = document.getElementById(`${prefix}-audio-elem`);
+                        const prev = document.getElementById(`${prefix}-audio-preview`);
+                        if (aud && prev) {
+                            aud.src = val;
+                            prev.style.display = 'block';
+                        }
+                    }
+                });
+            }
+        }
+
         function syncOverviewLists(posts, users, requests, media) {
             if (posts) {
                 const ovPosts = document.getElementById('ov-posts-list');
@@ -1103,12 +1276,20 @@
                         ovPosts.innerHTML = '<p style="color: #64748b;">No news articles yet.</p>';
                     } else {
                         ovPosts.innerHTML = posts.slice(0, 5).map(post => `
-                            <div style="border-bottom: 1px solid #e2e8f0; padding: 12px 0; display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <strong style="color: #0f172a; font-size: 0.95rem;">${post.title}</strong>
-                                    <div style="color: #64748b; font-size: 0.8rem;"><i class="far fa-calendar-alt"></i> ${new Date(post.created_at || Date.now()).toLocaleDateString()}</div>
+                            <div style="border-bottom: 1px solid #e2e8f0; padding: 12px 0; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    ${post.photo ? `<img src="${post.photo}" style="width: 48px; height: 48px; border-radius: 6px; object-fit: cover; flex-shrink: 0;" onerror="this.style.display='none'">` : ''}
+                                    <div>
+                                        <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 2px;">
+                                            <span class="badge" style="background: #f0fdf4; color: var(--primary-green); font-size: 0.72rem; padding: 1px 6px;">${post.category || 'Update'}</span>
+                                            ${post.video ? '<span style="background: #eff6ff; color: #2563eb; font-size: 0.7rem; padding: 1px 5px; border-radius: 4px; font-weight: 700;"><i class="fas fa-video"></i> Video</span>' : ''}
+                                            ${post.audio ? '<span style="background: #fef3c7; color: #b45309; font-size: 0.7rem; padding: 1px 5px; border-radius: 4px; font-weight: 700;"><i class="fas fa-microphone"></i> Voice Note</span>' : ''}
+                                        </div>
+                                        <strong style="color: #0f172a; font-size: 0.95rem;">${post.title}</strong>
+                                        <div style="color: #64748b; font-size: 0.78rem;"><i class="far fa-calendar-alt"></i> ${new Date(post.created_at || Date.now()).toLocaleDateString()}</div>
+                                    </div>
                                 </div>
-                                <button onclick="deletePost(${post.id})" class="btn-action btn-delete" style="padding: 4px 10px; font-size: 0.8rem;"><i class="fas fa-trash"></i> Delete</button>
+                                <button onclick="deletePost(${post.id})" class="btn-action btn-delete" style="padding: 4px 10px; font-size: 0.8rem; flex-shrink: 0;"><i class="fas fa-trash"></i> Delete</button>
                             </div>
                         `).join('');
                     }
@@ -1193,19 +1374,31 @@
             {
                 id: 101,
                 title: "Federal Government Launches Special Diaspora Housing Scheme",
+                category: "Policy Announcement",
+                photo: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1000&q=80",
+                video: "",
+                audio: "",
                 content: "The Federal Ministry of Housing and Urban Development has unveiled an exclusive mortgage scheme tailored for Nigerians living abroad. The initiative aims to provide secure property ownership and transparent investment opportunities.\n\nUnder this scheme, registered diaspora citizens can apply for federal home loans with flexible repayment terms, verified land titles, and direct consular assistance. Key partner banks and mortgage institutions have integrated automated diaspora verification protocols to prevent fraud and ensure seamless allocation.\n\nInterested applicants can initiate their requests directly through the Diaspora Services section of the RHND portal.",
                 created_at: "2026-03-01T10:00:00Z"
             },
             {
                 id: 102,
                 title: "NiDCOM Announces Virtual Diaspora Townhall Dialogue",
+                category: "Townhall Update",
+                photo: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1000&q=80",
+                video: "https://www.w3schools.com/html/mov_bbb.mp4",
+                audio: "",
                 content: "The Nigerians in Diaspora Commission (NiDCOM) invites all citizens overseas to participate in the upcoming quarterly virtual townhall meeting with diplomatic representatives and policy makers.\n\nThe interactive session will focus on consular welfare, passport renewal acceleration, voting rights advocacy, and foreign investment security. Registration is free and open to all registered community members.",
                 created_at: "2026-03-05T14:30:00Z"
             },
             {
                 id: 103,
                 title: "Nigeria Immigration Service Expands Diaspora Passport Centres",
-                content: "New passport enrollment and renewal processing centers have been established across strategic international locations to reduce processing wait times for diaspora citizens.\n\nCitizens living in North America, Europe, the Middle East, and Asia-Pacific regions can now access fast-track biometric capture appointments at authorized consular processing desks.",
+                category: "Consular Notice",
+                photo: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1000&q=80",
+                video: "",
+                audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                content: "New passport enrollment and renewal processing centers have been established across strategic international locations to reduce processing wait times for diaspora citizens.\n\nCitizens living in North America, Europe, the Middle East, and Asia-Pacific regions can now access fast-track biometric capture appointments at authorized consular processing desks. Listen to the official audio briefing attached for complete step-by-step instructions.",
                 created_at: "2026-03-09T09:15:00Z"
             }
         ];
@@ -1270,12 +1463,20 @@
             }
 
             list.innerHTML = posts.map(post => `
-                <div style="border-bottom: 1px solid #e2e8f0; padding: 18px 0; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h4 style="margin: 0 0 6px 0; font-size: 1.15rem; color: #0f172a;">${post.title}</h4>
-                        <small style="color: #64748b; font-weight: 600;"><i class="far fa-calendar-alt"></i> ${new Date(post.created_at || Date.now()).toLocaleString()}</small>
+                <div style="border-bottom: 1px solid #e2e8f0; padding: 18px 0; display: flex; justify-content: space-between; align-items: center; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        ${post.photo ? `<img src="${post.photo}" style="width: 70px; height: 70px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 1px solid #e2e8f0;" onerror="this.style.display='none'">` : ''}
+                        <div>
+                            <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 4px; flex-wrap: wrap;">
+                                <span class="badge" style="background: #f0fdf4; color: var(--primary-green); font-size: 0.75rem; padding: 2px 8px;">${post.category || 'Official Update'}</span>
+                                ${post.video ? '<span style="background: #eff6ff; color: #2563eb; font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;"><i class="fas fa-video"></i> Video Attached</span>' : ''}
+                                ${post.audio ? '<span style="background: #fef3c7; color: #b45309; font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;"><i class="fas fa-microphone"></i> Voice Note</span>' : ''}
+                            </div>
+                            <h4 style="margin: 0 0 6px 0; font-size: 1.15rem; color: #0f172a;">${post.title}</h4>
+                            <small style="color: #64748b; font-weight: 600;"><i class="far fa-calendar-alt"></i> ${new Date(post.created_at || Date.now()).toLocaleString()}</small>
+                        </div>
                     </div>
-                    <button onclick="deletePost(${post.id})" class="btn-action btn-delete"><i class="fas fa-trash"></i> Delete</button>
+                    <button onclick="deletePost(${post.id})" class="btn-action btn-delete" style="flex-shrink: 0;"><i class="fas fa-trash"></i> Delete</button>
                 </div>
             `).join('');
         }
@@ -1293,13 +1494,17 @@
             } catch(e) {}
         }
 
-        function handleAddPost(title, content, statusEl) {
+        function handleAddPost(title, content, category, photo, video, audio, statusEl) {
             if (!title || !content) return;
 
             const newPost = {
                 id: Date.now(),
                 title: title,
                 content: content,
+                category: category || 'Official Update',
+                photo: photo || '',
+                video: video || '',
+                audio: audio || '',
                 created_at: new Date().toISOString()
             };
 
@@ -1312,14 +1517,24 @@
                 fetch('/api/posts', {
                     method: 'POST',
                     headers: fetchHeaders,
-                    body: JSON.stringify({title, content})
+                    body: JSON.stringify({
+                        title,
+                        content,
+                        category: newPost.category,
+                        photo: newPost.photo,
+                        video: newPost.video,
+                        audio: newPost.audio
+                    })
                 }).catch(err => console.log("Background API sync:", err));
             } catch(e) {}
 
             if (statusEl) {
-                statusEl.textContent = 'Published Live Successfully!';
+                statusEl.textContent = 'Published Live Successfully with Attachments!';
                 statusEl.style.color = '#16a34a';
                 statusEl.style.display = 'inline';
+                setTimeout(() => statusEl.style.display = 'none', 3500);
+            }
+        }
                 setTimeout(() => statusEl.style.display = 'none', 3500);
             }
         }
@@ -1707,169 +1922,7 @@
             fetchMedia();
         }
 
-        // --- 5. MINISTRIES & AGENCIES LOGIC ---
-        const defaultEntities = [
-            {
-                id: 1,
-                type: "Ministry",
-                name: "Federal Ministry of Foreign Affairs",
-                leader: "Amb. Yusuf Maitama Tuggar (Minister)",
-                website: "https://foreignaffairs.gov.ng",
-                description: "Overseeing diplomatic relations, consular assistance, and diaspora welfare globally."
-            },
-            {
-                id: 2,
-                type: "Ministry",
-                name: "Federal Ministry of Interior",
-                leader: "Dr. Olubunmi Tunji-Ojo (Minister)",
-                website: "https://interior.gov.ng",
-                description: "Oversees homeland security, citizenship, passport administration, and immigration services."
-            },
-            {
-                id: 3,
-                type: "Ministry",
-                name: "Federal Ministry of Finance",
-                leader: "Mr. Wale Edun (Minister)",
-                website: "https://finance.gov.ng",
-                description: "Formulates fiscal policies and manages economic resources and diaspora investment frameworks."
-            },
-            {
-                id: 4,
-                type: "Agency",
-                name: "Nigerians in Diaspora Commission (NiDCOM)",
-                leader: "Hon. Abike Dabiri-Erewa (Chairman/CEO)",
-                website: "https://nidcom.gov.ng",
-                description: "Dedicated to the engagement and utilization of human, capital and material resources of Nigerian Diaspora."
-            },
-            {
-                id: 5,
-                type: "Agency",
-                name: "Nigeria Immigration Service (NIS)",
-                leader: "Comptroller General of Immigration",
-                website: "https://immigration.gov.ng",
-                description: "Passport issuance, visa policy administration, and diaspora travel document processing."
-            },
-            {
-                id: 6,
-                type: "Agency",
-                name: "National Identity Management Commission (NIMC)",
-                leader: "Director General / CEO",
-                website: "https://nimc.gov.ng",
-                description: "National Identification Number (NIN) enrollment and diaspora identity verification."
-            }
-        ];
-
-        function getStoredEntities() {
-            try {
-                const local = localStorage.getItem('rhnd_entities_db');
-                if (local) {
-                    const parsed = JSON.parse(local);
-                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-                }
-            } catch(e) {}
-            return defaultEntities;
-        }
-
-        async function fetchEntities() {
-            let items = getStoredEntities();
-            try {
-                const res = await fetch('/api/entities');
-                if (res.ok) {
-                    const data = await res.json();
-                    if (Array.isArray(data) && !data.error) {
-                        items = data;
-                        localStorage.setItem('rhnd_entities_db', JSON.stringify(items));
-                    }
-                }
-            } catch(e) {
-                console.warn("Using stored ministries and agencies dataset");
-            }
-
-            const badge = document.getElementById('badge-entities-count');
-            if (badge) badge.textContent = items.length || 0;
-
-            const ovTbody = document.getElementById('ov-entities-list-tbody');
-            if (ovTbody) {
-                if (!items || items.length === 0) {
-                    ovTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 20px;">No ministries or agencies configured.</td></tr>';
-                } else {
-                    ovTbody.innerHTML = items.map(e => `
-                        <tr>
-                            <td><span class="badge ${e.type === 'Ministry' ? 'badge-resolved' : 'badge-progress'}">${e.type}</span></td>
-                            <td><strong style="color: #0f172a;">${e.name}</strong></td>
-                            <td>${e.leader || '<span style="color:#94a3b8;">N/A</span>'}</td>
-                            <td><a href="${e.website}" target="_blank" style="color:var(--primary-green); font-weight: 600;"><i class="fas fa-external-link-alt"></i> Portal</a></td>
-                            <td>
-                                <button onclick="deleteEntity('${e.id}')" class="btn-action btn-delete" style="padding: 4px 8px; font-size: 0.75rem;">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
-                    `).join('');
-                }
-            }
-
-            const fullTbody = document.getElementById('entities-full-list-tbody');
-            if (fullTbody) {
-                if (!items || items.length === 0) {
-                    fullTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 25px;">No entities found.</td></tr>';
-                } else {
-                    fullTbody.innerHTML = items.map(e => `
-                        <tr>
-                            <td><span class="badge ${e.type === 'Ministry' ? 'badge-resolved' : 'badge-progress'}">${e.type}</span></td>
-                            <td><strong style="color: #0f172a;">${e.name}</strong></td>
-                            <td>${e.leader || 'N/A'}</td>
-                            <td><a href="${e.website}" target="_blank" style="color:var(--primary-green); font-weight:600;"><i class="fas fa-link"></i> ${e.website}</a></td>
-                            <td>
-                                <button onclick="deleteEntity('${e.id}')" class="btn-action btn-delete">
-                                    <i class="fas fa-trash"></i> Remove
-                                </button>
-                            </td>
-                        </tr>
-                    `).join('');
-                }
-            }
-        }
-
-        async function deleteEntity(id) {
-            if (!confirm('Are you sure you want to remove this ministry/agency?')) return;
-            let items = getStoredEntities();
-            items = items.filter(e => String(e.id) !== String(id));
-            localStorage.setItem('rhnd_entities_db', JSON.stringify(items));
-            fetchEntities();
-
-            try {
-                await fetch('/api/entities?id=' + id, { method: 'DELETE', headers: fetchHeaders });
-            } catch(e) {}
-        }
-
-        function handleAddEntity(type, name, leader, website, description, statusEl) {
-            const newEntity = {
-                id: Date.now(),
-                type, name, leader, website: website || 'https://gov.ng', description
-            };
-
-            let items = getStoredEntities();
-            items.push(newEntity);
-            localStorage.setItem('rhnd_entities_db', JSON.stringify(items));
-
-            try {
-                fetch('/api/entities', {
-                    method: 'POST',
-                    headers: fetchHeaders,
-                    body: JSON.stringify({ type, name, leader, website, description })
-                }).catch(e => {});
-            } catch(e) {}
-
-            if (statusEl) {
-                statusEl.textContent = 'Saved Successfully!';
-                statusEl.style.display = 'inline';
-                setTimeout(() => statusEl.style.display = 'none', 3000);
-            }
-            fetchEntities();
-        }
-
-        // --- 6. BROADCAST ALERTS LOGIC ---
+        // --- 5. BROADCAST ALERTS LOGIC ---
         function loadBroadcastAlert() {
             const previewEl = document.getElementById('active-broadcast-preview');
             const rawAlert = localStorage.getItem('rhnd_broadcast_alert');
@@ -1906,23 +1959,12 @@
             }
         }
 
-        // --- 7. PLATFORM SETTINGS LOGIC ---
-        function loadPlatformSettings() {
-            const raw = localStorage.getItem('rhnd_platform_settings');
-            if (raw) {
-                try {
-                    const s = JSON.parse(raw);
-                    if (s.orgName) document.getElementById('setting-org-name').value = s.orgName;
-                    if (s.tagline) document.getElementById('setting-tagline').value = s.tagline;
-                    if (s.email) document.getElementById('setting-email').value = s.email;
-                    if (s.phone) document.getElementById('setting-phone').value = s.phone;
-                    if (s.address) document.getElementById('setting-address').value = s.address;
-                } catch(e) {}
-            }
-        }
-
         // Initialize All Event Listeners Once DOM is Ready
         document.addEventListener('DOMContentLoaded', () => {
+            // Init Media Input Listeners for Photo, Video, Audio
+            initMediaInputListeners('ov-post');
+            initMediaInputListeners('post');
+
             // News Forms
             const ovPostForm = document.getElementById('ov-add-post-form');
             if (ovPostForm) {
@@ -1930,9 +1972,17 @@
                     e.preventDefault();
                     const title = document.getElementById('ov-post-title').value.trim();
                     const content = document.getElementById('ov-post-content').value.trim();
+                    const category = document.getElementById('ov-post-category').value;
+                    const photo = newsMediaState['ov-post'].photo || document.getElementById('ov-post-photo-url').value.trim();
+                    const video = newsMediaState['ov-post'].video || document.getElementById('ov-post-video-url').value.trim();
+                    const audio = newsMediaState['ov-post'].audio || '';
                     const status = document.getElementById('ov-post-status');
-                    handleAddPost(title, content, status);
+
+                    handleAddPost(title, content, category, photo, video, audio, status);
                     ovPostForm.reset();
+                    clearMedia('ov-post-photo');
+                    clearMedia('ov-post-video');
+                    clearMedia('ov-post-audio');
                 });
             }
 
@@ -1942,9 +1992,17 @@
                     e.preventDefault();
                     const title = document.getElementById('post-title').value.trim();
                     const content = document.getElementById('post-content').value.trim();
+                    const category = document.getElementById('post-category').value;
+                    const photo = newsMediaState['post'].photo || document.getElementById('post-photo-url').value.trim();
+                    const video = newsMediaState['post'].video || document.getElementById('post-video-url').value.trim();
+                    const audio = newsMediaState['post'].audio || document.getElementById('post-audio-url').value.trim();
                     const status = document.getElementById('post-status');
-                    handleAddPost(title, content, status);
+
+                    handleAddPost(title, content, category, photo, video, audio, status);
                     addPostForm.reset();
+                    clearMedia('post-photo');
+                    clearMedia('post-video');
+                    clearMedia('post-audio');
                 });
             }
 
@@ -2036,37 +2094,6 @@
                 });
             }
 
-            // Entity Forms
-            const ovEntForm = document.getElementById('ov-add-entity-form');
-            if (ovEntForm) {
-                ovEntForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const type = document.getElementById('ov-ent-type').value;
-                    const name = document.getElementById('ov-ent-name').value.trim();
-                    const leader = document.getElementById('ov-ent-leader').value.trim();
-                    const website = document.getElementById('ov-ent-website').value.trim();
-                    const desc = document.getElementById('ov-ent-desc').value.trim();
-                    const status = document.getElementById('ov-ent-status');
-                    handleAddEntity(type, name, leader, website, desc, status);
-                    ovEntForm.reset();
-                });
-            }
-
-            const fullEntForm = document.getElementById('add-entity-full-form');
-            if (fullEntForm) {
-                fullEntForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const type = document.getElementById('ent-type-full').value;
-                    const name = document.getElementById('ent-name-full').value.trim();
-                    const leader = document.getElementById('ent-leader-full').value.trim();
-                    const website = document.getElementById('ent-website-full').value.trim();
-                    const desc = document.getElementById('ent-desc-full').value.trim();
-                    handleAddEntity(type, name, leader, website, desc, null);
-                    fullEntForm.reset();
-                    alert('Ministry / Agency saved successfully to the platform!');
-                });
-            }
-
             // Broadcast Form
             const broadcastForm = document.getElementById('broadcast-alert-form');
             if (broadcastForm) {
@@ -2095,27 +2122,6 @@
                     }
                 });
             }
-
-            // Settings Form
-            const settingsForm = document.getElementById('platform-settings-form');
-            if (settingsForm) {
-                settingsForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const settings = {
-                        orgName: document.getElementById('setting-org-name').value.trim(),
-                        tagline: document.getElementById('setting-tagline').value.trim(),
-                        email: document.getElementById('setting-email').value.trim(),
-                        phone: document.getElementById('setting-phone').value.trim(),
-                        address: document.getElementById('setting-address').value.trim()
-                    };
-                    localStorage.setItem('rhnd_platform_settings', JSON.stringify(settings));
-                    const status = document.getElementById('setting-save-status');
-                    if (status) {
-                        status.style.display = 'inline';
-                        setTimeout(() => status.style.display = 'none', 3000);
-                    }
-                });
-            }
         });
 
         // Initialize All Dashboard Data
@@ -2123,9 +2129,7 @@
         fetchMembers();
         fetchRequests();
         fetchMedia();
-        fetchEntities();
         loadBroadcastAlert();
-        loadPlatformSettings();
     </script>
 </body>
 </html>
