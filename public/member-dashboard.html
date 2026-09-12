@@ -58,15 +58,15 @@
     
         /* Official Diaspora ID Card Styling */
         .diaspora-id-card {
-            background: linear-gradient(135deg, #022615 0%, #033a20 40%, #056839 100%);
+            background: linear-gradient(135deg, #022213 0%, #043820 45%, #056839 100%);
             border: 2px solid var(--primary-gold);
-            border-radius: 20px;
-            padding: 24px;
+            border-radius: 18px;
+            padding: 22px 24px;
             color: white;
             box-shadow: 0 15px 35px rgba(5, 104, 57, 0.35);
             position: relative;
             overflow: hidden;
-            max-width: 580px;
+            max-width: 540px;
             margin: 0 auto;
         }
         .diaspora-id-card::before {
@@ -83,9 +83,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.4);
-            padding-bottom: 14px;
-            margin-bottom: 18px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
         }
         .id-card-brand {
             display: flex;
@@ -93,53 +93,56 @@
             gap: 12px;
         }
         .id-card-brand img {
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             object-fit: contain;
             background: white;
             border-radius: 50%;
-            padding: 4px;
+            padding: 3px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
         }
         .id-card-brand h4 {
             margin: 0;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             color: var(--primary-gold);
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             font-weight: 800;
         }
         .id-card-brand p {
             margin: 0;
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             color: rgba(255,255,255,0.8);
-            letter-spacing: 1.5px;
+            letter-spacing: 1.2px;
         }
         .id-card-type {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 800;
             color: var(--primary-gold);
             background: rgba(212,175,55,0.15);
             padding: 4px 10px;
             border-radius: 12px;
             border: 1px solid rgba(212,175,55,0.4);
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
+            white-space: nowrap;
         }
         .id-card-body {
             display: flex;
-            gap: 20px;
+            gap: 18px;
             align-items: center;
         }
         .id-photo-box {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            flex-shrink: 0;
         }
         .id-photo-frame {
-            width: 90px;
-            height: 100px;
-            border-radius: 12px;
+            width: 85px;
+            height: 98px;
+            border-radius: 10px;
             border: 2px solid var(--primary-gold);
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.12);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -147,7 +150,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .id-photo-frame i {
-            font-size: 2.5rem;
+            font-size: 2.4rem;
             color: var(--primary-gold);
         }
         .id-photo-frame img {
@@ -156,7 +159,7 @@
             object-fit: cover;
         }
         .id-upload-btn {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             background: rgba(255,255,255,0.2);
             color: white;
             padding: 3px 8px;
@@ -164,61 +167,87 @@
             cursor: pointer;
             border: 1px solid rgba(255,255,255,0.3);
             font-weight: 600;
+            transition: all 0.2s;
         }
         .id-upload-btn:hover {
             background: var(--primary-gold);
             color: #0f172a;
         }
-        .id-details-grid {
+        .id-details-list {
             flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
         }
-        .id-field.full-width {
-            grid-column: span 2;
+        .id-field-group {
+            display: flex;
+            flex-direction: column;
         }
         .id-label {
-            display: block;
-            font-size: 0.62rem;
-            color: rgba(255,255,255,0.65);
+            font-size: 0.6rem;
+            color: rgba(212, 175, 55, 0.9);
             letter-spacing: 1px;
             font-weight: 700;
-            margin-bottom: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1px;
         }
-        .id-val {
-            display: block;
-            font-size: 0.88rem;
+        .id-val-name {
+            font-size: 1rem;
             color: white;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .id-gold-text {
+        .id-val-number {
+            font-size: 0.95rem;
             color: var(--primary-gold);
             font-family: monospace;
-            font-size: 0.92rem;
+            font-weight: 700;
             letter-spacing: 1px;
         }
-        .id-status-val {
+        .id-val-country {
+            font-size: 0.88rem;
+            color: #f1f5f9;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .id-meta-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 2px;
+            font-size: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .id-status-badge {
             color: #4ade80;
-            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .id-expiry-badge {
+            color: rgba(255,255,255,0.75);
+            font-weight: 600;
         }
         .id-card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 16px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255,255,255,0.15);
-            font-size: 0.68rem;
-            color: rgba(255,255,255,0.6);
+            margin-top: 14px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(212, 175, 55, 0.25);
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.65);
         }
-        .id-hologram-stamp {
+        .id-card-footer i {
             color: var(--primary-gold);
-            font-weight: 800;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            margin-right: 4px;
         }
         @media print {
             body * { visibility: hidden; }
@@ -226,7 +255,6 @@
             #diaspora-id-card-element { position: absolute; left: 0; top: 0; width: 100%; max-width: 100%; border: 3px solid #000; }
         }
 
-    
         /* Mobile Overlay & Responsive Menu */
         .sidebar-overlay {
             position: fixed !important;
@@ -266,124 +294,6 @@
         }
 
         @media (max-width: 768px) {
-            html, body {
-                overflow-x: hidden !important;
-                max-width: 100vw !important;
-            }
-            .dashboard-container {
-                flex-direction: column !important;
-                min-height: 100vh !important;
-                width: 100% !important;
-                overflow-x: hidden !important;
-            }
-            .sidebar {
-                position: fixed !important;
-                top: 0 !important;
-                left: -290px !important;
-                width: 280px !important;
-                height: 100vh !important;
-                z-index: 1000 !important;
-                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                box-shadow: 5px 0 25px rgba(0,0,0,0.3) !important;
-            }
-            .sidebar.mobile-open {
-                left: 0 !important;
-            }
-            .main-content {
-                width: 100% !important;
-                max-width: 100vw !important;
-                overflow-x: hidden !important;
-                height: auto !important;
-                min-height: 100vh !important;
-            }
-            .mobile-menu-btn {
-                display: inline-flex !important;
-            }
-            .top-navbar {
-                padding: 12px 16px !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
-                position: sticky !important;
-                top: 0 !important;
-                z-index: 10 !important;
-            }
-            .top-website-btn {
-                display: none !important;
-            }
-            .top-logout-btn {
-                display: none !important;
-            }
-            .user-profile {
-                gap: 8px !important;
-            }
-            .user-name-display {
-                font-size: 0.88rem !important;
-                max-width: 120px !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-            }
-            .user-email-display {
-                font-size: 0.75rem !important;
-                max-width: 120px !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-            }
-            .panel {
-                padding: 16px 12px !important;
-            }
-            .welcome-card {
-                padding: 20px 16px !important;
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                gap: 12px !important;
-            }
-            .welcome-text h2 {
-                font-size: 1.25rem !important;
-                line-height: 1.3 !important;
-                word-break: break-word !important;
-            }
-            .content-card {
-                padding: 20px 16px !important;
-                border-radius: 12px !important;
-            }
-            .content-card h3 {
-                font-size: 1.1rem !important;
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                gap: 6px !important;
-            }
-            .quick-stats {
-                grid-template-columns: 1fr !important;
-                gap: 12px !important;
-            }
-            .site-nav-links {
-                display: grid !important;
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 8px !important;
-            }
-            .site-nav-btn {
-                padding: 10px 8px !important;
-                font-size: 0.8rem !important;
-                justify-content: center !important;
-                text-align: center !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
-            }
-            .form-row {
-                grid-template-columns: 1fr !important;
-                gap: 12px !important;
-            }
-            .diaspora-id-card {
-                padding: 18px 14px !important;
-                border-radius: 16px !important;
-                max-width: 100% !important;
-                box-sizing: border-box !important;
-            }
-        }
-
-        @media (max-width: 768px) {
             .diaspora-id-card {
                 padding: 16px 14px !important;
                 border-radius: 16px !important;
@@ -397,31 +307,28 @@
                 gap: 12px !important;
             }
             .id-photo-frame {
-                width: 75px !important;
-                height: 85px !important;
+                width: 72px !important;
+                height: 84px !important;
                 flex-shrink: 0 !important;
             }
-            .id-details-grid {
-                flex: 1 !important;
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 4px 10px !important;
-            }
-            .id-field.full-width {
-                grid-column: span 2 !important;
+            .id-details-list {
+                gap: 6px !important;
             }
             .id-label {
-                font-size: 0.58rem !important;
-                margin-bottom: 1px !important;
+                font-size: 0.55rem !important;
             }
-            .id-val {
-                font-size: 0.76rem !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
+            .id-val-name {
+                font-size: 0.88rem !important;
             }
-            .id-gold-text {
+            .id-val-number {
+                font-size: 0.82rem !important;
+            }
+            .id-val-country {
                 font-size: 0.78rem !important;
+            }
+            .id-meta-bar {
+                font-size: 0.68rem !important;
+                gap: 8px !important;
             }
         }
 
@@ -431,67 +338,57 @@
                 border-radius: 14px !important;
             }
             .id-card-header {
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: space-between !important;
-                gap: 6px !important;
                 padding-bottom: 6px !important;
-                margin-bottom: 10px !important;
+                margin-bottom: 8px !important;
             }
             .id-card-brand img {
-                width: 30px !important;
-                height: 30px !important;
-                padding: 2px !important;
+                width: 28px !important;
+                height: 28px !important;
             }
             .id-card-brand h4 {
-                font-size: 0.66rem !important;
-                letter-spacing: 0.5px !important;
+                font-size: 0.65rem !important;
             }
             .id-card-brand p {
-                font-size: 0.52rem !important;
-                letter-spacing: 0.5px !important;
+                font-size: 0.5rem !important;
             }
             .id-card-type {
                 font-size: 0.55rem !important;
-                padding: 2px 5px !important;
-                letter-spacing: 0.5px !important;
+                padding: 2px 6px !important;
             }
             .id-card-body {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
                 gap: 10px !important;
             }
             .id-photo-frame {
-                width: 65px !important;
-                height: 75px !important;
-                flex-shrink: 0 !important;
+                width: 60px !important;
+                height: 72px !important;
             }
             .id-upload-btn {
-                font-size: 0.58rem !important;
-                padding: 2px 4px !important;
+                font-size: 0.55rem !important;
+                padding: 2px 5px !important;
             }
-            .id-details-grid {
-                flex: 1 !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 3px 6px !important;
+            .id-details-list {
+                gap: 4px !important;
             }
             .id-label {
-                font-size: 0.52rem !important;
+                font-size: 0.5rem !important;
             }
-            .id-val {
-                font-size: 0.68rem !important;
+            .id-val-name {
+                font-size: 0.8rem !important;
             }
-            .id-gold-text {
-                font-size: 0.72rem !important;
+            .id-val-number {
+                font-size: 0.75rem !important;
             }
-            .id-status-val {
-                font-size: 0.65rem !important;
+            .id-val-country {
+                font-size: 0.7rem !important;
+            }
+            .id-meta-bar {
+                font-size: 0.62rem !important;
+                gap: 6px !important;
             }
             .id-card-footer {
                 margin-top: 8px !important;
                 padding-top: 6px !important;
-                font-size: 0.55rem !important;
+                font-size: 0.52rem !important;
             }
             .site-nav-links {
                 grid-template-columns: repeat(2, 1fr) !important;
@@ -641,49 +538,45 @@
                                 <input type="file" id="id-photo-input" accept="image/*" style="display: none;">
                             </div>
 
-                            <!-- Right Details Column -->
-                            <div class="id-details-grid">
-                                <div class="id-field full-width">
-                                    <span class="id-label">FULL NAME</span>
-                                    <strong class="id-val" id="card-val-name">REGISTERED MEMBER</strong>
+                            <!-- Right Clean Details List -->
+                            <div class="id-details-list">
+                                <div class="id-field-group">
+                                    <span class="id-label">Full Name</span>
+                                    <div class="id-val-name" id="card-val-name">REGISTERED MEMBER</div>
                                 </div>
 
-                                <div class="id-field">
-                                    <span class="id-label">MEMBER ID NO.</span>
-                                    <strong class="id-val id-gold-text" id="card-val-id">RHND-NIG-00001</strong>
+                                <div class="id-field-group">
+                                    <span class="id-label">Diaspora ID No.</span>
+                                    <div class="id-val-number" id="card-val-id">RHND-NIG-00001</div>
                                 </div>
 
-                                <div class="id-field">
-                                    <span class="id-label">PHONE NUMBER</span>
-                                    <strong class="id-val" id="card-val-phone">+44 7123 456789</strong>
+                                <div class="id-field-group">
+                                    <span class="id-label">Residence Country</span>
+                                    <div class="id-val-country" id="card-val-address">United Kingdom</div>
                                 </div>
 
-                                <div class="id-field full-width">
-                                    <span class="id-label">RESIDENCE / ADDRESS</span>
-                                    <strong class="id-val" id="card-val-address">United Kingdom (Diaspora)</strong>
-                                </div>
-
-                                <div class="id-field">
-                                    <span class="id-label">STATUS</span>
-                                    <strong class="id-val id-status-val"><i class="fas fa-check-circle text-gold"></i> VERIFIED CITIZEN</strong>
-                                </div>
-
-                                <div class="id-field">
-                                    <span class="id-label">ISSUE / VALIDITY</span>
-                                    <strong class="id-val">09/2026 — 09/2031</strong>
+                                <div class="id-meta-bar">
+                                    <div class="id-status-badge">
+                                        <i class="fas fa-check-circle"></i> VERIFIED
+                                    </div>
+                                    <span style="color: rgba(212,175,55,0.4);">•</span>
+                                    <div class="id-expiry-badge">
+                                        VALID: 09/2026 – 09/2031
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Card Footer with Security Hologram Seal -->
                         <div class="id-card-footer">
-                            <div class="id-security-code">
-                                AUTH-HASH: 00001-RHND-SECURE
+                            <div>
+                                <i class="fas fa-shield-alt"></i> VERIFIED BIOMETRIC CREDENTIAL
                             </div>
-                            <div class="id-hologram-stamp">
-                                <i class="fas fa-shield-halved"></i> OFFICIAL STAMP
+                            <div style="font-weight: 700; color: var(--primary-gold);">
+                                <i class="fas fa-certificate"></i> OFFICIAL ISSUANCE
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
 
@@ -839,6 +732,17 @@
     
     <script src="js/main.js"></script>
     <script>
+        
+        // Hash navigation support
+        function checkUrlHash() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash && ['dashboard', 'profile', 'services', 'support'].includes(hash)) {
+                switchTab(hash);
+            }
+        }
+        window.addEventListener('hashchange', checkUrlHash);
+        checkUrlHash();
+
         function switchTab(tabId) {
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             const matchedNav = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick') && el.getAttribute('onclick').includes("'" + tabId + "'"));

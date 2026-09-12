@@ -137,6 +137,8 @@ function setupFloatingPortalButton() {
     const fabContainer = document.createElement("div");
     fabContainer.className = "fab-container";
     
+    const isDashboard = window.location.pathname.toLowerCase().includes("member-dashboard");
+
     let menuHTML = ``;
     if (isAdmin) {
         menuHTML = `
@@ -149,23 +151,50 @@ function setupFloatingPortalButton() {
             <a href="member-dashboard.html" class="fab-item">
                 <i class="fas fa-user-circle"></i> <span>Member Dashboard</span>
             </a>
-        `;
-    } else if (user) {
-        menuHTML = `
-            <a href="member-dashboard.html" class="fab-item">
-                <i class="fas fa-user-circle"></i> <span>My Dashboard</span>
-            </a>
             <a href="support.html" class="fab-item">
                 <i class="fas fa-life-ring"></i> <span>Help & Support</span>
             </a>
+            <a href="index.html" class="fab-item">
+                <i class="fas fa-globe"></i> <span>Public Website</span>
+            </a>
+            <div class="fab-item fab-logout" onclick="rhndLogout()">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </div>
+        `;
+    } else if (user) {
+        menuHTML = `
+            <a href="${isDashboard ? "javascript:switchTab('dashboard')" : "member-dashboard.html#dashboard"}" class="fab-item" onclick="if(window.closeFabMenu) window.closeFabMenu()">
+                <i class="fas fa-home"></i> <span>Dashboard Overview</span>
+            </a>
+            <a href="${isDashboard ? "javascript:switchTab('profile')" : "member-dashboard.html#profile"}" class="fab-item" onclick="if(window.closeFabMenu) window.closeFabMenu()">
+                <i class="fas fa-user-edit"></i> <span>My Profile</span>
+            </a>
+            <a href="${isDashboard ? "javascript:switchTab('services')" : "member-dashboard.html#services"}" class="fab-item" onclick="if(window.closeFabMenu) window.closeFabMenu()">
+                <i class="fas fa-passport"></i> <span>Diaspora Services</span>
+            </a>
+            <a href="${isDashboard ? "javascript:switchTab('support')" : "support.html"}" class="fab-item" onclick="if(window.closeFabMenu) window.closeFabMenu()">
+                <i class="fas fa-life-ring"></i> <span>Help & Support</span>
+            </a>
+            <a href="index.html" class="fab-item">
+                <i class="fas fa-globe"></i> <span>Browse Public Website</span>
+            </a>
+            <div class="fab-item fab-logout" onclick="rhndLogout()">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout / Sign Out</span>
+            </div>
         `;
     } else {
         menuHTML = `
+            <a href="index.html" class="fab-item">
+                <i class="fas fa-home"></i> <span>Home</span>
+            </a>
             <a href="login.html" class="fab-item">
                 <i class="fas fa-sign-in-alt"></i> <span>Login Portal</span>
             </a>
             <a href="register.html" class="fab-item">
                 <i class="fas fa-user-plus"></i> <span>Register Account</span>
+            </a>
+            <a href="support.html" class="fab-item">
+                <i class="fas fa-life-ring"></i> <span>Help & Support</span>
             </a>
         `;
     }
