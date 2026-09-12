@@ -964,22 +964,45 @@
         });
 
         // --- 2. MEMBERS LOGIC ---
-        const defaultMembers = [
-            { id: 1, name: "Amina Hausawi", email: "aminahausawi10@gmail.com", country: "United Kingdom", created_at: "2026-09-01T10:00:00Z" },
-            { id: 2, name: "Babatunde Adeleke", email: "babatunde.ade@diaspora.org", country: "United States", created_at: "2026-09-03T14:30:00Z" },
-            { id: 3, name: "Ngozi Okonjo-Nwosu", email: "ngozi.diaspora@gmail.com", country: "Canada", created_at: "2026-09-05T09:15:00Z" },
-            { id: 4, name: "Dr. Ibrahim Musa", email: "ibrahim.musa@rhnd.org", country: "Germany", created_at: "2026-09-08T11:45:00Z" }
-        ];
-
         function getStoredMembers() {
+            let list = [];
             try {
                 const local = localStorage.getItem('rhnd_members_db');
                 if (local) {
                     const parsed = JSON.parse(local);
-                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                    if (Array.isArray(parsed)) list = parsed;
                 }
             } catch(e) {}
-            return defaultMembers;
+            
+            // Sync with current active registered member in session if not already in list
+            try {
+                const currentUser = JSON.parse(localStorage.getItem('rhnd_user') || 'null');
+                if (currentUser && currentUser.email && !currentUser.email.toLowerCase().includes('admin')) {
+                    const exists = list.some(m => m.email && m.email.toLowerCase() === currentUser.email.toLowerCase());
+                    if (!exists) {
+                        list.unshift({
+                            id: currentUser.id || 1,
+                            name: currentUser.name || currentUser.email.split('@')[0],
+                            email: currentUser.email,
+                            country: currentUser.country || 'Diaspora',
+                            created_at: new Date().toISOString()
+                        });
+                    }
+                }
+            } catch(e) {}
+
+            // Strictly filter out any fake or dummy placeholder emails
+            const fakeEmails = [
+                'babatunde.ade@diaspora.org', 
+                'ngozi.diaspora@gmail.com', 
+                'ibrahim.musa@rhnd.org',
+                'sample@member.com'
+            ];
+            list = list.filter(m => m && m.email && !fakeEmails.includes(m.email.toLowerCase()));
+
+            // Update cleaned storage
+            localStorage.setItem('rhnd_members_db', JSON.stringify(list));
+            return list;
         }
 
         async function fetchMembers() {
@@ -988,13 +1011,17 @@
                 const res = await fetch('/api/users');
                 if (res.ok) {
                     const data = await res.json();
-                    if (Array.isArray(data) && data.length > 0 && !data.error) {
-                        users = data;
-                        localStorage.setItem('rhnd_members_db', JSON.stringify(users));
+                    if (Array.isArray(data) && !data.error) {
+                        // Filter out dummy/admin accounts from API
+                        const realApiUsers = data.filter(u => u && u.email && !u.email.toLowerCase().includes('admin'));
+                        if (realApiUsers.length > 0) {
+                            users = realApiUsers;
+                            localStorage.setItem('rhnd_members_db', JSON.stringify(users));
+                        }
                     }
                 }
             } catch(e) {
-                console.warn("Using stored member directory fallback");
+                console.warn("Using stored real members list");
             }
 
             const tbody = document.getElementById('members-list-tbody');
@@ -1002,14 +1029,14 @@
             syncOverviewLists(null, users, null, null);
 
             if (!users || users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">No registered members found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 25px;">No registered members found.</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = users.map(u => {
+            tbody.innerHTML = users.map((u, idx) => {
                 let idStr = '#RHND-NIG-00001';
                 if (typeof u.id === 'number') {
-                    if (u.id > 99999) idStr = '#RHND-NIG-0000' + (users.indexOf(u) + 1);
+                    if (u.id > 99999) idStr = '#RHND-NIG-' + String(idx + 1).padStart(5, '0');
                     else idStr = '#RHND-NIG-' + String(u.id).padStart(5, '0');
                 } else if (u.id) {
                     idStr = '#' + u.id;
