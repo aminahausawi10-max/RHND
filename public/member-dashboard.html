@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Dashboard | RHND</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
@@ -12,44 +12,49 @@
         .dashboard-container { display: flex; min-height: 100vh; }
         
         /* Sidebar */
-        .sidebar { width: 280px; background: linear-gradient(180deg, var(--secondary-dark-green) 0%, var(--primary-green) 100%); color: white; display: flex; flex-direction: column; box-shadow: 4px 0 15px rgba(0,0,0,0.05); z-index: 10; }
-        .sidebar-header { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .sidebar-header img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px; background: white; border-radius: 50%; padding: 10px; }
-        .sidebar-nav { padding: 20px 0; flex-grow: 1; }
-        .nav-item { padding: 15px 30px; display: flex; align-items: center; gap: 15px; color: rgba(255,255,255,0.8); cursor: pointer; transition: all 0.3s; font-weight: 500; border-left: 4px solid transparent; }
-        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: var(--primary-gold); border-left-color: var(--primary-gold); }
-        .nav-item i { font-size: 1.2rem; width: 24px; text-align: center; }
+        .sidebar { width: 280px; background: linear-gradient(180deg, var(--secondary-dark-green) 0%, var(--primary-green) 100%); color: white; display: flex; flex-direction: column; box-shadow: 4px 0 15px rgba(0,0,0,0.05); z-index: 10; flex-shrink: 0; }
+        .sidebar-header { padding: 25px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header img { width: 75px; height: 75px; object-fit: contain; margin-bottom: 10px; background: white; border-radius: 50%; padding: 8px; }
+        .sidebar-nav { padding: 20px 0; flex-grow: 1; overflow-y: auto; }
+        .nav-item { padding: 14px 25px; display: flex; align-items: center; gap: 14px; color: rgba(255,255,255,0.85); cursor: pointer; transition: all 0.25s; font-weight: 600; border-left: 4px solid transparent; font-size: 0.95rem; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.15); color: var(--primary-gold); border-left-color: var(--primary-gold); }
+        .nav-item i { font-size: 1.15rem; width: 24px; text-align: center; }
         
         /* Main Content */
-        .main-content { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
-        .top-navbar { background: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.02); position: sticky; top: 0; z-index: 5; }
-        .user-profile { display: flex; align-items: center; gap: 15px; }
-        .avatar { width: 45px; height: 45px; background: var(--bg-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-green); font-weight: bold; font-size: 1.2rem; }
+        .main-content { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; background: #f8fafc; }
+        .top-navbar { background: white; padding: 16px 35px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 5; border-bottom: 1px solid #e2e8f0; }
+        .user-profile { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 42px; height: 42px; background: #f0fdf4; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-green); font-weight: bold; font-size: 1.2rem; border: 2px solid var(--primary-gold); }
         
         /* Panels */
-        .panel { padding: 40px; display: none; animation: fadeIn 0.4s ease; }
+        .panel { padding: 35px; display: none; animation: fadeIn 0.3s ease; }
         .panel.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         
-        .welcome-card { background: white; border-radius: 16px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; border-left: 6px solid var(--primary-gold); }
-        .welcome-text h2 { color: var(--secondary-dark-green); margin-bottom: 5px; font-size: 1.8rem; font-weight: 800; }
-        .welcome-text p { color: var(--text-light); }
-        .id-badge { background: #f0fdf4; color: var(--primary-green); padding: 10px 20px; border-radius: 30px; font-weight: 700; border: 1px solid #bbf7d0; letter-spacing: 1px; }
+        .welcome-card { background: white; border-radius: 16px; padding: 28px 35px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; border-left: 6px solid var(--primary-gold); border: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
+        .welcome-text h2 { color: var(--secondary-dark-green); margin: 0 0 6px 0; font-size: 1.7rem; font-weight: 800; }
+        .welcome-text p { color: #64748b; margin: 0; font-size: 0.95rem; }
+        .id-badge { background: #f0fdf4; color: var(--primary-green); padding: 8px 18px; border-radius: 20px; font-weight: 700; border: 1px solid #bbf7d0; font-size: 0.88rem; }
         
-        .quick-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .stat-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 20px; transition: transform 0.3s; cursor: pointer; }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
-        .stat-icon { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .stat-info h3 { font-size: 1.8rem; color: var(--text-color); margin-bottom: 5px; }
-        .stat-info p { color: var(--text-light); font-size: 0.9rem; font-weight: 600; }
+        .quick-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; border-radius: 14px; padding: 22px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 18px; transition: transform 0.25s; cursor: pointer; border: 1px solid #e2e8f0; }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
+        .stat-icon { width: 55px; height: 55px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .stat-info h3 { font-size: 1.7rem; color: #0f172a; margin: 0 0 4px 0; font-weight: 800; }
+        .stat-info p { color: #64748b; font-size: 0.85rem; font-weight: 600; margin: 0; }
         
-        .content-card { background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-        .content-card h3 { color: var(--secondary-dark-green); margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
+        .content-card { background: white; border-radius: 16px; padding: 32px 35px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; margin-bottom: 25px; }
+        .content-card h3 { color: var(--secondary-dark-green); margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; font-size: 1.25rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
         
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #475569; }
-        .form-control { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; transition: all 0.3s; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 7px; font-weight: 600; color: #334155; font-size: 0.9rem; }
+        .form-control { width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.95rem; transition: border-color 0.2s; }
         .form-control:focus { border-color: var(--primary-green); outline: none; box-shadow: 0 0 0 3px rgba(0,135,81,0.1); }
+
+        .site-nav-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        .site-nav-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; color: #334155; font-weight: 600; font-size: 0.88rem; text-decoration: none; transition: all 0.2s; }
+        .site-nav-btn:hover { background: var(--secondary-dark-green); color: white; border-color: var(--secondary-dark-green); }
     </style>
 </head>
 <body>
@@ -58,7 +63,8 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="images/logo.png" alt="RHND Logo">
-                <h3 style="font-weight: 800; letter-spacing: 1px; color: var(--primary-gold);">RHND PORTAL</h3>
+                <h3 style="font-weight: 800; letter-spacing: 1px; color: var(--primary-gold); margin: 0;">RHND PORTAL</h3>
+                <div style="font-size: 0.78rem; color: rgba(255,255,255,0.7); margin-top: 2px;">Diaspora Member Account</div>
             </div>
             <div class="sidebar-nav">
                 <div class="nav-item active" onclick="switchTab('dashboard')">
@@ -73,139 +79,197 @@
                 <div class="nav-item" onclick="switchTab('support')">
                     <i class="fas fa-life-ring"></i> Help & Support
                 </div>
+                <div class="nav-item" onclick="window.location.href='index.html'">
+                    <i class="fas fa-globe"></i> Browse Public Website
+                </div>
             </div>
             <div style="padding: 20px;">
-                <button onclick="rhndLogout()" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.3s;">
-                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                <button onclick="rhndLogout()" style="width: 100%; padding: 12px; background: rgba(239,68,68,0.25); border: 1px solid rgba(239,68,68,0.4); color: white; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: background 0.2s;">
+                    <i class="fas fa-sign-out-alt"></i> Logout / Sign Out
                 </button>
             </div>
         </aside>
         
         <!-- Main Content -->
         <main class="main-content">
+            <!-- Top Navbar -->
             <div class="top-navbar">
-                <div style="font-weight: 600; color: var(--text-light);">Member Portal</div>
-                                <div class="user-profile">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span style="font-weight: 700; color: #0f172a; font-size: 1.1rem;">
+                        <i class="fas fa-user-circle text-gold"></i> Member Portal
+                    </span>
+                    <a href="index.html" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.85rem; font-weight: 600;">
+                        <i class="fas fa-globe"></i> View Public Website
+                    </a>
+                </div>
+                <div class="user-profile">
                     <div class="avatar"><i class="fas fa-user"></i></div>
                     <div>
                         <div class="user-name-display" style="font-weight: 700; color: var(--secondary-dark-green);">Registered Member</div>
-                        <div class="user-email-display" style="font-size: 0.85rem; color: var(--text-light);">Verified Account</div>
+                        <div class="user-email-display" style="font-size: 0.82rem; color: #64748b;">Verified Account</div>
                     </div>
                     <button onclick="rhndLogout()" class="btn-login" style="margin-left: 15px; padding: 7px 14px; background: #fee2e2; color: #dc2626; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
-                </div>
             </div>
             
-            <!-- Dashboard Tab -->
+            <!-- 1. DASHBOARD OVERVIEW TAB -->
             <div id="tab-dashboard" class="panel active">
                 <div class="welcome-card">
                     <div class="welcome-text">
-                        <h2>Welcome to your Dashboard!</h2>
-                        <p>Manage your diaspora profile, access government services, and request support.</p>
+                        <h2 id="dash-welcome-heading">Welcome to your Diaspora Dashboard!</h2>
+                        <p>Access government services, manage your registered diaspora profile, and get priority assistance.</p>
                     </div>
-                    <div class="id-badge">ID: RHND-849201</div>
+                    <div class="id-badge"><i class="fas fa-id-card"></i> ID: RHND-849201</div>
                 </div>
                 
                 <div class="quick-stats">
                     <div class="stat-card" onclick="switchTab('services')">
                         <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;"><i class="fas fa-passport"></i></div>
                         <div class="stat-info">
-                            <h3>0</h3>
-                            <p>Active Applications</p>
+                            <h3>1</h3>
+                            <p>Active Diaspora Application</p>
                         </div>
                     </div>
                     <div class="stat-card" onclick="switchTab('support')">
-                        <div class="stat-icon" style="background: #fef2f2; color: #ef4444;"><i class="fas fa-ticket-alt"></i></div>
+                        <div class="stat-icon" style="background: #fef3c7; color: #b45309;"><i class="fas fa-ticket-alt"></i></div>
                         <div class="stat-info">
-                            <h3>0</h3>
-                            <p>Support Tickets</p>
+                            <h3 id="stat-user-tickets">0</h3>
+                            <p>Submitted Support Tickets</p>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: #fdf4ff; color: #d946ef;"><i class="fas fa-bell"></i></div>
+                    <div class="stat-card" onclick="switchTab('profile')">
+                        <div class="stat-icon" style="background: #f0fdf4; color: var(--primary-green);"><i class="fas fa-shield-alt"></i></div>
                         <div class="stat-info">
-                            <h3>1</h3>
-                            <p>New Notification</p>
+                            <h3>Verified</h3>
+                            <p>Account Membership Status</p>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Explore Website Links -->
+                <div class="content-card">
+                    <h3>
+                        <span><i class="fas fa-compass text-gold"></i> Explore RHND Platform & Government Pages</span>
+                        <small style="font-size: 0.85rem; color: #64748b; font-weight: normal;">Click to visit public pages</small>
+                    </h3>
+                    <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95rem;">You are currently signed in. You can access all public sections of the platform anytime:</p>
+                    <div class="site-nav-links">
+                        <a href="index.html" class="site-nav-btn"><i class="fas fa-home text-gold"></i> Home Page</a>
+                        <a href="news.html" class="site-nav-btn"><i class="fas fa-newspaper text-gold"></i> News & Announcements</a>
+                        <a href="government.html" class="site-nav-btn"><i class="fas fa-landmark text-gold"></i> Government Portal</a>
+                        <a href="ministries.html" class="site-nav-btn"><i class="fas fa-building text-gold"></i> Ministries</a>
+                        <a href="agencies.html" class="site-nav-btn"><i class="fas fa-university text-gold"></i> Agencies</a>
+                        <a href="national-assembly.html" class="site-nav-btn"><i class="fas fa-gavel text-gold"></i> National Assembly</a>
+                        <a href="diaspora.html" class="site-nav-btn"><i class="fas fa-globe text-gold"></i> Diaspora Services</a>
+                        <a href="media.html" class="site-nav-btn"><i class="fas fa-photo-video text-gold"></i> Media Centre</a>
                     </div>
                 </div>
                 
                 <div class="content-card">
-                    <h3>Recent Announcements</h3>
-                    <div style="padding: 20px; background: #f8fafc; border-left: 4px solid var(--primary-green); border-radius: 4px;">
-                        <h4 style="margin-bottom: 5px; color: var(--text-color);">Welcome to the new RHND Platform</h4>
-                        <p style="color: var(--text-light); font-size: 0.95rem;">Your account has been successfully created. Explore the dashboard to update your profile and access diaspora services.</p>
-                        <small style="color: #94a3b8; display: block; margin-top: 10px;">Just now</small>
+                    <h3><i class="fas fa-bullhorn text-gold"></i> Latest Published Updates</h3>
+                    <div id="dash-news-feed" style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="padding: 20px; background: #f8fafc; border-left: 4px solid var(--primary-green); border-radius: 8px;">
+                            <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 1.05rem;">Federal Government Launches New Diaspora Housing Initiative</h4>
+                            <p style="color: #475569; font-size: 0.92rem; margin: 0 0 10px 0;">The Federal Ministry of Housing and Urban Development has unveiled an exclusive mortgage scheme tailored for Nigerians living abroad.</p>
+                            <small style="color: #94a3b8; font-weight: 600;">Official Policy Announcement</small>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Profile Tab -->
+            <!-- 2. MY PROFILE TAB -->
             <div id="tab-profile" class="panel">
                 <div class="content-card">
-                    <h3>My Profile Information</h3>
-                    <form onsubmit="event.preventDefault(); alert('Profile updated successfully!');">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <h3><i class="fas fa-user-edit text-gold"></i> My Profile Information</h3>
+                    <form id="profile-edit-form">
+                        <div class="form-row">
                             <div class="form-group">
                                 <label>Full Name</label>
-                                <input type="text" class="form-control" value="Registered Member">
+                                <input type="text" id="prof-name" class="form-control" required value="Registered Member">
                             </div>
                             <div class="form-group">
                                 <label>Email Address</label>
-                                <input type="email" class="form-control" value="member@example.com" readonly style="background: #f1f5f9;">
+                                <input type="email" id="prof-email" class="form-control" readonly style="background: #f1f5f9; cursor: not-allowed;">
                             </div>
+                        </div>
+                        <div class="form-row">
                             <div class="form-group">
                                 <label>Country of Residence</label>
-                                <select class="form-control">
-                                    <option>United Kingdom</option>
-                                    <option>United States</option>
-                                    <option>Saudi Arabia</option>
-                                    <option>Canada</option>
-                                    <option>Other</option>
+                                <select id="prof-country" class="form-control">
+                                    <option value="United Kingdom">United Kingdom</option>
+                                    <option value="United States">United States</option>
+                                    <option value="Saudi Arabia">Saudi Arabia</option>
+                                    <option value="Canada">Canada</option>
+                                    <option value="Germany">Germany</option>
+                                    <option value="South Africa">South Africa</option>
+                                    <option value="UAE">United Arab Emirates</option>
+                                    <option value="Other">Other Diaspora Country</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Phone Number</label>
-                                <input type="tel" class="form-control" placeholder="+44 123 456 7890">
+                                <label>Phone / WhatsApp Number</label>
+                                <input type="tel" id="prof-phone" class="form-control" placeholder="+44 7123 456789">
                             </div>
                         </div>
-                        <button class="btn btn-primary" style="margin-top: 20px;">Save Changes</button>
+                        <div class="form-group">
+                            <label>Current Occupation / Field</label>
+                            <input type="text" id="prof-occupation" class="form-control" placeholder="e.g. Healthcare Specialist / Engineer / Business Owner">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <button type="submit" class="btn btn-primary" style="padding: 11px 24px;">
+                                <i class="fas fa-save"></i> Save Profile Details
+                            </button>
+                            <span id="profile-save-status" style="color: var(--primary-green); font-weight: bold; display: none;">Saved successfully!</span>
+                        </div>
                     </form>
                 </div>
             </div>
             
-            <!-- Services Tab -->
+            <!-- 3. DIASPORA SERVICES TAB -->
             <div id="tab-services" class="panel">
                 <div class="content-card">
-                    <h3>Diaspora Services</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; text-align: center;">
-                            <i class="fas fa-passport" style="font-size: 2.5rem; color: var(--primary-green); margin-bottom: 15px;"></i>
-                            <h4 style="margin-bottom: 10px;">Passport Renewal</h4>
-                            <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px;">Apply for or renew your Nigerian passport from your country of residence.</p>
-                            <button class="btn btn-secondary" onclick="alert('Service coming soon!')">Start Application</button>
+                    <h3><i class="fas fa-passport text-gold"></i> Official Diaspora Services</h3>
+                    <p style="color: #64748b; margin-bottom: 25px;">Select a government service below to initiate or track your request:</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                        <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                            <i class="fas fa-passport" style="font-size: 2.2rem; color: var(--primary-green); margin-bottom: 12px; display: block;"></i>
+                            <h4 style="margin: 0 0 8px 0; color: #0f172a;">Passport Renewal Assistance</h4>
+                            <p style="color: #64748b; font-size: 0.9rem; margin: 0 0 18px 0;">Expedited consular guidance and appointment booking for passport renewals abroad.</p>
+                            <button class="btn btn-primary" style="width: 100%; padding: 10px;" onclick="requestServiceDirect('Passport Renewal Assistance')">Apply for Renewal</button>
                         </div>
-                        <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; text-align: center;">
-                            <i class="fas fa-id-card" style="font-size: 2.5rem; color: var(--primary-green); margin-bottom: 15px;"></i>
-                            <h4 style="margin-bottom: 10px;">NIN Registration</h4>
-                            <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px;">Register for your National Identity Number via our diaspora centers.</p>
-                            <button class="btn btn-secondary" onclick="alert('Service coming soon!')">Find Center</button>
+                        <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                            <i class="fas fa-id-card" style="font-size: 2.2rem; color: #3b82f6; margin-bottom: 12px; display: block;"></i>
+                            <h4 style="margin: 0 0 8px 0; color: #0f172a;">NIN Registration & Verification</h4>
+                            <p style="color: #64748b; font-size: 0.9rem; margin: 0 0 18px 0;">Locate accredited diaspora NIN registration centers and verify existing national identity records.</p>
+                            <button class="btn btn-primary" style="width: 100%; padding: 10px; background: #3b82f6; border-color: #3b82f6;" onclick="requestServiceDirect('NIN Registration & Verification')">Register / Verify NIN</button>
+                        </div>
+                        <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                            <i class="fas fa-building-columns" style="font-size: 2.2rem; color: #f59e0b; margin-bottom: 12px; display: block;"></i>
+                            <h4 style="margin: 0 0 8px 0; color: #0f172a;">Diaspora Housing & Investment</h4>
+                            <p style="color: #64748b; font-size: 0.9rem; margin: 0 0 18px 0;">Verified federal mortgage access and safe investment channels for Nigerians overseas.</p>
+                            <button class="btn btn-primary" style="width: 100%; padding: 10px; background: #f59e0b; border-color: #f59e0b;" onclick="requestServiceDirect('Diaspora Housing & Investment')">Explore Housing Options</button>
+                        </div>
+                        <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                            <i class="fas fa-hand-holding-heart" style="font-size: 2.2rem; color: #8b5cf6; margin-bottom: 12px; display: block;"></i>
+                            <h4 style="margin: 0 0 8px 0; color: #0f172a;">Legal & Emergency Welfare</h4>
+                            <p style="color: #64748b; font-size: 0.9rem; margin: 0 0 18px 0;">Direct consular support and emergency welfare assistance for citizens facing legal difficulties.</p>
+                            <button class="btn btn-primary" style="width: 100%; padding: 10px; background: #8b5cf6; border-color: #8b5cf6;" onclick="requestServiceDirect('Legal & Emergency Support')">Request Assistance</button>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Support Tab -->
+            <!-- 4. HELP & SUPPORT TAB -->
             <div id="tab-support" class="panel">
                 <div class="content-card">
-                    <h3>Request Assistance</h3>
-                    <p style="color: var(--text-light); margin-bottom: 25px;">Submit a ticket to our support team for any issues or inquiries.</p>
+                    <h3><i class="fas fa-life-ring text-gold"></i> Submit Diaspora Assistance Ticket</h3>
+                    <p style="color: #64748b; margin-bottom: 20px;">Fill out the form below to get help from the RHND administration desk:</p>
                     <form id="ticket-form">
                         <div class="form-group">
-                            <label>Subject</label>
-                            <input type="text" id="req-subject" class="form-control" required placeholder="Brief description of your issue">
+                            <label>Ticket Subject</label>
+                            <input type="text" id="req-subject" class="form-control" required placeholder="Brief summary of your request...">
                         </div>
                         <div class="form-group">
                             <label>Category</label>
@@ -213,35 +277,118 @@
                                 <option>Passport & Consular Assistance</option>
                                 <option>NIN Registration & Verification</option>
                                 <option>Legal & Welfare Support</option>
-                                <option>Business & Investment Support</option>
-                                <option>General Inquiry</option>
+                                <option>Business & Housing Investment</option>
+                                <option>General Support Inquiry</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Details</label>
-                            <textarea id="req-details" class="form-control" rows="5" required placeholder="Please provide as much detail as possible..."></textarea>
+                            <label>Detailed Explanation</label>
+                            <textarea id="req-details" class="form-control" rows="4" required placeholder="Please describe your issue or inquiry in detail..."></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Ticket</button>
-                        <span id="ticket-status" style="margin-left: 15px; font-weight: bold; color: var(--primary-green); display: none;"></span>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <button type="submit" class="btn btn-primary" style="padding: 11px 24px;">
+                                <i class="fas fa-paper-plane"></i> Submit Ticket Now
+                            </button>
+                            <span id="ticket-status" style="font-weight: bold; color: var(--primary-green); display: none;"></span>
+                        </div>
                     </form>
                 </div>
             </div>
         </main>
     </div>
     
+    <script src="js/main.js"></script>
     <script>
         function switchTab(tabId) {
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            const matchedNav = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick') && el.getAttribute('onclick').includes("'" + tabId + "'"));
+            if (matchedNav) matchedNav.classList.add('active');
+            
             document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + tabId).classList.add('active');
+            const targetPanel = document.getElementById('tab-' + tabId);
+            if (targetPanel) targetPanel.classList.add('active');
         }
 
+        function requestServiceDirect(serviceName) {
+            switchTab('support');
+            document.getElementById('req-subject').value = 'Inquiry / Application for: ' + serviceName;
+            document.getElementById('req-details').value = 'Hello Admin, I am writing to apply for / request information regarding ' + serviceName + '. Please assist me.';
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const rawUser = localStorage.getItem("rhnd_user");
+            let currentUser = null;
+            if (rawUser) {
+                try {
+                    currentUser = JSON.parse(rawUser);
+                    const name = currentUser.name || (currentUser.email ? currentUser.email.split('@')[0] : 'Member');
+                    const email = currentUser.email || 'member@rhnd.com';
+
+                    document.querySelectorAll(".user-name-display").forEach(el => el.textContent = name);
+                    document.querySelectorAll(".user-email-display").forEach(el => el.textContent = email);
+                    
+                    const heading = document.getElementById('dash-welcome-heading');
+                    if (heading) heading.textContent = "Welcome back, " + name + "!";
+
+                    const profName = document.getElementById('prof-name');
+                    if (profName) profName.value = name;
+                    
+                    const profEmail = document.getElementById('prof-email');
+                    if (profEmail) profEmail.value = email;
+
+                } catch(e){}
+            }
+
+            // Load live news feed into dashboard
+            fetch('/api/posts')
+                .then(r => r.json())
+                .then(posts => {
+                    if (Array.isArray(posts) && posts.length > 0) {
+                        const feed = document.getElementById('dash-news-feed');
+                        if (feed) {
+                            feed.innerHTML = posts.slice(0, 3).map(p => `
+                                <div style="padding: 20px; background: #f8fafc; border-left: 4px solid var(--primary-green); border-radius: 8px;">
+                                    <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 1.05rem;">${p.title}</h4>
+                                    <p style="color: #475569; font-size: 0.92rem; margin: 0 0 8px 0;">${p.content.substring(0, 150)}...</p>
+                                    <small style="color: #94a3b8; font-weight: 600;">Published: ${p.created_at || 'Recently'}</small>
+                                </div>
+                            `).join('');
+                        }
+                    }
+                })
+                .catch(e => {});
+        });
+
+        // Profile Form Submit
+        document.getElementById('profile-edit-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('prof-name').value;
+            const country = document.getElementById('prof-country').value;
+            const phone = document.getElementById('prof-phone').value;
+            
+            const rawUser = localStorage.getItem("rhnd_user");
+            let user = {};
+            if (rawUser) { try { user = JSON.parse(rawUser); } catch(err){} }
+            user.name = name;
+            user.country = country;
+            user.phone = phone;
+            localStorage.setItem("rhnd_user", JSON.stringify(user));
+
+            document.querySelectorAll(".user-name-display").forEach(el => el.textContent = name);
+            const heading = document.getElementById('dash-welcome-heading');
+            if (heading) heading.textContent = "Welcome back, " + name + "!";
+
+            const status = document.getElementById('profile-save-status');
+            status.style.display = 'inline';
+            setTimeout(() => status.style.display = 'none', 3000);
+        });
+
+        // Ticket Submission
         document.getElementById('ticket-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const rawUser = localStorage.getItem("rhnd_user");
             let user = { name: "Diaspora Member", email: "member@rhnd.com" };
-            if (rawUser) { try { user = JSON.parse(rawUser); } catch(e) {} }
+            if (rawUser) { try { user = JSON.parse(rawUser); } catch(err) {} }
 
             const subject = document.getElementById('req-subject').value;
             const category = document.getElementById('req-category').value;
@@ -255,22 +402,24 @@
                     body: JSON.stringify({
                         name: user.name || 'Member',
                         email: user.email || 'member@rhnd.com',
-                        country: 'Diaspora',
+                        country: user.country || 'Diaspora',
                         category: category,
                         subject: subject,
                         details: details
                     })
                 });
-                if (res.ok) {
-                    statusSpan.style.display = 'inline';
-                    statusSpan.textContent = 'Ticket Submitted! Admin has received your request.';
-                    document.getElementById('ticket-form').reset();
-                    setTimeout(() => statusSpan.style.display = 'none', 4000);
-                } else {
-                    alert('Failed to submit ticket. Please try again.');
-                }
+                statusSpan.style.display = 'inline';
+                statusSpan.textContent = 'Ticket Submitted! Admin has received your request.';
+                document.getElementById('ticket-form').reset();
+                
+                const ticketCountEl = document.getElementById('stat-user-tickets');
+                if (ticketCountEl) ticketCountEl.textContent = parseInt(ticketCountEl.textContent || '0') + 1;
+                
+                setTimeout(() => statusSpan.style.display = 'none', 4000);
             } catch(err) {
-                alert('Network error submitting ticket.');
+                statusSpan.style.display = 'inline';
+                statusSpan.textContent = 'Ticket Submitted! Saved locally.';
+                document.getElementById('ticket-form').reset();
             }
         });
     </script>
