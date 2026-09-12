@@ -80,16 +80,22 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
     font-size: 0.86rem; 
     padding: 10px 0; 
     font-weight: 500; 
-    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    border-bottom: 2px solid var(--primary-gold);
 }
-.top-bar-inner { display: flex; justify-content: space-between; align-items: center; }
-.top-bar-left i { margin-right: 6px; color: var(--primary-gold); }
-.top-bar-right { display: flex; align-items: center; gap: 16px; }
-.divider { color: rgba(255,255,255,0.25); }
-.top-bar-right a:hover { color: var(--primary-gold); }
-.social-icons { display: flex; gap: 12px; margin-left: 10px; }
-.social-icons a { color: var(--primary-white); opacity: 0.85; transition: all 0.2s; }
-.social-icons a:hover { opacity: 1; color: var(--primary-gold); transform: translateY(-2px); }
+.top-bar-inner { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+.top-bar-left {
+    display: flex;
+    align-items: center;
+}
+.top-bar-right { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+}
 
 /* Main Sticky Header */
 .main-header { 
@@ -560,4 +566,10 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
 }
 .top-bar .btn-register:hover {
     background: var(--secondary-dark-green);
+}
+
+@media(max-width: 768px) {
+    .top-bar-inner { flex-direction: row !important; justify-content: space-between !important; }
+    .search-box { width: 100% !important; max-width: 100% !important; }
+    .header-actions { flex-direction: column !important; gap: 10px !important; }
 }
