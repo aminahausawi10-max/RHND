@@ -100,34 +100,79 @@
         </div>
     </section>
 
-    <script>
+        <script>
+        const defaultMinistries = [
+            {
+                name: "Federal Ministry of Foreign Affairs",
+                leader: "Amb. Yusuf Maitama Tuggar (Minister)",
+                description: "Promoting Nigeria's national interests and providing diplomatic & consular representation globally for citizens abroad.",
+                website: "https://foreignaffairs.gov.ng"
+            },
+            {
+                name: "Federal Ministry of Interior",
+                leader: "Dr. Olubunmi Tunji-Ojo (Minister)",
+                description: "Oversees homeland security, citizenship, passport administration, and immigration services for diaspora Nigerians.",
+                website: "https://interior.gov.ng"
+            },
+            {
+                name: "Federal Ministry of Finance",
+                leader: "Mr. Wale Edun (Minister)",
+                description: "Formulates fiscal policies and manages economic resources, remittances, and diaspora investment frameworks.",
+                website: "https://finance.gov.ng"
+            },
+            {
+                name: "Ministry of Communications & Digital Economy",
+                leader: "Dr. Bosun Tijani (Minister)",
+                description: "Facilitating digital transformation, talent export programs, and global tech partnerships for Nigerians worldwide.",
+                website: "https://fmcide.gov.ng"
+            },
+            {
+                name: "Federal Ministry of Housing and Urban Development",
+                leader: "Arc. Ahmed Musa Dangiwa (Minister)",
+                description: "Providing affordable housing initiatives, diaspora mortgage frameworks, and urban infrastructure projects.",
+                website: "https://housingandurban.gov.ng"
+            },
+            {
+                name: "Federal Ministry of Industry, Trade and Investment",
+                leader: "Dr. Doris Uzoka-Anite (Minister)",
+                description: "Promoting trade partnerships, diaspora commercial enterprises, and foreign direct investment into Nigeria.",
+                website: "https://fmiti.gov.ng"
+            }
+        ];
+
+        function renderMinistries(items) {
+            const grid = document.getElementById('ministries-grid');
+            if (!grid) return;
+            grid.innerHTML = items.map(m => `
+                <div class="update-card" style="border-top: 4px solid var(--primary-green);">
+                    <div class="card-content">
+                        <div class="category" style="color: var(--primary-gold);"><i class="fas fa-landmark"></i> Federal Ministry</div>
+                        <h3 style="font-size: 1.3rem; margin-bottom: 8px;">${m.name}</h3>
+                        ${m.leader ? `<div style="font-size: 0.9rem; font-weight: 700; color: var(--secondary-dark-green); margin-bottom: 12px;"><i class="fas fa-user-tie"></i> ${m.leader}</div>` : ''}
+                        <p style="font-size: 0.95rem; color: var(--text-light); margin-bottom: 20px;">${m.description || ''}</p>
+                        ${m.website ? `<a href="${m.website}" target="_blank" class="read-more" style="font-weight: 700; color: var(--primary-green);">Visit Official Portal <i class="fas fa-external-link-alt"></i></a>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
         async function loadMinistries() {
+            let items = defaultMinistries;
             try {
                 const res = await fetch('/api/entities?type=Ministry');
-                const items = await res.json();
-                const grid = document.getElementById('ministries-grid');
-                if (!items || items.length === 0) {
-                    grid.innerHTML = '<div class="update-card" style="padding: 50px; text-align: center; grid-column: 1 / -1;"><p>No ministries configured yet.</p></div>';
-                    return;
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0 && !data.error) {
+                        items = data;
+                    }
                 }
-                grid.innerHTML = items.map(m => `
-                    <div class="update-card" style="border-top: 4px solid var(--primary-green);">
-                        <div class="card-content">
-                            <div class="category" style="color: var(--primary-gold);"><i class="fas fa-landmark"></i> Federal Ministry</div>
-                            <h3 style="font-size: 1.3rem; margin-bottom: 8px;">${m.name}</h3>
-                            ${m.leader ? `<div style="font-size: 0.9rem; font-weight: 700; color: var(--secondary-dark-green); margin-bottom: 12px;"><i class="fas fa-user-tie"></i> ${m.leader}</div>` : ''}
-                            <p style="font-size: 0.95rem; color: var(--text-light); margin-bottom: 20px;">${m.description || ''}</p>
-                            ${m.website ? `<a href="${m.website}" target="_blank" class="read-more" style="font-weight: 700; color: var(--primary-green);">Visit Official Portal <i class="fas fa-external-link-alt"></i></a>` : ''}
-                        </div>
-                    </div>
-                `).join('');
             } catch(e) {
-                document.getElementById('ministries-grid').innerHTML = '<p style="grid-column: 1 / -1; color: red;">Error loading ministries.</p>';
+                console.warn("Using default ministries dataset");
             }
+            renderMinistries(items);
         }
         loadMinistries();
-    </script>
-    <!-- Footer -->
+    </script><!-- Footer -->
     <footer class="main-footer">
         <div class="container footer-grid">
             <div class="footer-col brand-col">

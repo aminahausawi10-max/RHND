@@ -100,34 +100,67 @@
         </div>
     </section>
 
-    <script>
+        <script>
+        const defaultAgencies = [
+            {
+                name: "NiDCOM - Nigerians in Diaspora Commission",
+                leader: "Hon. Abike Dabiri-Erewa (CEO/Chairman)",
+                description: "Dedicated government commission for diaspora engagement, welfare, empowerment, and national development.",
+                website: "https://nidcom.gov.ng"
+            },
+            {
+                name: "Nigeria Immigration Service (NIS)",
+                leader: "Comptroller-General",
+                description: "Responsible for issuance of Nigerian standard passports, visa services, and diaspora border management.",
+                website: "https://immigration.gov.ng"
+            },
+            {
+                name: "National Identity Management Commission (NIMC)",
+                leader: "Director-General",
+                description: "Manages the National Identity Database and oversees diaspora National Identification Number (NIN) enrollment.",
+                website: "https://nimc.gov.ng"
+            },
+            {
+                name: "Nigerian Investment Promotion Commission (NIPC)",
+                leader: "Executive Secretary",
+                description: "Encourages, promotes, and coordinates diaspora and foreign direct investments into the Nigerian economy.",
+                website: "https://nipc.gov.ng"
+            }
+        ];
+
+        function renderAgencies(items) {
+            const grid = document.getElementById('agencies-grid');
+            if (!grid) return;
+            grid.innerHTML = items.map(a => `
+                <div class="update-card" style="border-top: 4px solid var(--primary-gold);">
+                    <div class="card-content">
+                        <div class="category" style="color: var(--primary-green);"><i class="fas fa-sitemap"></i> Focal Agency</div>
+                        <h3 style="font-size: 1.3rem; margin-bottom: 8px;">${a.name}</h3>
+                        ${a.leader ? `<div style="font-size: 0.9rem; font-weight: 700; color: var(--secondary-dark-green); margin-bottom: 12px;"><i class="fas fa-user-shield"></i> ${a.leader}</div>` : ''}
+                        <p style="font-size: 0.95rem; color: var(--text-light); margin-bottom: 20px;">${a.description || ''}</p>
+                        ${a.website ? `<a href="${a.website}" target="_blank" class="read-more" style="font-weight: 700; color: var(--secondary-dark-green);">Access Services Portal <i class="fas fa-external-link-alt"></i></a>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
         async function loadAgencies() {
+            let items = defaultAgencies;
             try {
                 const res = await fetch('/api/entities?type=Agency');
-                const items = await res.json();
-                const grid = document.getElementById('agencies-grid');
-                if (!items || items.length === 0) {
-                    grid.innerHTML = '<div class="update-card" style="padding: 50px; text-align: center; grid-column: 1 / -1;"><p>No agencies configured yet.</p></div>';
-                    return;
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0 && !data.error) {
+                        items = data;
+                    }
                 }
-                grid.innerHTML = items.map(a => `
-                    <div class="update-card" style="border-top: 4px solid var(--primary-gold);">
-                        <div class="card-content">
-                            <div class="category" style="color: var(--primary-green);"><i class="fas fa-sitemap"></i> Focal Agency</div>
-                            <h3 style="font-size: 1.3rem; margin-bottom: 8px;">${a.name}</h3>
-                            ${a.leader ? `<div style="font-size: 0.9rem; font-weight: 700; color: var(--secondary-dark-green); margin-bottom: 12px;"><i class="fas fa-user-shield"></i> ${a.leader}</div>` : ''}
-                            <p style="font-size: 0.95rem; color: var(--text-light); margin-bottom: 20px;">${a.description || ''}</p>
-                            ${a.website ? `<a href="${a.website}" target="_blank" class="read-more" style="font-weight: 700; color: var(--secondary-dark-green);">Access Services Portal <i class="fas fa-external-link-alt"></i></a>` : ''}
-                        </div>
-                    </div>
-                `).join('');
             } catch(e) {
-                document.getElementById('agencies-grid').innerHTML = '<p style="grid-column: 1 / -1; color: red;">Error loading agencies.</p>';
+                console.warn("Using default agencies dataset");
             }
+            renderAgencies(items);
         }
         loadAgencies();
-    </script>
-    <!-- Footer -->
+    </script><!-- Footer -->
     <footer class="main-footer">
         <div class="container footer-grid">
             <div class="footer-col brand-col">

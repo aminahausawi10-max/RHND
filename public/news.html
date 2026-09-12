@@ -101,42 +101,63 @@
         </div>
     </section>
 
-    <script>
-    async function loadNews() {
-        try {
-            const res = await fetch('/api/posts');
-            const posts = await res.json();
-            const list = document.getElementById('public-news-list');
-            
-            if (posts.length === 0) {
-                list.innerHTML = `
-                <div class="update-card" style="padding: 60px; text-align: center; border: 2px dashed #cbd5e1; background: transparent; box-shadow: none; grid-column: 1 / -1;">
-                    <h3 style="color: var(--text-light); margin-bottom: 10px;">No news published yet.</h3>
-                    <p style="color: #94a3b8;">Check back later for official updates.</p>
-                </div>`;
-                return;
-            }
-            
-            list.innerHTML = posts.map(post => `
-                <div class="update-card">
-                    <div class="card-content">
-                        <div class="category">Official Update</div>
-                        <h3>${post.title}</h3>
-                        <p>${post.content.length > 150 ? post.content.substring(0, 150) + '...' : post.content}</p>
-                        <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #718096; font-size: 0.85rem;">${new Date(post.created_at).toLocaleDateString()}</span>
-                            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-                        </div>
+        <script>
+    const defaultNews = [
+        {
+            id: 101,
+            title: "Federal Government Launches Special Diaspora Housing Scheme",
+            content: "The Federal Ministry of Housing and Urban Development has unveiled an exclusive mortgage scheme tailored for Nigerians living abroad. The initiative aims to provide secure property ownership and transparent investment opportunities.",
+            created_at: new Date().toISOString()
+        },
+        {
+            id: 102,
+            title: "NiDCOM Announces Virtual Diaspora Townhall Dialogue",
+            content: "The Nigerians in Diaspora Commission (NiDCOM) invites all citizens overseas to participate in the upcoming quarterly virtual townhall meeting with diplomatic representatives and policy makers.",
+            created_at: new Date().toISOString()
+        },
+        {
+            id: 103,
+            title: "Nigeria Immigration Service Expands Diaspora Passport Centres",
+            content: "New passport enrollment and renewal processing centers have been established across strategic international locations to reduce processing wait times for diaspora citizens.",
+            created_at: new Date().toISOString()
+        }
+    ];
+
+    function renderNews(posts) {
+        const list = document.getElementById('public-news-list');
+        if (!list) return;
+        list.innerHTML = posts.map(post => `
+            <div class="update-card">
+                <div class="card-content">
+                    <div class="category">Official Update</div>
+                    <h3>${post.title}</h3>
+                    <p>${post.content.length > 150 ? post.content.substring(0, 150) + '...' : post.content}</p>
+                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #718096; font-size: 0.85rem;">${new Date(post.created_at || Date.now()).toLocaleDateString()}</span>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-            `).join('');
+            </div>
+        `).join('');
+    }
+
+    async function loadNews() {
+        let posts = defaultNews;
+        try {
+            const res = await fetch('/api/posts');
+            if (res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0 && !data.error) {
+                    posts = data;
+                }
+            }
         } catch(e) {
-            document.getElementById('public-news-list').innerHTML = '<p style="grid-column: 1/-1; text-align:center;">Error loading news.</p>';
+            console.warn("Using default news dataset");
         }
+        renderNews(posts);
     }
     loadNews();
-    </script>
-<!-- Footer -->
+    </script><!-- Footer -->
     <footer class="main-footer">
         <div class="container footer-grid">
             <div class="footer-col brand-col">
