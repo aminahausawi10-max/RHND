@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+    (function() {
+        const rawUser = localStorage.getItem("rhnd_user");
+        const adminPwd = sessionStorage.getItem("rhnd_admin_pwd");
+        let isAdmin = false;
+        if (rawUser) {
+            try {
+                const user = JSON.parse(rawUser);
+                if (user.role === "admin" || (user.email && user.email.toLowerCase().includes("admin"))) {
+                    isAdmin = true;
+                }
+            } catch(e){}
+        }
+        if (adminPwd === "Admin@RHND2026") {
+            isAdmin = true;
+        }
+        if (!isAdmin) {
+            alert("Access Denied: Only Super Admin can access the Admin Portal. Please log in as Admin.");
+            window.location.href = "login.html";
+        }
+    })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RHND Super Admin Portal</title>
