@@ -32,6 +32,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Floating Action Button (FAB) & Quick Post News
     setupFloatingPortalButton();
+
+    
+    // Require login for subpages while allowing public home page view
+    checkPageAccess();
+
 });
 
 // Logout handler
@@ -296,4 +301,39 @@ function setupFloatingPortalButton() {
             if (fabIcon) fabIcon.className = "fas fa-bolt";
         }
     });
+}
+
+
+function checkPageAccess() {
+    const rawUser = localStorage.getItem("rhnd_user");
+    const adminPwd = sessionStorage.getItem("rhnd_admin_pwd");
+    const isLoggedIn = !!rawUser || adminPwd === "Admin@RHND2026";
+
+    const path = window.location.pathname.toLowerCase();
+    
+    // Protected pages list
+    const protectedPages = [
+        "news.html", "government.html", "ministries.html", 
+        "agencies.html", "national-assembly.html", "diaspora.html", 
+        "media.html", "membership.html", "support.html"
+    ];
+
+    const isVisitingProtected = protectedPages.some(page => path.endsWith(page));
+
+    if (isVisitingProtected && !isLoggedIn) {
+        alert("Access Restricted: Please sign in or register to view full news, government updates, and diaspora services.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    // Intercept "Read More" or navigation links for logged out users on homepage
+    if (!isLoggedIn) {
+        document.querySelectorAll("a.read-more, .cards-grid a").forEach(link => {
+            link.addEventListener("click", function(e) {
+                e.preventDefault();
+                alert("Please sign in or register to read full news articles and access government services.");
+                window.location.href = "login.html";
+            });
+        });
+    }
 }
