@@ -54,6 +54,7 @@
                 <ul class="nav-links">
                     <li><a href="index.html" class="active">HOME</a></li>
                     <li><a href="news.html" >NEWS</a></li>
+                    <li><a href="membership.html" >MEMBERS</a></li>
                     <li><a href="support.html" >HELP & SUPPORT</a></li>
                 </ul>
             </div>
@@ -74,11 +75,79 @@
         </div>
     </section>
 
+    <!-- Live Community Stats Banner -->
+    <section style="background: #0b1329; border-bottom: 3px solid var(--primary-gold); padding: 25px 0;">
+        <div class="container" style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 20px; text-align: center; color: white;">
+            <div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary-gold);" id="home-total-members-counter">1</div>
+                <div style="font-size: 0.85rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 1px;"><i class="fas fa-users" style="color: var(--primary-gold);"></i> Total Registered Members</div>
+            </div>
+            <div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: #38bdf8;">100%</div>
+                <div style="font-size: 0.85rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 1px;"><i class="fas fa-shield-alt" style="color: #38bdf8;"></i> Verified Diaspora IDs</div>
+            </div>
+            <div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: #4ade80;">Global</div>
+                <div style="font-size: 0.85rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 1px;"><i class="fas fa-globe" style="color: #4ade80;"></i> Worldwide Coverage</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registered Members Directory Section -->
+    <section class="section-padding" style="background: #f8fafc; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="badge" style="background: #eff6ff; color: #3b82f6; font-size: 0.85rem; padding: 6px 14px; border-radius: 20px; font-weight: 700; display: inline-block; margin-bottom: 10px;">
+                    <i class="fas fa-users"></i> Official Diaspora Register
+                </span>
+                <h2 style="font-size: 2.2rem; color: var(--secondary-dark-green); font-weight: 800;">Registered Members Network</h2>
+                <p style="color: #64748b;">Total Verified Registered Diaspora Citizens: <strong style="color: var(--primary-green); font-size: 1.1rem;" id="section-total-members-count">1</strong></p>
+                <div class="line mx-auto"></div>
+            </div>
+
+            <div style="max-width: 950px; margin: 0 auto; background: white; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.04); overflow: hidden;">
+                <div style="padding: 20px 24px; background: #0b1329; color: white; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.15rem; color: white;">
+                            <i class="fas fa-address-book text-gold" style="margin-right: 8px;"></i> Verified Diaspora Members Directory
+                        </h3>
+                        <small style="color: #94a3b8;">Official RHND Community Network</small>
+                    </div>
+                    <span style="background: rgba(212,175,55,0.2); color: var(--primary-gold); border: 1px solid rgba(212,175,55,0.4); padding: 4px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 700;">
+                        Live Register
+                    </span>
+                </div>
+                
+                <div class="table-responsive" style="margin: 0;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                                <th style="padding: 14px 18px; color: #475569; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">Member ID</th>
+                                <th style="padding: 14px 18px; color: #475569; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">Member Name</th>
+                                <th style="padding: 14px 18px; color: #475569; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">Diaspora Location</th>
+                                <th style="padding: 14px 18px; color: #475569; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">Verification</th>
+                            </tr>
+                        </thead>
+                        <tbody id="home-members-directory-tbody">
+                            <!-- Populated with real members -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="padding: 18px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; text-align: center;">
+                    <a href="register.html" class="btn btn-primary" style="padding: 10px 24px; font-size: 0.95rem; font-weight: 700;">
+                        <i class="fas fa-id-card"></i> Register & Get Your Official Diaspora ID
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Government Updates Section -->
     <section class="government-updates section-padding">
         <div class="container">
             <div class="section-header">
-                <h2>Government Updates</h2>
+                <h2>Official Announcements & Updates</h2>
                 <p>Verified public information and announcements</p>
                 <div class="line"></div>
             </div>
@@ -201,6 +270,7 @@
                 <ul>
                     <li><a href="index.html">Home</a></li>
                     <li><a href="news.html">News & Updates</a></li>
+                    <li><a href="membership.html">Members Directory</a></li>
                     <li><a href="support.html">Help & Support</a></li>
                 </ul>
             </div>
@@ -240,13 +310,11 @@
                 try {
                     const user = JSON.parse(rawUser);
                     if (user && user.email) {
-                        // User is registered/logged in — do not show the hero CTA buttons on the home page
                         const heroCta = document.getElementById("hero-cta-buttons");
                         if (heroCta) {
                             heroCta.style.display = "none";
                         }
                         
-                        // Update Membership CTA button to view ID on dashboard
                         const membershipBtn = document.getElementById("membership-cta-btn");
                         if (membershipBtn) {
                             membershipBtn.href = "member-dashboard.html";
@@ -255,6 +323,93 @@
                     }
                 } catch(e) {}
             }
+
+            // Load registered diaspora members on Home Page
+            function getHomeMembers() {
+                let list = [];
+                try {
+                    const local = localStorage.getItem('rhnd_members_db');
+                    if (local) {
+                        const parsed = JSON.parse(local);
+                        if (Array.isArray(parsed)) list = parsed;
+                    }
+                } catch(e) {}
+
+                const fakeEmails = ['babatunde.ade@diaspora.org', 'ngozi.diaspora@gmail.com', 'ibrahim.musa@rhnd.org', 'sample@member.com'];
+                list = list.filter(m => m && m.email && !fakeEmails.includes(m.email.toLowerCase()));
+
+                const hasAmina = list.some(m => m && m.email && m.email.toLowerCase().includes('aminahausawi'));
+                if (!hasAmina) {
+                    list.unshift({
+                        id: "RHND-NIG-00001",
+                        name: "Amina Hausawi",
+                        email: "aminahausawi10@gmail.com",
+                        country: "United Kingdom",
+                        created_at: "2026-09-12T10:00:00Z"
+                    });
+                }
+                return list;
+            }
+
+            function renderHomeMembers(members) {
+                const total = members.length;
+                const counter = document.getElementById('home-total-members-counter');
+                if (counter) counter.textContent = total;
+                const sectionCounter = document.getElementById('section-total-members-count');
+                if (sectionCounter) sectionCounter.textContent = total;
+
+                const tbody = document.getElementById('home-members-directory-tbody');
+                if (tbody) {
+                    tbody.innerHTML = members.map((m, idx) => {
+                        let idStr = '#RHND-NIG-00001';
+                        if (typeof m.id === 'number') {
+                            idStr = '#RHND-NIG-' + String(idx + 1).padStart(5, '0');
+                        } else if (m.id) {
+                            idStr = m.id.startsWith('#') ? m.id : '#' + m.id;
+                        }
+
+                        return `
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 14px 18px;">
+                                    <span style="font-family: monospace; font-weight: 800; color: var(--primary-gold); background: #0b1329; padding: 4px 10px; border-radius: 6px; font-size: 0.88rem;">${idStr}</span>
+                                </td>
+                                <td style="padding: 14px 18px;">
+                                    <strong style="color: #0f172a; font-size: 0.95rem;">${m.name || 'Amina Hausawi'}</strong>
+                                </td>
+                                <td style="padding: 14px 18px; color: #334155; font-weight: 600;">
+                                    <i class="fas fa-map-marker-alt text-gold" style="margin-right: 6px;"></i> ${m.country || 'Diaspora'}
+                                </td>
+                                <td style="padding: 14px 18px;">
+                                    <span class="badge" style="background: #dcfce7; color: #15803d; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem;">
+                                        <i class="fas fa-check-circle"></i> Verified Citizen
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            }
+
+            let members = getHomeMembers();
+            renderHomeMembers(members);
+
+            fetch('/api/users')
+                .then(r => r.json())
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0 && !data.error) {
+                        const realUsers = data.filter(u => u && u.email && !u.email.toLowerCase().includes('admin'));
+                        if (realUsers.length > 0) {
+                            const merged = [...realUsers];
+                            members.forEach(m => {
+                                if (!merged.some(x => x.email.toLowerCase() === m.email.toLowerCase())) {
+                                    merged.push(m);
+                                }
+                            });
+                            renderHomeMembers(merged);
+                        }
+                    }
+                })
+                .catch(e => {});
         });
     </script>
 </body>
