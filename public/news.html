@@ -91,40 +91,82 @@
         {
             id: 101,
             title: "Federal Government Launches Special Diaspora Housing Scheme",
-            content: "The Federal Ministry of Housing and Urban Development has unveiled an exclusive mortgage scheme tailored for Nigerians living abroad. The initiative aims to provide secure property ownership and transparent investment opportunities.",
+            content: "The Federal Ministry of Housing and Urban Development has unveiled an exclusive mortgage scheme tailored for Nigerians living abroad. The initiative aims to provide secure property ownership and transparent investment opportunities.
+
+Under this scheme, registered diaspora citizens can apply for federal home loans with flexible repayment terms, verified land titles, and direct consular assistance. Key partner banks and mortgage institutions have integrated automated diaspora verification protocols to prevent fraud and ensure seamless allocation.
+
+Interested applicants can initiate their requests directly through the Diaspora Services section of the RHND portal.",
             created_at: new Date().toISOString()
         },
         {
             id: 102,
             title: "NiDCOM Announces Virtual Diaspora Townhall Dialogue",
-            content: "The Nigerians in Diaspora Commission (NiDCOM) invites all citizens overseas to participate in the upcoming quarterly virtual townhall meeting with diplomatic representatives and policy makers.",
+            content: "The Nigerians in Diaspora Commission (NiDCOM) invites all citizens overseas to participate in the upcoming quarterly virtual townhall meeting with diplomatic representatives and policy makers.
+
+The interactive session will focus on consular welfare, passport renewal acceleration, voting rights advocacy, and foreign investment security. Registration is free and open to all registered community members.",
             created_at: new Date().toISOString()
         },
         {
             id: 103,
             title: "Nigeria Immigration Service Expands Diaspora Passport Centres",
-            content: "New passport enrollment and renewal processing centers have been established across strategic international locations to reduce processing wait times for diaspora citizens.",
+            content: "New passport enrollment and renewal processing centers have been established across strategic international locations to reduce processing wait times for diaspora citizens.
+
+Citizens living in North America, Europe, the Middle East, and Asia-Pacific regions can now access fast-track biometric capture appointments at authorized consular processing desks.",
             created_at: new Date().toISOString()
         }
     ];
 
+    let allNewsPosts = [...defaultNews];
+
     function renderNews(posts) {
+        allNewsPosts = Array.isArray(posts) && posts.length > 0 ? posts : defaultNews;
         const list = document.getElementById('public-news-list');
         if (!list) return;
-        list.innerHTML = posts.map(post => `
-            <div class="update-card">
+        
+        list.innerHTML = allNewsPosts.map(post => `
+            <div class="update-card" style="cursor: pointer;" onclick="openNewsArticle(${post.id})">
                 <div class="card-content">
                     <div class="category">Official Update</div>
                     <h3>${post.title}</h3>
-                    <p>${post.content.length > 150 ? post.content.substring(0, 150) + '...' : post.content}</p>
+                    <p>${post.content.length > 140 ? post.content.substring(0, 140) + '...' : post.content}</p>
                     <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
                         <span style="color: #718096; font-size: 0.85rem;">${new Date(post.created_at || Date.now()).toLocaleDateString()}</span>
-                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                        <a href="javascript:void(0)" onclick="event.stopPropagation(); openNewsArticle(${post.id})" class="read-more" style="color: var(--primary-green); font-weight: 700; text-decoration: none;">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         `).join('');
     }
+
+    function openNewsArticle(postId) {
+        const post = allNewsPosts.find(p => p.id == postId) || defaultNews.find(p => p.id == postId);
+        if (!post) return;
+        
+        document.getElementById('modal-article-title').textContent = post.title;
+        document.getElementById('modal-article-date').textContent = new Date(post.created_at || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('modal-article-content').textContent = post.content;
+        
+        const modal = document.getElementById('newsArticleModal');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+
+    function closeNewsArticleModal() {
+        const modal = document.getElementById('newsArticleModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    document.addEventListener('click', function(e) {
+        const modal = document.getElementById('newsArticleModal');
+        if (modal && e.target === modal) {
+            closeNewsArticleModal();
+        }
+    });
 
     async function loadNews() {
         let posts = defaultNews;
@@ -142,7 +184,7 @@
         renderNews(posts);
     }
     loadNews();
-    </script><!-- Footer -->
+</script><!-- Footer -->
     <footer class="main-footer">
         <div class="container footer-grid">
             <div class="footer-col brand-col">
