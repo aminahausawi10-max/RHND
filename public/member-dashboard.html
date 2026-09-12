@@ -55,6 +55,177 @@
         .site-nav-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
         .site-nav-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; color: #334155; font-weight: 600; font-size: 0.88rem; text-decoration: none; transition: all 0.2s; }
         .site-nav-btn:hover { background: var(--secondary-dark-green); color: white; border-color: var(--secondary-dark-green); }
+    
+        /* Official Diaspora ID Card Styling */
+        .diaspora-id-card {
+            background: linear-gradient(135deg, #022615 0%, #033a20 40%, #056839 100%);
+            border: 2px solid var(--primary-gold);
+            border-radius: 20px;
+            padding: 24px;
+            color: white;
+            box-shadow: 0 15px 35px rgba(5, 104, 57, 0.35);
+            position: relative;
+            overflow: hidden;
+            max-width: 580px;
+            margin: 0 auto;
+        }
+        .diaspora-id-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .id-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+        .id-card-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .id-card-brand img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            background: white;
+            border-radius: 50%;
+            padding: 4px;
+        }
+        .id-card-brand h4 {
+            margin: 0;
+            font-size: 0.88rem;
+            color: var(--primary-gold);
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        .id-card-brand p {
+            margin: 0;
+            font-size: 0.68rem;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 1.5px;
+        }
+        .id-card-type {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--primary-gold);
+            background: rgba(212,175,55,0.15);
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(212,175,55,0.4);
+            letter-spacing: 1px;
+        }
+        .id-card-body {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .id-photo-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .id-photo-frame {
+            width: 90px;
+            height: 100px;
+            border-radius: 12px;
+            border: 2px solid var(--primary-gold);
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .id-photo-frame i {
+            font-size: 2.5rem;
+            color: var(--primary-gold);
+        }
+        .id-photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .id-upload-btn {
+            font-size: 0.7rem;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.3);
+            font-weight: 600;
+        }
+        .id-upload-btn:hover {
+            background: var(--primary-gold);
+            color: #0f172a;
+        }
+        .id-details-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .id-field.full-width {
+            grid-column: span 2;
+        }
+        .id-label {
+            display: block;
+            font-size: 0.62rem;
+            color: rgba(255,255,255,0.65);
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .id-val {
+            display: block;
+            font-size: 0.88rem;
+            color: white;
+            font-weight: 700;
+        }
+        .id-gold-text {
+            color: var(--primary-gold);
+            font-family: monospace;
+            font-size: 0.92rem;
+            letter-spacing: 1px;
+        }
+        .id-status-val {
+            color: #4ade80;
+            font-size: 0.8rem;
+        }
+        .id-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            font-size: 0.68rem;
+            color: rgba(255,255,255,0.6);
+        }
+        .id-hologram-stamp {
+            color: var(--primary-gold);
+            font-weight: 800;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #diaspora-id-card-element, #diaspora-id-card-element * { visibility: visible; }
+            #diaspora-id-card-element { position: absolute; left: 0; top: 0; width: 100%; max-width: 100%; border: 3px solid #000; }
+        }
+
     </style>
 </head>
 <body>
@@ -147,6 +318,101 @@
                         </div>
                     </div>
                 </div>
+
+                
+                <!-- OFFICIAL DIASPORA DIGITAL ID CARD WIDGET -->
+                <div class="content-card" style="border-top: 4px solid var(--primary-gold); background: #f8fafc; padding: 25px 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <h3 style="margin: 0 0 4px 0; color: #0f172a; border: none; padding: 0; font-size: 1.25rem;">
+                                <i class="fas fa-id-card text-gold"></i> Official Diaspora Membership ID Card
+                            </h3>
+                            <p style="margin: 0; color: #64748b; font-size: 0.88rem;">Your verified digital credential for accessing diplomatic & diaspora services worldwide.</p>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="window.print()" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem; font-weight: 700;">
+                                <i class="fas fa-print"></i> Print ID Card
+                            </button>
+                            <button onclick="switchTab('profile')" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem; font-weight: 700;">
+                                <i class="fas fa-edit"></i> Edit Details
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- THE ID CARD -->
+                    <div class="diaspora-id-card" id="diaspora-id-card-element">
+                        <div class="id-card-header">
+                            <div class="id-card-brand">
+                                <img src="images/logo.png" alt="RHND Logo">
+                                <div>
+                                    <h4>RENEWED HOPE NIGERIA DIASPORA</h4>
+                                    <p>FEDERAL REPUBLIC OF NIGERIA</p>
+                                </div>
+                            </div>
+                            <div class="id-card-type">
+                                OFFICIAL DIASPORA ID
+                            </div>
+                        </div>
+
+                        <div class="id-card-body">
+                            <!-- Left Photo Column -->
+                            <div class="id-photo-box">
+                                <div class="id-photo-frame" id="id-photo-display">
+                                    <i class="fas fa-user-tie" id="id-photo-icon"></i>
+                                    <img id="id-photo-img" src="" alt="Member Photo" style="display: none;">
+                                </div>
+                                <label for="id-photo-input" class="id-upload-btn" title="Change photo">
+                                    <i class="fas fa-camera"></i> Change Photo
+                                </label>
+                                <input type="file" id="id-photo-input" accept="image/*" style="display: none;">
+                            </div>
+
+                            <!-- Right Details Column -->
+                            <div class="id-details-grid">
+                                <div class="id-field full-width">
+                                    <span class="id-label">FULL NAME</span>
+                                    <strong class="id-val" id="card-val-name">REGISTERED MEMBER</strong>
+                                </div>
+
+                                <div class="id-field">
+                                    <span class="id-label">MEMBER ID NO.</span>
+                                    <strong class="id-val id-gold-text" id="card-val-id">RHND-NIG-2026-849201</strong>
+                                </div>
+
+                                <div class="id-field">
+                                    <span class="id-label">PHONE NUMBER</span>
+                                    <strong class="id-val" id="card-val-phone">+44 7123 456789</strong>
+                                </div>
+
+                                <div class="id-field full-width">
+                                    <span class="id-label">RESIDENCE / ADDRESS</span>
+                                    <strong class="id-val" id="card-val-address">United Kingdom (Diaspora)</strong>
+                                </div>
+
+                                <div class="id-field">
+                                    <span class="id-label">STATUS</span>
+                                    <strong class="id-val id-status-val"><i class="fas fa-check-circle text-gold"></i> VERIFIED CITIZEN</strong>
+                                </div>
+
+                                <div class="id-field">
+                                    <span class="id-label">ISSUE / VALIDITY</span>
+                                    <strong class="id-val">09/2026 — 09/2031</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer with Security Hologram Seal -->
+                        <div class="id-card-footer">
+                            <div class="id-security-code">
+                                AUTH-HASH: 8492-9102-RHND-SECURE
+                            </div>
+                            <div class="id-hologram-stamp">
+                                <i class="fas fa-shield-halved"></i> OFFICIAL STAMP
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Explore Website Links -->
                 <div class="content-card">
@@ -315,6 +581,68 @@
             document.getElementById('req-details').value = 'Hello Admin, I am writing to apply for / request information regarding ' + serviceName + '. Please assist me.';
         }
 
+        
+        function updateIDCardDisplay(user) {
+            if (!user) return;
+            const name = user.name || (user.email ? user.email.split('@')[0] : 'REGISTERED MEMBER');
+            const phone = user.phone || '+44 7123 456789';
+            const country = user.country || 'United Kingdom (Diaspora)';
+            const idNum = user.id ? ('RHND-NIG-2026-' + String(user.id).slice(-6)) : 'RHND-NIG-2026-849201';
+
+            const nameEl = document.getElementById('card-val-name');
+            if (nameEl) nameEl.textContent = name.toUpperCase();
+
+            const phoneEl = document.getElementById('card-val-phone');
+            if (phoneEl) phoneEl.textContent = phone;
+
+            const addrEl = document.getElementById('card-val-address');
+            if (addrEl) addrEl.textContent = country;
+
+            const idEl = document.getElementById('card-val-id');
+            if (idEl) idEl.textContent = idNum;
+
+            if (user.photoUrl) {
+                const imgEl = document.getElementById('id-photo-img');
+                const iconEl = document.getElementById('id-photo-icon');
+                if (imgEl && iconEl) {
+                    imgEl.src = user.photoUrl;
+                    imgEl.style.display = 'block';
+                    iconEl.style.display = 'none';
+                }
+            }
+        }
+
+        // Photo Upload Listener
+        document.addEventListener("DOMContentLoaded", function() {
+            const photoInput = document.getElementById('id-photo-input');
+            if (photoInput) {
+                photoInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            const photoUrl = evt.target.result;
+                            const imgEl = document.getElementById('id-photo-img');
+                            const iconEl = document.getElementById('id-photo-icon');
+                            if (imgEl && iconEl) {
+                                imgEl.src = photoUrl;
+                                imgEl.style.display = 'block';
+                                iconEl.style.display = 'none';
+                            }
+                            
+                            const rawUser = localStorage.getItem("rhnd_user");
+                            let user = {};
+                            if (rawUser) { try { user = JSON.parse(rawUser); } catch(err){} }
+                            user.photoUrl = photoUrl;
+                            localStorage.setItem("rhnd_user", JSON.stringify(user));
+            updateIDCardDisplay(user);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+
         document.addEventListener("DOMContentLoaded", function() {
             const rawUser = localStorage.getItem("rhnd_user");
             let currentUser = null;
@@ -335,6 +663,11 @@
                     
                     const profEmail = document.getElementById('prof-email');
                     if (profEmail) profEmail.value = email;
+
+                    const profPhone = document.getElementById('prof-phone');
+                    if (profPhone && currentUser.phone) profPhone.value = currentUser.phone;
+
+                    updateIDCardDisplay(currentUser);
 
                 } catch(e){}
             }
@@ -373,6 +706,7 @@
             user.country = country;
             user.phone = phone;
             localStorage.setItem("rhnd_user", JSON.stringify(user));
+            updateIDCardDisplay(user);
 
             document.querySelectorAll(".user-name-display").forEach(el => el.textContent = name);
             const heading = document.getElementById('dash-welcome-heading');
