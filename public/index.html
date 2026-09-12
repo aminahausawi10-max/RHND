@@ -168,7 +168,7 @@
             <div class="membership-text">
                 <h2>Join Our Diaspora Community</h2>
                 <p>Register today to receive updates, request assistance, and connect with millions of Nigerians globally through your personalized dashboard.</p>
-                <a href="#" class="btn btn-primary btn-large mt-20">Create Membership ID</a>
+                <a href="register.html" id="membership-cta-btn" class="btn btn-primary btn-large mt-20"><i class="fas fa-id-card"></i> Create Membership ID</a>
             </div>
             <div class="membership-image">
                 <div class="mockup-card">
@@ -254,6 +254,13 @@
                         const heroCta = document.getElementById("hero-cta-buttons");
                         if (heroCta) {
                             heroCta.style.display = "none";
+                        }
+                        
+                        // Update Membership CTA button to view ID on dashboard
+                        const membershipBtn = document.getElementById("membership-cta-btn");
+                        if (membershipBtn) {
+                            membershipBtn.href = "member-dashboard.html";
+                            membershipBtn.innerHTML = '<i class="fas fa-id-card"></i> View My Membership ID';
                         }
                     }
                 } catch(e) {}

@@ -77,14 +77,61 @@
     <!-- Main Content Area -->
     <section class="section-padding">
         <div class="container">
-            <div class="cards-grid">
-                <div class="update-card" style="padding: 60px; text-align: center; border: 2px dashed #cbd5e1; background: transparent; box-shadow: none; grid-column: 1 / -1;">
-                    <h3 style="color: var(--text-light); margin-bottom: 10px;">Content for Diaspora Membership is being updated.</h3>
-                    <p style="color: #94a3b8;">Our administrators are currently populating this section with official data.</p>
+            <!-- Membership Benefits Grid -->
+            <div style="text-align: center; margin-bottom: 40px;">
+                <span class="category" style="font-size: 0.9rem;">Official Credential</span>
+                <h2 style="font-size: 2.2rem; color: var(--secondary-dark-green); font-weight: 800; margin: 8px 0;">Digital Diaspora Membership</h2>
+                <p style="color: #64748b; max-width: 650px; margin: 0 auto;">Join thousands of Nigerians worldwide and receive your verified smart diaspora credential.</p>
+                <div class="line" style="margin: 15px auto 0 auto;"></div>
+            </div>
+
+            <div class="cards-grid" style="margin-bottom: 50px;">
+                <div class="update-card" style="padding: 35px 30px; text-align: center;">
+                    <div class="service-icon" style="margin-bottom: 20px;"><i class="fas fa-id-card"></i></div>
+                    <h3 style="margin-bottom: 10px;">Digital Diaspora ID</h3>
+                    <p style="color: #64748b; font-size: 0.95rem;">Receive a unique sequential diaspora membership number for official identification and consular recognition.</p>
                 </div>
+                <div class="update-card" style="padding: 35px 30px; text-align: center;">
+                    <div class="service-icon" style="margin-bottom: 20px;"><i class="fas fa-passport"></i></div>
+                    <h3 style="margin-bottom: 10px;">Consular Assistance</h3>
+                    <p style="color: #64748b; font-size: 0.95rem;">Priority support for passport renewals, emergency consular intervention, and legal welfare assistance.</p>
+                </div>
+                <div class="update-card" style="padding: 35px 30px; text-align: center;">
+                    <div class="service-icon" style="margin-bottom: 20px;"><i class="fas fa-building-columns"></i></div>
+                    <h3 style="margin-bottom: 10px;">Housing & Investment</h3>
+                    <p style="color: #64748b; font-size: 0.95rem;">Direct access to verified federal mortgage schemes and secure property acquisition across Nigeria.</p>
+                </div>
+            </div>
+
+            <!-- CTA Card -->
+            <div style="background: linear-gradient(145deg, #022615 0%, #043820 45%, #056839 100%); border: 2px solid var(--primary-gold); border-radius: 22px; padding: 45px 35px; color: white; text-align: center; max-width: 800px; margin: 0 auto; box-shadow: 0 15px 35px rgba(5,104,57,0.3);">
+                <span style="background: rgba(212,175,55,0.2); color: var(--primary-gold); border: 1px solid rgba(212,175,55,0.4); padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;">Instant Enrollment</span>
+                <h2 style="font-size: 2rem; color: white; font-weight: 800; margin: 15px 0 10px 0;">Get Your Digital ID Today</h2>
+                <p style="color: rgba(255,255,255,0.85); max-width: 550px; margin: 0 auto 30px auto; font-size: 1.05rem; line-height: 1.6;">Registration is fast, verified, and completely free for all Nigerians living overseas.</p>
+                <a href="register.html" id="page-membership-cta" class="btn btn-secondary btn-large" style="background: white; color: var(--primary-green); font-weight: 800; padding: 14px 34px; font-size: 1.05rem; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.2);">
+                    <i class="fas fa-user-plus"></i> Register for Membership ID
+                </a>
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const rawUser = localStorage.getItem("rhnd_user");
+            if (rawUser) {
+                try {
+                    const user = JSON.parse(rawUser);
+                    if (user && user.email) {
+                        const btn = document.getElementById("page-membership-cta");
+                        if (btn) {
+                            btn.href = "member-dashboard.html";
+                            btn.innerHTML = '<i class="fas fa-id-card"></i> View My Membership ID Card';
+                        }
+                    }
+                } catch(e) {}
+            }
+        });
+    </script>
     <!-- Footer -->
     <footer class="main-footer">
         <div class="container footer-grid">
