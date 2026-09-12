@@ -272,41 +272,44 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
     .footer-grid { grid-template-columns: 1fr; }
 }
 
-/* Floating Action Button (FAB) */
+/* Floating Action Button (FAB) - Neumorphic Soft UI */
 .fab-container {
     position: fixed;
-    bottom: 22px;
-    right: 20px;
+    bottom: 24px;
+    right: 22px;
     z-index: 10000;
     display: flex;
     flex-direction: column-reverse;
     align-items: flex-end;
-    gap: 8px;
+    gap: 10px;
     font-family: var(--font-main);
 }
 .fab-main-btn {
-    width: 54px;
-    height: 54px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--secondary-dark-green) 0%, var(--primary-green) 100%);
+    background: linear-gradient(145deg, #057a43, #034827);
     color: var(--primary-gold);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.35rem;
-    box-shadow: 0 8px 24px rgba(5, 104, 57, 0.45);
+    font-size: 1.4rem;
+    box-shadow: 6px 6px 16px #cad2df, -6px -6px 16px #ffffff, inset 1px 1px 2px rgba(212, 175, 55, 0.4);
     cursor: pointer;
     border: 2px solid var(--primary-gold);
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .fab-main-btn:hover {
     transform: scale(1.08);
-    box-shadow: 0 12px 28px rgba(5, 104, 57, 0.65);
+    box-shadow: 8px 8px 20px #cad2df, -8px -8px 20px #ffffff;
+}
+.fab-main-btn:active {
+    box-shadow: inset 4px 4px 8px #022012, inset -3px -3px 6px #056839;
 }
 .fab-menu {
     display: none;
     flex-direction: column;
-    gap: 7px;
+    gap: 8px;
     align-items: flex-end;
     animation: fabFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     max-height: calc(100vh - 100px);
@@ -324,37 +327,37 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
 .fab-item {
     display: flex;
     align-items: center;
-    gap: 9px;
-    background: white;
+    gap: 10px;
+    background: #eef2f6;
     color: #0f172a;
-    padding: 8px 16px;
+    padding: 9px 18px;
     border-radius: 25px;
-    font-size: 0.86rem;
+    font-size: 0.88rem;
     font-weight: 700;
-    box-shadow: 0 6px 18px rgba(15,23,42,0.18);
-    border: 1px solid #cbd5e1;
+    box-shadow: 5px 5px 12px #cad2df, -5px -5px 12px #ffffff;
+    border: 1px solid rgba(255,255,255,0.8);
     cursor: pointer;
-    transition: all 0.18s ease;
+    transition: all 0.2s ease;
     text-decoration: none;
     white-space: nowrap;
 }
 .fab-item:hover {
-    background: var(--secondary-dark-green);
+    background: linear-gradient(145deg, #043a21, #022615);
     color: var(--primary-gold);
-    transform: translateX(-3px);
+    transform: translateX(-4px);
+    box-shadow: 6px 6px 14px #cad2df, -6px -6px 14px #ffffff;
     border-color: var(--primary-gold);
 }
 .fab-item i {
     font-size: 0.95rem;
     color: var(--primary-green);
-    width: 16px;
+    width: 18px;
     text-align: center;
 }
 .fab-item:hover i {
     color: var(--primary-gold);
 }
 .fab-item.fab-logout {
-    border-color: #fecaca;
     color: #dc2626;
 }
 .fab-item.fab-logout i {
