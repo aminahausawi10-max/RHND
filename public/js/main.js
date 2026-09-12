@@ -310,9 +310,7 @@ function checkPageAccess() {
     
     // Protected pages list
     const protectedPages = [
-        "news.html", "government.html", "ministries.html", 
-        "agencies.html", "national-assembly.html", "diaspora.html", 
-        "media.html", "membership.html", "support.html"
+        "news.html", "support.html"
     ];
 
     const isVisitingProtected = protectedPages.some(page => path.endsWith(page));
