@@ -143,51 +143,21 @@
         </div>
     </section>
 
-    <!-- Government Updates Section -->
+    <!-- Government Updates / Latest News Section -->
     <section class="government-updates section-padding">
         <div class="container">
-            <div class="section-header">
-                <h2>Official Announcements & Updates</h2>
-                <p>Verified public information and announcements</p>
-                <div class="line"></div>
+            <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 15px; margin-bottom: 30px;">
+                <div>
+                    <h2>Official Announcements & News</h2>
+                    <p style="margin-bottom: 0;">Verified public information, news releases, and announcements</p>
+                </div>
+                <a href="news.html" class="btn btn-secondary" style="padding: 8px 18px; font-size: 0.9rem; font-weight: 700;">
+                    View All News <i class="fas fa-arrow-right" style="margin-left: 6px;"></i>
+                </a>
             </div>
             
-            <div class="cards-grid">
-                <!-- Card 1 -->
-                <div class="update-card">
-                    <div class="card-img presidency-img">
-                        <span class="badge"><i class="fas fa-check-circle"></i> Official Source</span>
-                    </div>
-                    <div class="card-content">
-                        <span class="category">Presidency</span>
-                        <h3>Presidential Address on Diaspora Affairs</h3>
-                        <p>Summary of the recent activities and policies benefiting the Nigerian diaspora worldwide.</p>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="update-card">
-                    <div class="card-img fec-img">
-                        <span class="badge"><i class="fas fa-check-circle"></i> Official Source</span>
-                    </div>
-                    <div class="card-content">
-                        <span class="category">Federal Executive Council</span>
-                        <h3>New Economic Development Policies</h3>
-                        <p>Highlights from the latest FEC meeting concerning national economic development and growth.</p>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="update-card">
-                    <div class="card-img ministry-img">
-                        <span class="badge"><i class="fas fa-check-circle"></i> Official Source</span>
-                    </div>
-                    <div class="card-content">
-                        <span class="category">Foreign Affairs</span>
-                        <h3>New Diaspora Investment Program</h3>
-                        <p>Details about the newly launched investment opportunities designed exclusively for Nigerians abroad.</p>
-                    </div>
-                </div>
+            <div class="cards-grid" id="home-news-cards-grid">
+                <!-- Populated dynamically with latest news -->
             </div>
         </div>
     </section>
@@ -393,6 +363,108 @@
             let members = getHomeMembers();
             renderHomeMembers(members);
 
+            
+            // Dynamic News Handling on Homepage
+            const defaultHomeNews = [
+                {
+                    id: 101,
+                    title: "Federal Government Launches Special Diaspora Housing Scheme",
+                    content: "The Federal Ministry of Housing and Urban Development has unveiled an exclusive mortgage scheme tailored for Nigerians living abroad. The initiative aims to provide secure property ownership and transparent investment opportunities.\n\nUnder this scheme, registered diaspora citizens can apply for federal home loans with flexible repayment terms, verified land titles, and direct consular assistance. Key partner banks and mortgage institutions have integrated automated diaspora verification protocols to prevent fraud and ensure seamless allocation.\n\nInterested applicants can initiate their requests directly through the Diaspora Services section of the RHND portal.",
+                    created_at: new Date().toISOString()
+                },
+                {
+                    id: 102,
+                    title: "NiDCOM Announces Virtual Diaspora Townhall Dialogue",
+                    content: "The Nigerians in Diaspora Commission (NiDCOM) invites all citizens overseas to participate in the upcoming quarterly virtual townhall meeting with diplomatic representatives and policy makers.\n\nThe interactive session will focus on consular welfare, passport renewal acceleration, voting rights advocacy, and foreign investment security. Registration is free and open to all registered community members.",
+                    created_at: new Date().toISOString()
+                },
+                {
+                    id: 103,
+                    title: "Nigeria Immigration Service Expands Diaspora Passport Centres",
+                    content: "New passport enrollment and renewal processing centers have been established across strategic international locations to reduce processing wait times for diaspora citizens.\n\nCitizens living in North America, Europe, the Middle East, and Asia-Pacific regions can now access fast-track biometric capture appointments at authorized consular processing desks.",
+                    created_at: new Date().toISOString()
+                }
+            ];
+
+            let allHomeNews = [];
+            function getHomeNews() {
+                let posts = [];
+                try {
+                    const raw = localStorage.getItem('rhnd_news_db');
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed) && parsed.length > 0) posts = parsed;
+                    }
+                } catch(e) {}
+                if (posts.length === 0) {
+                    posts = [...defaultHomeNews];
+                }
+                return posts;
+            }
+
+            function renderHomeNews(posts) {
+                allHomeNews = posts;
+                const grid = document.getElementById('home-news-cards-grid');
+                if (!grid) return;
+                
+                grid.innerHTML = posts.slice(0, 6).map(post => `
+                    <div class="update-card" style="cursor: pointer;" onclick="openHomeNewsArticle(${post.id})">
+                        <div class="card-content">
+                            <div class="category">Official Update</div>
+                            <h3 style="font-size: 1.15rem; margin-bottom: 10px; color: #0f172a;">${post.title}</h3>
+                            <p style="color: #64748b; font-size: 0.9rem;">${(post.content || '').length > 120 ? (post.content || '').substring(0, 120) + '...' : (post.content || '')}</p>
+                            <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #94a3b8; font-size: 0.8rem;"><i class="far fa-calendar-alt"></i> ${new Date(post.created_at || Date.now()).toLocaleDateString()}</span>
+                                <a href="javascript:void(0)" onclick="event.stopPropagation(); openHomeNewsArticle(${post.id})" class="read-more" style="color: var(--primary-green); font-weight: 700; text-decoration: none; font-size: 0.88rem;">
+                                    Read Full Update <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            window.openHomeNewsArticle = function(postId) {
+                const post = allHomeNews.find(p => p.id == postId) || defaultHomeNews.find(p => p.id == postId);
+                if (!post) return;
+                
+                const titleEl = document.getElementById('modal-article-title');
+                const dateEl = document.getElementById('modal-article-date');
+                const contentEl = document.getElementById('modal-article-content');
+                const modal = document.getElementById('newsArticleModal');
+                
+                if (titleEl) titleEl.textContent = post.title;
+                if (dateEl) dateEl.textContent = new Date(post.created_at || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                if (contentEl) contentEl.textContent = post.content;
+                if (modal) modal.style.display = 'flex';
+            };
+
+            window.closeNewsArticleModal = function() {
+                const modal = document.getElementById('newsArticleModal');
+                if (modal) modal.style.display = 'none';
+            };
+
+            let homePosts = getHomeNews();
+            renderHomeNews(homePosts);
+
+            fetch('/api/posts')
+                .then(r => r.json())
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0 && !data.error) {
+                        const combined = [...data];
+                        homePosts.forEach(p => {
+                            if (!combined.some(c => c.id == p.id || c.title === p.title)) {
+                                combined.push(p);
+                            }
+                        });
+                        homePosts = combined;
+                        try { localStorage.setItem('rhnd_news_db', JSON.stringify(homePosts)); } catch(e) {}
+                        renderHomeNews(homePosts);
+                    }
+                })
+                .catch(e => {});
+
+
             fetch('/api/users')
                 .then(r => r.json())
                 .then(data => {
@@ -412,5 +484,24 @@
                 .catch(e => {});
         });
     </script>
+
+    <!-- News Article Modal -->
+    <div id="newsArticleModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; width: 100%; max-width: 650px; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.25); display: flex; flex-direction: column; max-height: 90vh;">
+            <div style="background: var(--primary-green); color: white; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 700; font-size: 1.1rem;"><i class="fas fa-newspaper text-gold" style="margin-right: 8px;"></i> RHND Official Update</span>
+                <button onclick="closeNewsArticleModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+            <div style="padding: 24px; overflow-y: auto;">
+                <span id="modal-article-date" style="color: #64748b; font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 8px;"></span>
+                <h2 id="modal-article-title" style="font-size: 1.5rem; color: #0f172a; margin-bottom: 16px; line-height: 1.3;"></h2>
+                <div id="modal-article-content" style="color: #334155; line-height: 1.7; font-size: 1rem; white-space: pre-line;"></div>
+            </div>
+            <div style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; text-align: right;">
+                <button onclick="closeNewsArticleModal()" class="btn btn-primary" style="padding: 8px 20px;">Close</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

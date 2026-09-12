@@ -11,6 +11,10 @@
         { "src": "/login", "dest": "/public/login.html" },
         { "src": "/register", "dest": "/public/register.html" },
         { "src": "/dashboard", "dest": "/public/member-dashboard.html" },
+        { "src": "/members", "dest": "/public/membership.html" },
+        { "src": "/membership", "dest": "/public/membership.html" },
+        { "src": "/news", "dest": "/public/news.html" },
+        { "src": "/support", "dest": "/public/support.html" },
         { "src": "/(.*\\.html)", "dest": "/public/$1" },
         { "src": "/", "dest": "/public/index.html" },
         { "src": "/api/(.*)", "dest": "/api/index.php" }
