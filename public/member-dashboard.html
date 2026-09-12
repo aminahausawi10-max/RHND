@@ -383,50 +383,118 @@
             }
         }
 
+        @media (max-width: 768px) {
+            .diaspora-id-card {
+                padding: 16px 14px !important;
+                border-radius: 16px !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .id-card-body {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                gap: 12px !important;
+            }
+            .id-photo-frame {
+                width: 75px !important;
+                height: 85px !important;
+                flex-shrink: 0 !important;
+            }
+            .id-details-grid {
+                flex: 1 !important;
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 4px 10px !important;
+            }
+            .id-field.full-width {
+                grid-column: span 2 !important;
+            }
+            .id-label {
+                font-size: 0.58rem !important;
+                margin-bottom: 1px !important;
+            }
+            .id-val {
+                font-size: 0.76rem !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+            .id-gold-text {
+                font-size: 0.78rem !important;
+            }
+        }
+
         @media (max-width: 520px) {
+            .diaspora-id-card {
+                padding: 12px 10px !important;
+                border-radius: 14px !important;
+            }
             .id-card-header {
                 flex-direction: row !important;
                 align-items: center !important;
                 justify-content: space-between !important;
                 gap: 6px !important;
+                padding-bottom: 6px !important;
+                margin-bottom: 10px !important;
             }
             .id-card-brand img {
-                width: 34px !important;
-                height: 34px !important;
+                width: 30px !important;
+                height: 30px !important;
+                padding: 2px !important;
             }
             .id-card-brand h4 {
-                font-size: 0.72rem !important;
+                font-size: 0.66rem !important;
                 letter-spacing: 0.5px !important;
             }
             .id-card-brand p {
-                font-size: 0.58rem !important;
+                font-size: 0.52rem !important;
                 letter-spacing: 0.5px !important;
             }
             .id-card-type {
-                font-size: 0.6rem !important;
-                padding: 3px 6px !important;
+                font-size: 0.55rem !important;
+                padding: 2px 5px !important;
+                letter-spacing: 0.5px !important;
             }
             .id-card-body {
-                flex-direction: column !important;
+                display: flex !important;
+                flex-direction: row !important;
                 align-items: center !important;
-                gap: 14px !important;
+                gap: 10px !important;
+            }
+            .id-photo-frame {
+                width: 65px !important;
+                height: 75px !important;
+                flex-shrink: 0 !important;
+            }
+            .id-upload-btn {
+                font-size: 0.58rem !important;
+                padding: 2px 4px !important;
             }
             .id-details-grid {
-                width: 100% !important;
+                flex: 1 !important;
                 grid-template-columns: 1fr 1fr !important;
-                gap: 8px !important;
+                gap: 3px 6px !important;
             }
-            .id-field.full-width {
-                grid-column: span 2 !important;
+            .id-label {
+                font-size: 0.52rem !important;
             }
             .id-val {
-                font-size: 0.8rem !important;
+                font-size: 0.68rem !important;
             }
             .id-gold-text {
-                font-size: 0.82rem !important;
+                font-size: 0.72rem !important;
+            }
+            .id-status-val {
+                font-size: 0.65rem !important;
+            }
+            .id-card-footer {
+                margin-top: 8px !important;
+                padding-top: 6px !important;
+                font-size: 0.55rem !important;
             }
             .site-nav-links {
-                grid-template-columns: 1fr !important;
+                grid-template-columns: repeat(2, 1fr) !important;
             }
         }</style>
 </head>
@@ -814,7 +882,19 @@
             const name = user.name || (user.email ? user.email.split('@')[0] : 'REGISTERED MEMBER');
             const phone = user.phone || '+44 7123 456789';
             const country = user.country || 'United Kingdom (Diaspora)';
-            const idNum = user.id ? ('RHND-NIG-' + String(user.id).padStart(5, '0')) : 'RHND-NIG-00001';
+            
+            let idNum = 'RHND-NIG-00001';
+            if (user.memberId) {
+                idNum = user.memberId;
+            } else if (user.id) {
+                if (typeof user.id === 'string' && user.id.startsWith('RHND-NIG-')) {
+                    idNum = user.id;
+                } else {
+                    let n = parseInt(user.id);
+                    if (isNaN(n) || n > 99999) n = 1;
+                    idNum = 'RHND-NIG-' + String(n).padStart(5, '0');
+                }
+            }
 
             const nameEl = document.getElementById('card-val-name');
             if (nameEl) nameEl.textContent = name.toUpperCase();
@@ -827,6 +907,9 @@
 
             const idEl = document.getElementById('card-val-id');
             if (idEl) idEl.textContent = idNum;
+            
+            const badgeEl = document.querySelector('.welcome-card .id-badge');
+            if (badgeEl) badgeEl.innerHTML = '<i class="fas fa-id-card"></i> ID: ' + idNum;
 
             if (user.photoUrl) {
                 const imgEl = document.getElementById('id-photo-img');
