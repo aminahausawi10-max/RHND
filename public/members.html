@@ -284,28 +284,19 @@
             .then(r => r.json())
             .then(settings => {
                 if (settings && typeof settings === 'object' && !settings.error) {
-                    if (settings.stat_members) {
+                    if (settings.stat_members !== undefined && settings.stat_members !== '') {
                         localStorage.setItem('rhnd_custom_stat_members', settings.stat_members);
-                        const el1 = document.getElementById('stat-members-val');
-                        if (el1) el1.textContent = settings.stat_members;
-                        const countEl = document.getElementById('membership-total-count');
-                        if (countEl) countEl.textContent = settings.stat_members;
                     }
-                    if (settings.stat_news) {
+                    if (settings.stat_news !== undefined && settings.stat_news !== '') {
                         localStorage.setItem('rhnd_custom_stat_news', settings.stat_news);
-                        const el2 = document.getElementById('stat-news-val');
-                        if (el2) el2.textContent = settings.stat_news;
                     }
-                    if (settings.stat_requests) {
+                    if (settings.stat_requests !== undefined && settings.stat_requests !== '') {
                         localStorage.setItem('rhnd_custom_stat_requests', settings.stat_requests);
-                        const el3 = document.getElementById('stat-tickets-val');
-                        if (el3) el3.textContent = settings.stat_requests;
                     }
-                    if (settings.stat_media) {
+                    if (settings.stat_media !== undefined && settings.stat_media !== '') {
                         localStorage.setItem('rhnd_custom_stat_media', settings.stat_media);
-                        const el4 = document.getElementById('stat-media-val');
-                        if (el4) el4.textContent = settings.stat_media;
                     }
+                    updateMembershipStats(allPublicMembers);
                 }
             }).catch(e => {});
 

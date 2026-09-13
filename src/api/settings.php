@@ -2,18 +2,26 @@
 require __DIR__ . "/../../config/database.php";
 
 header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit;
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Ensure settings table exists
+// Ensure settings table exists with safely quoted column names
 try {
-    $pdo->exec("CREATE TABLE IF NOT EXISTS settings (
-        key VARCHAR(100) PRIMARY KEY,
-        value TEXT NOT NULL,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )");
+    $pdo->exec('CREATE TABLE IF NOT EXISTS settings (
+        "key" VARCHAR(100) PRIMARY KEY,
+        "value" TEXT NOT NULL,
+        "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )');
     
     // Seed defaults if empty
-    $chk = $pdo->query("SELECT COUNT(*) FROM settings")->fetchColumn();
+    $chk = $pdo->query('SELECT COUNT(*) FROM settings')->fetchColumn();
     if ($chk == 0) {
         $defaults = [
             'stat_members' => '1',
@@ -23,7 +31,7 @@ try {
             'founder_name' => 'Alh. Inuwa Ahmed',
             'founder_phone' => '07047000070'
         ];
-        $ins = $pdo->prepare("INSERT INTO settings (key, value) VALUES (?, ?)");
+        $ins = $pdo->prepare('INSERT INTO settings ("key", "value") VALUES (?, ?)');
         foreach ($defaults as $k => $v) {
             $ins->execute([$k, $v]);
         }
@@ -32,7 +40,7 @@ try {
 
 if ($method === 'GET') {
     try {
-        $stmt = $pdo->query("SELECT key, value FROM settings");
+        $stmt = $pdo->query('SELECT "key", "value" FROM settings');
         $rows = $stmt->fetchAll();
         $settings = [];
         foreach ($rows as $row) {
@@ -52,7 +60,6 @@ if ($method === 'GET') {
     
     $data = json_decode(file_get_contents("php://input"), true);
     
-    // Check credentials (or allow if payload has admin password)
     if ($adminPassword !== 'Admin@RHND2026' && ($data['adminPassword'] ?? '') !== 'Admin@RHND2026') {
         http_response_code(401);
         echo json_encode(["error" => "Unauthorized: Incorrect Admin Password"]);
@@ -60,7 +67,7 @@ if ($method === 'GET') {
     }
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = CURRENT_TIMESTAMP");
+        $stmt = $pdo->prepare('INSERT INTO settings ("key", "value") VALUES (?, ?) ON CONFLICT ("key") DO UPDATE SET "value" = EXCLUDED."value", "updated_at" = CURRENT_TIMESTAMP');
         
         if (isset($data['key']) && isset($data['value'])) {
             $stmt->execute([$data['key'], (string)$data['value']]);
@@ -80,7 +87,7 @@ if ($method === 'GET') {
     $key = $_GET['key'] ?? null;
     if ($key) {
         try {
-            $stmt = $pdo->prepare("DELETE FROM settings WHERE key = ?");
+            $stmt = $pdo->prepare('DELETE FROM settings WHERE "key" = ?');
             $stmt->execute([$key]);
             echo json_encode(["success" => true]);
         } catch (Exception $e) {

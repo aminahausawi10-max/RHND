@@ -484,24 +484,63 @@ function initGoogleTranslate(targetLang) {
 
 // Global System Settings & Numbers Sync Handler
 async function syncGlobalSettings() {
+    // 1. First apply any cached local values immediately
+    const cachedMembers = localStorage.getItem('rhnd_custom_stat_members');
+    if (cachedMembers) {
+        document.querySelectorAll('#home-total-members-counter, #section-total-members-count, #stat-members-val, #membership-total-count, #dash-total-members-count, #dash-total-members-badge, .stat-members-count').forEach(el => {
+            el.textContent = cachedMembers;
+        });
+    }
+    const cachedNews = localStorage.getItem('rhnd_custom_stat_news');
+    if (cachedNews) {
+        document.querySelectorAll('#stat-news-val, .stat-news-count').forEach(el => { el.textContent = cachedNews; });
+    }
+    const cachedTickets = localStorage.getItem('rhnd_custom_stat_requests');
+    if (cachedTickets) {
+        document.querySelectorAll('#stat-tickets-val, .stat-requests-count').forEach(el => { el.textContent = cachedTickets; });
+    }
+    const cachedMedia = localStorage.getItem('rhnd_custom_stat_media');
+    if (cachedMedia) {
+        document.querySelectorAll('#stat-media-val, .stat-media-count').forEach(el => { el.textContent = cachedMedia; });
+    }
+
+    // 2. Fetch fresh live settings from the backend database
     try {
         const res = await fetch('/api/settings');
         if (res.ok) {
             const settings = await res.json();
             if (settings && typeof settings === 'object' && !settings.error) {
-                // Update local storage cache
-                if (settings.stat_members !== undefined) localStorage.setItem('rhnd_custom_stat_members', settings.stat_members);
-                if (settings.stat_news !== undefined) localStorage.setItem('rhnd_custom_stat_news', settings.stat_news);
-                if (settings.stat_requests !== undefined) localStorage.setItem('rhnd_custom_stat_requests', settings.stat_requests);
-                if (settings.stat_media !== undefined) localStorage.setItem('rhnd_custom_stat_media', settings.stat_media);
-                if (settings.founder_phone !== undefined) localStorage.setItem('rhnd_founder_phone', settings.founder_phone);
-                if (settings.founder_name !== undefined) localStorage.setItem('rhnd_founder_name', settings.founder_name);
-
-                // Update DOM elements in real-time across user portal
-                const memberCountEls = document.querySelectorAll('#home-total-members-counter, #section-total-members-count, #stat-members-val, #membership-total-count, #total-members-count-badge, .stat-members-count');
-                memberCountEls.forEach(el => {
-                    if (settings.stat_members) el.textContent = settings.stat_members;
-                });
+                if (settings.stat_members !== undefined && settings.stat_members !== '') {
+                    localStorage.setItem('rhnd_custom_stat_members', settings.stat_members);
+                    document.querySelectorAll('#home-total-members-counter, #section-total-members-count, #stat-members-val, #membership-total-count, #dash-total-members-count, #dash-total-members-badge, .stat-members-count').forEach(el => {
+                        el.textContent = settings.stat_members;
+                    });
+                }
+                if (settings.stat_news !== undefined && settings.stat_news !== '') {
+                    localStorage.setItem('rhnd_custom_stat_news', settings.stat_news);
+                    document.querySelectorAll('#stat-news-val, .stat-news-count').forEach(el => {
+                        el.textContent = settings.stat_news;
+                    });
+                }
+                if (settings.stat_requests !== undefined && settings.stat_requests !== '') {
+                    localStorage.setItem('rhnd_custom_stat_requests', settings.stat_requests);
+                    document.querySelectorAll('#stat-tickets-val, .stat-requests-count').forEach(el => {
+                        el.textContent = settings.stat_requests;
+                    });
+                }
+                if (settings.stat_media !== undefined && settings.stat_media !== '') {
+                    localStorage.setItem('rhnd_custom_stat_media', settings.stat_media);
+                    document.querySelectorAll('#stat-media-val, .stat-media-count').forEach(el => {
+                        el.textContent = settings.stat_media;
+                    });
+                }
+                if (settings.founder_phone !== undefined && settings.founder_phone !== '') {
+                    localStorage.setItem('rhnd_founder_phone', settings.founder_phone);
+                }
+            }
+        }
+    } catch(e) {}
+});
 
                 const newsCountEls = document.querySelectorAll('#stat-news-val, .stat-news-count');
                 newsCountEls.forEach(el => {
