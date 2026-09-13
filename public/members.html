@@ -133,6 +133,27 @@
     </section>
 
     <script>
+
+        async function fetchSafeJson(url, options = {}) {
+            const res = await fetch(url, options);
+            const text = await res.text();
+            try {
+                return JSON.parse(text);
+            } catch(e) {
+                const firstBrace = text.indexOf('{');
+                const lastBrace = text.lastIndexOf('}');
+                if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+                    try { return JSON.parse(text.substring(firstBrace, lastBrace + 1)); } catch(err) {}
+                }
+                const firstBracket = text.indexOf('[');
+                const lastBracket = text.lastIndexOf(']');
+                if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+                    try { return JSON.parse(text.substring(firstBracket, lastBracket + 1)); } catch(err) {}
+                }
+                throw e;
+            }
+        }
+
         let allPublicMembers = [];
 
         function getStoredMembershipList() {
