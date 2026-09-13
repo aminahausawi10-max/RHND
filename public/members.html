@@ -280,8 +280,7 @@
             allPublicMembers = getStoredMembershipList();
             renderPublicMembers(allPublicMembers);
 
-            fetch('/api/settings?t=' + Date.now(), { cache: 'no-store' })
-            .then(r => r.json())
+            fetchSafeJson('/api/settings?t=' + Date.now(), { cache: 'no-store' })
             .then(settings => {
                 if (settings && typeof settings === 'object' && !settings.error) {
                     if (settings.stat_members !== undefined && settings.stat_members !== '') {
@@ -298,7 +297,7 @@
                     }
                     updateMembershipStats(allPublicMembers);
                 }
-            }).catch(e => {});
+            }).catch(e => console.warn('Settings load error:', e));
 
         fetch('/api/users?t=' + Date.now(), { cache: 'no-store' })
                 .then(r => r.json())

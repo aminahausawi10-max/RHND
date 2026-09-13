@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // HARDCODED DATABASE URL FOR VERCEL
 $dbUrl = "postgresql://neondb_owner:npg_DpIVbjQh3Rz5@ep-green-breeze-at2cczuz-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
 
@@ -22,4 +22,3 @@ try {
 } catch (\PDOException $e) {
     die(json_encode(["error" => "Database connection failed: " . $e->getMessage()]));
 }
-

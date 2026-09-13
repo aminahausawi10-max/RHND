@@ -482,14 +482,85 @@ function initGoogleTranslate(targetLang) {
 
 
 
+// Robust JSON response parser (extracts JSON even if server prepends warning text)
+async function fetchSafeJson(url, options = {}) {
+    const res = await fetch(url, options);
+    const text = await res.text();
+    try {
+        return JSON.parse(text);
+    } catch(e) {
+        const firstBrace = text.indexOf('{');
+        const lastBrace = text.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+            try { return JSON.parse(text.substring(firstBrace, lastBrace + 1)); } catch(err) {}
+        }
+        const firstBracket = text.indexOf('[');
+        const lastBracket = text.lastIndexOf(']');
+        if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+            try { return JSON.parse(text.substring(firstBracket, lastBracket + 1)); } catch(err) {}
+        }
+        throw e;
+    }
+}
+
 // Global System Settings & Numbers Sync Handler
 async function syncGlobalSettings() {
-    // 1. First apply any cached local values immediately
+    // 1. Apply any cached local values immediately
     const cachedMembers = localStorage.getItem('rhnd_custom_stat_members');
     if (cachedMembers) {
         document.querySelectorAll('#home-total-members-counter, #section-total-members-count, #stat-members-val, #membership-total-count, #dash-total-members-count, #dash-total-members-badge, .stat-members-count').forEach(el => {
             el.textContent = cachedMembers;
         });
+    }
+    const cachedNews = localStorage.getItem('rhnd_custom_stat_news');
+    if (cachedNews) {
+        document.querySelectorAll('#stat-news-val, .stat-news-count').forEach(el => { el.textContent = cachedNews; });
+    }
+    const cachedTickets = localStorage.getItem('rhnd_custom_stat_requests');
+    if (cachedTickets) {
+        document.querySelectorAll('#stat-tickets-val, .stat-requests-count').forEach(el => { el.textContent = cachedTickets; });
+    }
+    const cachedMedia = localStorage.getItem('rhnd_custom_stat_media');
+    if (cachedMedia) {
+        document.querySelectorAll('#stat-media-val, .stat-media-count').forEach(el => { el.textContent = cachedMedia; });
+    }
+
+    // 2. Fetch fresh live settings from the backend database with safe JSON parsing
+    try {
+        const settings = await fetchSafeJson('/api/settings?t=' + Date.now(), { cache: 'no-store' });
+        if (settings && typeof settings === 'object' && !settings.error) {
+            if (settings.stat_members !== undefined && settings.stat_members !== '') {
+                localStorage.setItem('rhnd_custom_stat_members', settings.stat_members);
+                document.querySelectorAll('#home-total-members-counter, #section-total-members-count, #stat-members-val, #membership-total-count, #dash-total-members-count, #dash-total-members-badge, .stat-members-count').forEach(el => {
+                    el.textContent = settings.stat_members;
+                });
+            }
+            if (settings.stat_news !== undefined && settings.stat_news !== '') {
+                localStorage.setItem('rhnd_custom_stat_news', settings.stat_news);
+                document.querySelectorAll('#stat-news-val, .stat-news-count').forEach(el => {
+                    el.textContent = settings.stat_news;
+                });
+            }
+            if (settings.stat_requests !== undefined && settings.stat_requests !== '') {
+                localStorage.setItem('rhnd_custom_stat_requests', settings.stat_requests);
+                document.querySelectorAll('#stat-tickets-val, .stat-requests-count').forEach(el => {
+                    el.textContent = settings.stat_requests;
+                });
+            }
+            if (settings.stat_media !== undefined && settings.stat_media !== '') {
+                localStorage.setItem('rhnd_custom_stat_media', settings.stat_media);
+                document.querySelectorAll('#stat-media-val, .stat-media-count').forEach(el => {
+                    el.textContent = settings.stat_media;
+                });
+            }
+            if (settings.founder_phone !== undefined && settings.founder_phone !== '') {
+                localStorage.setItem('rhnd_founder_phone', settings.founder_phone);
+            }
+        }
+    } catch(e) {
+        console.warn('Live settings sync warning:', e);
+    }
+});
     }
     const cachedNews = localStorage.getItem('rhnd_custom_stat_news');
     if (cachedNews) {

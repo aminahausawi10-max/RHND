@@ -32,4 +32,3 @@ if ($method === "GET") {
 } else {
     http_response_code(405);
 }
-

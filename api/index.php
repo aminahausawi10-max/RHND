@@ -40,4 +40,3 @@ if (strpos($requestUri, "/api/") === 0) {
 
 // Serve standard frontend
 require __DIR__ . "/../templates/index.html";
-
