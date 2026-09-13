@@ -300,7 +300,7 @@ function checkPageAccess() {
     
     // Protected pages list
     const protectedPages = [
-        "news.html", "support.html"
+        "news.html"
     ];
 
     const isVisitingProtected = protectedPages.some(page => path.endsWith(page));
@@ -414,7 +414,7 @@ function setupLanguageSelector() {
     initGoogleTranslate(savedLang);
 }
 
-function changeLanguage(code) {
+window.changeLanguage = function(code) {
     localStorage.setItem("rhnd_language_code", code);
     
     // Cookie formatting for Google Translate element
@@ -428,8 +428,12 @@ function changeLanguage(code) {
 
     if (code === "ar") {
         document.documentElement.setAttribute("dir", "rtl");
+        document.documentElement.setAttribute("lang", "ar");
+        document.body.classList.add("rtl-mode");
     } else {
         document.documentElement.setAttribute("dir", "ltr");
+        document.documentElement.setAttribute("lang", code);
+        document.body.classList.remove("rtl-mode");
     }
 
     // Check if Google Translate Combo is loaded
@@ -440,6 +444,10 @@ function changeLanguage(code) {
     } else {
         window.location.reload();
     }
+};
+
+function changeLanguage(code) {
+    window.changeLanguage(code);
 }
 
 function initGoogleTranslate(targetLang) {

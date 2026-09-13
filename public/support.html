@@ -3,13 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Renewed Hope Nigeria Diaspora</title>
+    <title>Help & Support | Renewed Hope Nigeria Diaspora</title>
     <link rel="stylesheet" href="css/style.css?v=3.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .support-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .support-channel-card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .support-channel-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(5, 104, 57, 0.12);
+            border-color: var(--primary-green);
+        }
+        .channel-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 18px;
+        }
+        .ticket-box {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 45px;
+        }
+        .form-row {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 240px;
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+            font-size: 0.92rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: #0f172a;
+            background: #f8fafc;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(5, 104, 57, 0.15);
+        }
+        .ticket-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .badge-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .badge-resolved {
+            background: #dcfce7;
+            color: #166534;
+        }
+    </style>
 </head>
 <body>
-        <!-- Top Bar -->
+    <!-- Top Bar -->
     <div class="top-bar">
         <div class="container top-bar-inner">
             <div class="top-bar-left">
@@ -26,14 +127,13 @@
             </div>
         </div>
     </div>
-    </div>
 
     <!-- Main Header -->
     <header class="main-header" id="header">
         <div class="container header-inner" style="padding: 12px 24px;">
             <div class="header-actions" style="width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 15px;">
                 <div class="search-box">
-                    <input type="text" placeholder="Search news, updates...">
+                    <input type="text" placeholder="Search support topics, tickets...">
                     <button><i class="fas fa-search"></i></button>
                 </div>
                 <div class="language-selector">
@@ -44,7 +144,6 @@
                         <option value="ar">العربية</option>
                     </select>
                 </div>
-                
             </div>
         </div>
 
@@ -61,7 +160,7 @@
         </nav>
     </header>
 
-    <!-- Page Header -->
+    <!-- Hero Banner -->
     <section class="hero-section" style="padding: 45px 0 35px 0; min-height: 180px; background: linear-gradient(to right, rgba(0,77,46,0.95) 0%, rgba(0,135,81,0.9) 100%); text-align: center; border-bottom: 4px solid var(--primary-gold);">
         <div class="hero-content container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <div class="hero-badge-group" style="display: flex; align-items: center; justify-content: center; flex-wrap: nowrap;">
@@ -80,87 +179,317 @@
         </div>
     </section>
 
-    <!-- Main Content Area / FAQ -->
+    <!-- Main Content Area -->
     <section class="section-padding" style="background: #f8fafc; padding: 45px 0;">
-        <div class="container" style="max-width: 900px;">
-            <div class="section-header text-center" style="margin-bottom: 40px;">
-                <h2>Frequently Asked Questions</h2>
-                <p>Find answers to common questions about Renewed Hope Nigeria Diaspora services</p>
-                <div class="line" style="margin: 15px auto;"></div>
+        <div class="container">
+
+            <!-- Founder & Consultant Support Desk Banner -->
+            <div style="background: linear-gradient(135deg, #0b1329 0%, #022615 100%); border-radius: 18px; padding: 30px; margin-bottom: 35px; border: 1.5px solid rgba(212,175,55,0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.15); color: white; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                    <div style="width: 75px; height: 75px; background: white; border-radius: 50%; padding: 4px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2.5px solid var(--primary-gold); flex-shrink: 0;">
+                        <img src="images/logo.png" alt="RHND Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
+                    </div>
+                    <div>
+                        <span style="background: rgba(212,175,55,0.2); color: var(--primary-gold); border: 1px solid rgba(212,175,55,0.5); padding: 3px 12px; border-radius: 15px; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; display: inline-block; margin-bottom: 6px;">
+                            <i class="fas fa-crown"></i> Founder & Consultant
+                        </span>
+                        <h3 style="margin: 0 0 4px 0; color: white; font-size: 1.4rem; font-weight: 800;">MR. INUWA AHMED</h3>
+                        <div style="color: var(--primary-gold); font-size: 0.95rem; font-weight: 700; margin-bottom: 2px;">Consultant Nigeria Diaspora Services</div>
+                        <p style="margin: 0; color: #94a3b8; font-size: 0.88rem;">Diaspora Diplomatic Support &bull; Founder &bull; High-Priority Citizen Escalations</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <a href="tel:07047000070" class="btn btn-primary" style="padding: 11px 22px; font-size: 0.95rem; font-weight: 700; border-radius: 25px; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-phone-alt"></i> Call: 07047000070
+                    </a>
+                    <a href="https://wa.me/2347047000070" target="_blank" class="btn btn-secondary" style="padding: 11px 22px; font-size: 0.95rem; font-weight: 700; border-radius: 25px; display: inline-flex; align-items: center; gap: 8px; background: #25D366; border-color: #25D366; color: white;">
+                        <i class="fab fa-whatsapp"></i> WhatsApp Direct
+                    </a>
+                </div>
             </div>
 
-            <!-- FAQ Accordion -->
-            <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 50px;">
-                <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);" open>
-                    <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                        How do I register as a diaspora member?
-                    </summary>
-                    <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
-                        Click on the <a href="register.html" style="color: var(--primary-green); font-weight: 600;">Register</a> button in the top navigation. Complete the simple registration form with your full name, email, current host country, and create a password. You will instantly receive access to your Member Dashboard and a unique Diaspora ID number.
+            <!-- Quick Support Channels Grid -->
+            <div class="support-card-grid">
+                <div class="support-channel-card">
+                    <div>
+                        <div class="channel-icon" style="background: #e0f2fe; color: #0284c7;">
+                            <i class="fas fa-passport"></i>
+                        </div>
+                        <h3 style="font-size: 1.2rem; color: #0f172a; margin-bottom: 10px;">Passport & Biometrics</h3>
+                        <p style="color: #64748b; font-size: 0.92rem; line-height: 1.6; margin-bottom: 20px;">
+                            Assistance with fast-track passport renewals, missing application reference numbers, and authorized consular biometric center appointments worldwide.
+                        </p>
                     </div>
-                </details>
+                    <button type="button" onclick="prefillCategory('Passport Renewal Assistance')" class="btn btn-secondary" style="width: 100%; padding: 10px; font-size: 0.88rem;">
+                        <i class="fas fa-ticket-alt"></i> Open Passport Ticket
+                    </button>
+                </div>
 
-                <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                    <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                        How do I apply for passport renewal assistance?
-                    </summary>
-                    <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
-                        Log in to your <strong>Member Dashboard</strong>, go to <strong>Diaspora Services</strong>, and select <strong>"Passport Renewal Assistance"</strong>. This will open a pre-filled support ticket for our admin team to process your request.
+                <div class="support-channel-card">
+                    <div>
+                        <div class="channel-icon" style="background: #f0fdf4; color: #16a34a;">
+                            <i class="fas fa-landmark"></i>
+                        </div>
+                        <h3 style="font-size: 1.2rem; color: #0f172a; margin-bottom: 10px;">Consular & Diplomatic Aid</h3>
+                        <p style="color: #64748b; font-size: 0.92rem; line-height: 1.6; margin-bottom: 20px;">
+                            Direct liaison with Nigerian High Commissions, Embassies, Emergency Travel Certificates (ETC), and consular welfare advocacy abroad.
+                        </p>
                     </div>
-                </details>
+                    <button type="button" onclick="prefillCategory('Consular & Diplomatic Support')" class="btn btn-secondary" style="width: 100%; padding: 10px; font-size: 0.88rem;">
+                        <i class="fas fa-ticket-alt"></i> Open Consular Ticket
+                    </button>
+                </div>
 
-                <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                    <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                        What is the Diaspora Membership ID Card?
-                    </summary>
-                    <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
-                        Every registered member receives a <strong>Digital Diaspora Membership ID</strong> with a unique number (e.g. RHND-NIG-00001). This official credential can be used for accessing diaspora services, consular support, and priority government assistance programs.
+                <div class="support-channel-card">
+                    <div>
+                        <div class="channel-icon" style="background: #fef3c7; color: #d97706;">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h3 style="font-size: 1.2rem; color: #0f172a; margin-bottom: 10px;">Diaspora Housing & Land</h3>
+                        <p style="color: #64748b; font-size: 0.92rem; line-height: 1.6; margin-bottom: 20px;">
+                            Guidance on the Federal Ministry of Housing diaspora mortgage scheme, land title verifications, verified developer allocations, and fraud prevention.
+                        </p>
                     </div>
-                </details>
+                    <button type="button" onclick="prefillCategory('Housing & Land Inquiries')" class="btn btn-secondary" style="width: 100%; padding: 10px; font-size: 0.88rem;">
+                        <i class="fas fa-ticket-alt"></i> Open Housing Ticket
+                    </button>
+                </div>
 
-                <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                    <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                        How do I contact the Nigerian Embassy or Consulate?
-                    </summary>
-                    <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
-                        Visit the <a href="diaspora.html" style="color: var(--primary-green); font-weight: 600;">Diaspora Services</a> page for a directory of embassies and consulates worldwide. You can also submit a ticket through your dashboard and our team will connect you with the appropriate consular office.
+                <div class="support-channel-card">
+                    <div>
+                        <div class="channel-icon" style="background: #fee2e2; color: #dc2626;">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 style="font-size: 1.2rem; color: #0f172a; margin-bottom: 10px;">Emergency Welfare Line</h3>
+                        <p style="color: #64748b; font-size: 0.92rem; line-height: 1.6; margin-bottom: 20px;">
+                            Urgent consular assistance, emergency repatriation coordination, citizen distress reporting, and priority diplomatic escalation.
+                        </p>
                     </div>
-                </details>
-
-                <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                    <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                        Is this platform affiliated with the Federal Government of Nigeria?
-                    </summary>
-                    <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
-                        The <strong>Renewed Hope Nigeria Diaspora (RHND)</strong> platform is a community-driven information hub that aggregates verified government policies and resources. It is designed to support and empower Nigerians living abroad.
-                    </div>
-                </details>
-
-                <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                    <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-                        I forgot my password. How can I reset it?
-                    </summary>
-                    <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
-                        Currently, please contact our support team via email at <strong>support@rhnd.gov.ng</strong> or call the Diaspora Helpline to request a password reset. A self-service password reset feature will be available in a future update.
-                    </div>
-                </details>
+                    <button type="button" onclick="prefillCategory('Emergency Consular Assistance')" class="btn btn-secondary" style="width: 100%; padding: 10px; font-size: 0.88rem; border-color: #fca5a5; color: #dc2626;">
+                        <i class="fas fa-exclamation-triangle"></i> Emergency Ticket
+                    </button>
+                </div>
             </div>
 
-            <!-- Contact Info Section -->
-            <div style="background: linear-gradient(135deg, #022615 0%, #056839 100%); border-radius: 18px; padding: 40px 35px; color: white; text-align: center;">
-                <h2 style="color: var(--primary-gold); font-weight: 800; margin-bottom: 10px; font-size: 1.6rem;">Still Need Help?</h2>
-                <p style="color: rgba(255,255,255,0.8); margin-bottom: 25px; max-width: 550px; margin-left: auto; margin-right: auto;">Our dedicated diaspora support team is available to assist you with any questions or concerns.</p>
+            <!-- Main Support Hub: Ticket Form & Live Tracker -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 50px;">
+                
+                <!-- 1. Submit Support Ticket Form -->
+                <div class="ticket-box" id="ticket-submission-box">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">
+                        <div>
+                            <h3 style="margin: 0 0 4px 0; color: #0f172a; font-size: 1.3rem;">
+                                <i class="fas fa-headset text-gold" style="margin-right: 8px;"></i> Submit a Support Ticket
+                            </h3>
+                            <p style="margin: 0; color: #64748b; font-size: 0.88rem;">Our consular assistance officers will respond to your request promptly.</p>
+                        </div>
+                        <span class="badge" style="background: #dcfce7; color: #15803d; font-weight: 700; font-size: 0.78rem; padding: 4px 10px; border-radius: 20px;">
+                            <i class="fas fa-clock"></i> 24/7 Active Desk
+                        </span>
+                    </div>
+
+                    <form id="public-support-ticket-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ticket-name">Full Name <span style="color: #ef4444;">*</span></label>
+                                <input type="text" id="ticket-name" class="form-control" required placeholder="e.g. Amina Hausawi">
+                            </div>
+                            <div class="form-group">
+                                <label for="ticket-email">Email Address <span style="color: #ef4444;">*</span></label>
+                                <input type="email" id="ticket-email" class="form-control" required placeholder="e.g. yourname@email.com">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ticket-country">Current Host Country <span style="color: #ef4444;">*</span></label>
+                                <select id="ticket-country" class="form-control" required>
+                                    <option value="">-- Select Country --</option>
+                                    <option value="United Kingdom">United Kingdom</option>
+                                    <option value="United States">United States</option>
+                                    <option value="Canada">Canada</option>
+                                    <option value="Saudi Arabia">Saudi Arabia</option>
+                                    <option value="United Arab Emirates">United Arab Emirates</option>
+                                    <option value="Germany">Germany</option>
+                                    <option value="South Africa">South Africa</option>
+                                    <option value="Australia">Australia</option>
+                                    <option value="France">France</option>
+                                    <option value="Italy">Italy</option>
+                                    <option value="Ghana">Ghana</option>
+                                    <option value="Malaysia">Malaysia</option>
+                                    <option value="Other Diaspora Country">Other Diaspora Country</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticket-category">Assistance Category <span style="color: #ef4444;">*</span></label>
+                                <select id="ticket-category" class="form-control" required>
+                                    <option value="Passport Renewal Assistance">Passport Renewal Assistance</option>
+                                    <option value="Consular & Diplomatic Support">Consular & Diplomatic Support</option>
+                                    <option value="NIN / BVN Diaspora Verification">NIN / BVN Diaspora Verification</option>
+                                    <option value="Housing & Land Inquiries">Housing & Land Inquiries</option>
+                                    <option value="Emergency Consular Assistance">Emergency Consular Assistance</option>
+                                    <option value="Business & Investment Advisory">Business & Investment Advisory</option>
+                                    <option value="General Diaspora Inquiry">General Diaspora Inquiry</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ticket-subject">Subject / Purpose of Request <span style="color: #ef4444;">*</span></label>
+                            <input type="text" id="ticket-subject" class="form-control" required placeholder="Brief summary of your request...">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ticket-details">Detailed Message & Supporting Notes <span style="color: #ef4444;">*</span></label>
+                            <textarea id="ticket-details" class="form-control" rows="4" required placeholder="Please provide all relevant details, enrollment reference, passport number (if applicable), and your specific location..."></textarea>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 15px;">
+                            <div id="ticket-status-msg" style="display: none; font-weight: 700; font-size: 0.92rem;"></div>
+                            <button type="submit" id="ticket-submit-btn" class="btn btn-primary" style="padding: 12px 30px; font-size: 1rem; border-radius: 10px;">
+                                <i class="fas fa-paper-plane"></i> Submit Ticket
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 2. Track Support Tickets Box -->
+                <div class="ticket-box">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">
+                        <div>
+                            <h3 style="margin: 0 0 4px 0; color: #0f172a; font-size: 1.3rem;">
+                                <i class="fas fa-search-location text-gold" style="margin-right: 8px;"></i> Track Support Ticket
+                            </h3>
+                            <p style="margin: 0; color: #64748b; font-size: 0.88rem;">Check status and updates for your submitted requests.</p>
+                        </div>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+                        <input type="text" id="ticket-search-query" class="form-control" placeholder="Search by Ticket ID or Email...">
+                        <button type="button" onclick="searchTickets()" class="btn btn-primary" style="padding: 10px 18px; white-space: nowrap;">
+                            <i class="fas fa-search"></i> Find
+                        </button>
+                    </div>
+
+                    <!-- Recent Tickets Container -->
+                    <h4 style="margin: 0 0 12px 0; font-size: 0.95rem; color: #334155; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800;">
+                        <i class="fas fa-list-alt text-gold"></i> My Active Tickets
+                    </h4>
+
+                    <div id="my-tickets-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 380px; overflow-y: auto;">
+                        <!-- Tickets will be rendered dynamically here -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FAQ Section -->
+            <div style="max-width: 900px; margin: 0 auto 40px auto;">
+                <div class="section-header text-center" style="margin-bottom: 35px;">
+                    <h2>Frequently Asked Questions</h2>
+                    <p>Find quick answers to common questions about Renewed Hope Nigeria Diaspora services</p>
+                    <div class="line" style="margin: 15px auto;"></div>
+                </div>
+
+                <!-- FAQ Accordion -->
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);" open>
+                        <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                            How do I register as a diaspora member?
+                        </summary>
+                        <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
+                            Click on the <a href="register.html" style="color: var(--primary-green); font-weight: 600;">Register</a> button in the navigation. Complete the simple registration form with your full name, email, current host country, and create a password. You will instantly receive access to your Member Dashboard and a unique Diaspora ID number.
+                        </div>
+                    </details>
+
+                    <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                            How do I apply for passport renewal assistance?
+                        </summary>
+                        <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
+                            Select <strong>"Passport Renewal Assistance"</strong> in the Support Ticket form above or log in to your Member Dashboard. Provide your current passport number and preferred consular center. Our support desk will review and provide priority appointment guidance.
+                        </div>
+                    </details>
+
+                    <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                            What is the Diaspora Membership ID Card?
+                        </summary>
+                        <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
+                            Every registered member receives a <strong>Digital Diaspora Membership ID</strong> with a unique number (e.g. RHND-NIG-00001). This official credential can be used for accessing diaspora services, consular support, and priority government assistance programs.
+                        </div>
+                    </details>
+
+                    <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                            How do I contact the Nigerian Embassy or Consulate?
+                        </summary>
+                        <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
+                            Visit the <a href="diaspora.html" style="color: var(--primary-green); font-weight: 600;">Diaspora Services</a> page for a directory of embassies and consulates worldwide. You can also submit a ticket through this page and our team will connect you with the appropriate consular office.
+                        </div>
+                    </details>
+
+                    <details style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                        <summary style="padding: 18px 22px; cursor: pointer; font-weight: 700; color: #0f172a; font-size: 1rem; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                            Is this platform affiliated with the Federal Government of Nigeria?
+                        </summary>
+                        <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
+                            The <strong>Renewed Hope Nigeria Diaspora (RHND)</strong> platform is a dedicated community information hub that aggregates verified government policies, diplomatic resources, and citizen services to support Nigerians living abroad.
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Direct Contact Box -->
+            <div style="background: linear-gradient(135deg, #022615 0%, #056839 100%); border-radius: 18px; padding: 40px 35px; color: white; text-align: center; box-shadow: 0 10px 30px rgba(5, 104, 57, 0.2);">
+                <h2 style="color: var(--primary-gold); font-weight: 800; margin-bottom: 10px; font-size: 1.6rem;">Still Need Immediate Assistance?</h2>
+                <p style="color: rgba(255,255,255,0.85); margin-bottom: 25px; max-width: 600px; margin-left: auto; margin-right: auto;">Our dedicated diaspora support team and diplomatic consultants are available 24/7 to assist you.</p>
                 <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
                     <a href="mailto:support@rhnd.gov.ng" class="btn btn-secondary" style="padding: 12px 24px; font-weight: 700; font-size: 0.95rem;">
                         <i class="fas fa-envelope"></i> support@rhnd.gov.ng
                     </a>
                     <a href="tel:07047000070" class="btn btn-primary" style="padding: 12px 24px; font-weight: 700; font-size: 0.95rem;">
-                        <i class="fas fa-phone"></i> 07047000070
+                        <i class="fas fa-phone-alt"></i> 07047000070
+                    </a>
+                    <a href="https://wa.me/2347047000070" target="_blank" class="btn btn-secondary" style="padding: 12px 24px; font-weight: 700; font-size: 0.95rem; background: #25D366; border-color: #25D366; color: white;">
+                        <i class="fab fa-whatsapp"></i> WhatsApp Live
                     </a>
                 </div>
             </div>
+
         </div>
     </section>
+
+    <!-- Ticket Detail Modal -->
+    <div id="ticketDetailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; width: 100%; max-width: 600px; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.25); display: flex; flex-direction: column; max-height: 90vh;">
+            <div style="background: var(--secondary-dark-green); color: white; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 700; font-size: 1.1rem;"><i class="fas fa-ticket-alt text-gold" style="margin-right: 8px;"></i> Support Ticket Details</span>
+                <button onclick="closeTicketModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+            <div style="padding: 24px; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <span id="modal-ticket-id" style="font-family: monospace; font-weight: 800; font-size: 1rem; color: var(--primary-gold); background: #0b1329; padding: 4px 10px; border-radius: 6px;"></span>
+                    <span id="modal-ticket-badge"></span>
+                </div>
+                <h3 id="modal-ticket-subject" style="color: #0f172a; margin-bottom: 12px; font-size: 1.25rem;"></h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; background: #f8fafc; padding: 12px; border-radius: 8px; font-size: 0.88rem;">
+                    <div><strong>Category:</strong> <span id="modal-ticket-category" style="color: #475569;"></span></div>
+                    <div><strong>Date:</strong> <span id="modal-ticket-date" style="color: #475569;"></span></div>
+                    <div><strong>Submitted By:</strong> <span id="modal-ticket-user" style="color: #475569;"></span></div>
+                    <div><strong>Country:</strong> <span id="modal-ticket-country" style="color: #475569;"></span></div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <label style="font-weight: 700; color: #334155; font-size: 0.9rem; display: block; margin-bottom: 6px;">Message Details:</label>
+                    <div id="modal-ticket-details" style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 8px; color: #334155; font-size: 0.95rem; line-height: 1.6; white-space: pre-line;"></div>
+                </div>
+            </div>
+            <div style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; text-align: right;">
+                <button onclick="closeTicketModal()" class="btn btn-primary" style="padding: 8px 20px;">Close</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="main-footer">
@@ -208,9 +537,9 @@
             <div class="footer-col">
                 <h3>Languages & Legal</h3>
                 <ul>
-                    <li><a href="#">English</a></li>
-                    <li><a href="#">Hausa</a></li>
-                    <li><a href="#">العربية</a></li>
+                    <li><a href="javascript:void(0)" onclick="changeLanguage('en')">English</a></li>
+                    <li><a href="javascript:void(0)" onclick="changeLanguage('ha')">Hausa</a></li>
+                    <li><a href="javascript:void(0)" onclick="changeLanguage('ar')">العربية</a></li>
                     <li class="mt-10"><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Terms of Use</a></li>
                 </ul>
@@ -224,5 +553,251 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script>
+        const defaultSampleTickets = [
+            {
+                id: "RHND-TCK-10824",
+                name: "Amina Hausawi",
+                email: "aminahausawi10@gmail.com",
+                country: "United Kingdom",
+                category: "Passport Renewal Assistance",
+                subject: "Fast-track London Consular Biometrics Appointment",
+                details: "Submitted passport renewal application online. Need urgent biometric enrollment slot at the London High Commission.",
+                status: "In Progress",
+                created_at: "2026-09-12T14:30:00Z"
+            },
+            {
+                id: "RHND-TCK-10492",
+                name: "Diaspora Citizen",
+                email: "support@rhnd.gov.ng",
+                country: "United States",
+                category: "Housing & Land Inquiries",
+                subject: "Diaspora Mortgage Scheme Verification",
+                details: "Inquiry regarding federal diaspora mortgage financing terms and partner mortgage banks.",
+                status: "Resolved",
+                created_at: "2026-09-08T09:15:00Z"
+            }
+        ];
+
+        function getStoredTickets() {
+            let list = [];
+            try {
+                const raw = localStorage.getItem('rhnd_requests_db');
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length > 0) list = parsed;
+                }
+            } catch(e) {}
+            if (list.length === 0) {
+                list = [...defaultSampleTickets];
+                try { localStorage.setItem('rhnd_requests_db', JSON.stringify(list)); } catch(e) {}
+            }
+            return list;
+        }
+
+        let allTickets = [];
+
+        function renderTicketsList(tickets) {
+            const container = document.getElementById('my-tickets-list');
+            if (!container) return;
+
+            if (!tickets.length) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 30px; background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1; color: #64748b;">
+                        <i class="fas fa-ticket-alt" style="font-size: 2rem; margin-bottom: 8px; color: #cbd5e1; display: block;"></i>
+                        No support tickets found matching your query.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = tickets.map(t => {
+                let badgeClass = 'badge-pending';
+                let statusIcon = 'fa-clock';
+                const st = (t.status || 'Pending').toLowerCase();
+                if (st.includes('progress') || st.includes('review')) {
+                    badgeClass = 'badge-progress';
+                    statusIcon = 'fa-spinner fa-spin';
+                } else if (st.includes('resolve') || st.includes('complete') || st.includes('close')) {
+                    badgeClass = 'badge-resolved';
+                    statusIcon = 'fa-check-circle';
+                }
+
+                let idStr = String(t.id);
+                if (!idStr.startsWith('#') && !idStr.startsWith('RHND')) idStr = '#RHND-TCK-' + idStr.slice(-5);
+                else if (!idStr.startsWith('#')) idStr = '#' + idStr;
+
+                return `
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; cursor: pointer; transition: all 0.2s ease;" onclick="openTicketDetail('${t.id}')">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="font-family: monospace; font-weight: 800; color: var(--primary-gold); font-size: 0.85rem; background: #0b1329; padding: 2px 8px; border-radius: 4px;">${idStr}</span>
+                            <span class="ticket-badge ${badgeClass}"><i class="fas ${statusIcon}"></i> ${t.status || 'Pending'}</span>
+                        </div>
+                        <h4 style="margin: 0 0 4px 0; color: #0f172a; font-size: 0.95rem;">${t.subject || 'Support Request'}</h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b;">
+                            <span><i class="fas fa-tag"></i> ${t.category || 'General'}</span>
+                            <span><i class="far fa-calendar-alt"></i> ${new Date(t.created_at || Date.now()).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function prefillCategory(cat) {
+            const catSelect = document.getElementById('ticket-category');
+            if (catSelect) {
+                catSelect.value = cat;
+                const formBox = document.getElementById('ticket-submission-box');
+                if (formBox) {
+                    formBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    formBox.style.boxShadow = '0 0 0 3px var(--primary-gold)';
+                    setTimeout(() => formBox.style.boxShadow = '', 2000);
+                }
+            }
+        }
+
+        window.openTicketDetail = function(ticketId) {
+            const ticket = allTickets.find(t => String(t.id) === String(ticketId));
+            if (!ticket) return;
+
+            let idStr = String(ticket.id);
+            if (!idStr.startsWith('#') && !idStr.startsWith('RHND')) idStr = '#RHND-TCK-' + idStr.slice(-5);
+            else if (!idStr.startsWith('#')) idStr = '#' + idStr;
+
+            document.getElementById('modal-ticket-id').textContent = idStr;
+            document.getElementById('modal-ticket-subject').textContent = ticket.subject || 'Support Ticket';
+            document.getElementById('modal-ticket-category').textContent = ticket.category || 'General';
+            document.getElementById('modal-ticket-date').textContent = new Date(ticket.created_at || Date.now()).toLocaleString();
+            document.getElementById('modal-ticket-user').textContent = (ticket.name || 'Member') + ' (' + (ticket.email || '') + ')';
+            document.getElementById('modal-ticket-country').textContent = ticket.country || 'Diaspora';
+            document.getElementById('modal-ticket-details').textContent = ticket.details || ticket.message || 'No additional notes.';
+
+            let badgeClass = 'badge-pending';
+            const st = (ticket.status || 'Pending').toLowerCase();
+            if (st.includes('progress') || st.includes('review')) badgeClass = 'badge-progress';
+            else if (st.includes('resolve') || st.includes('complete')) badgeClass = 'badge-resolved';
+
+            document.getElementById('modal-ticket-badge').innerHTML = `<span class="ticket-badge ${badgeClass}">${ticket.status || 'Pending'}</span>`;
+            document.getElementById('ticketDetailModal').style.display = 'flex';
+        };
+
+        window.closeTicketModal = function() {
+            document.getElementById('ticketDetailModal').style.display = 'none';
+        };
+
+        function searchTickets() {
+            const q = (document.getElementById('ticket-search-query').value || '').toLowerCase().trim();
+            if (!q) {
+                renderTicketsList(allTickets);
+                return;
+            }
+            const filtered = allTickets.filter(t => {
+                const id = String(t.id || '').toLowerCase();
+                const sub = (t.subject || '').toLowerCase();
+                const email = (t.email || '').toLowerCase();
+                const name = (t.name || '').toLowerCase();
+                return id.includes(q) || sub.includes(q) || email.includes(q) || name.includes(q);
+            });
+            renderTicketsList(filtered);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Auto fill member details if logged in
+            const rawUser = localStorage.getItem("rhnd_user");
+            if (rawUser) {
+                try {
+                    const u = JSON.parse(rawUser);
+                    if (u && u.name) document.getElementById('ticket-name').value = u.name;
+                    if (u && u.email) document.getElementById('ticket-email').value = u.email;
+                    if (u && u.country) document.getElementById('ticket-country').value = u.country;
+                } catch(e) {}
+            }
+
+            allTickets = getStoredTickets();
+            renderTicketsList(allTickets);
+
+            // Fetch live tickets from backend API
+            fetch('/api/requests?t=' + Date.now(), { cache: 'no-store' })
+                .then(r => r.json())
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0 && !data.error) {
+                        const merged = [...data];
+                        allTickets.forEach(t => {
+                            if (!merged.some(m => String(m.id) === String(t.id) || m.subject === t.subject)) {
+                                merged.push(t);
+                            }
+                        });
+                        allTickets = merged;
+                        try { localStorage.setItem('rhnd_requests_db', JSON.stringify(allTickets)); } catch(e) {}
+                        renderTicketsList(allTickets);
+                    }
+                })
+                .catch(e => {});
+
+            // Ticket form submit listener
+            const form = document.getElementById('public-support-ticket-form');
+            if (form) {
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const name = document.getElementById('ticket-name').value.trim();
+                    const email = document.getElementById('ticket-email').value.trim();
+                    const country = document.getElementById('ticket-country').value;
+                    const category = document.getElementById('ticket-category').value;
+                    const subject = document.getElementById('ticket-subject').value.trim();
+                    const details = document.getElementById('ticket-details').value.trim();
+                    const statusMsg = document.getElementById('ticket-status-msg');
+                    const btn = document.getElementById('ticket-submit-btn');
+
+                    if (!name || !email || !subject || !details) return;
+
+                    const randomId = 'RHND-TCK-' + Math.floor(10000 + Math.random() * 90000);
+                    const newTicket = {
+                        id: randomId,
+                        name: name,
+                        email: email,
+                        country: country || 'Diaspora',
+                        category: category,
+                        subject: subject,
+                        details: details,
+                        status: 'Pending',
+                        created_at: new Date().toISOString()
+                    };
+
+                    allTickets.unshift(newTicket);
+                    try { localStorage.setItem('rhnd_requests_db', JSON.stringify(allTickets)); } catch(e) {}
+                    renderTicketsList(allTickets);
+
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+                    try {
+                        await fetch('/api/requests', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(newTicket)
+                        });
+                    } catch(err) {}
+
+                    statusMsg.style.display = 'block';
+                    statusMsg.style.color = '#15803d';
+                    statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Ticket <strong>${newTicket.id}</strong> submitted successfully! You will receive an update shortly.`;
+
+                    form.reset();
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Ticket';
+
+                    setTimeout(() => {
+                        statusMsg.style.display = 'none';
+                    }, 6000);
+                });
+            }
+
+            // Real-time search filter input
+            const searchInput = document.getElementById('ticket-search-query');
+            if (searchInput) {
+                searchInput.addEventListener('input', searchTickets);
+            }
+        });
+    </script>
 </body>
 </html>
