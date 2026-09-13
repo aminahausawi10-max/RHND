@@ -506,7 +506,7 @@ async function syncGlobalSettings() {
 
     // 2. Fetch fresh live settings from the backend database
     try {
-        const res = await fetch('/api/settings');
+        const res = await fetch('/api/settings?t=' + Date.now(), { cache: 'no-store' });
         if (res.ok) {
             const settings = await res.json();
             if (settings && typeof settings === 'object' && !settings.error) {

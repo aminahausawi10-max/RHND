@@ -1052,7 +1052,7 @@
 
         async function loadBackendSettings() {
             try {
-                const res = await fetch('/api/settings');
+                const res = await fetch('/api/settings?t=' + Date.now(), { cache: 'no-store' });
                 if (res.ok) {
                     const settings = await res.json();
                     if (settings && typeof settings === 'object' && !settings.error) {
@@ -1484,7 +1484,7 @@
             renderPostsUI(posts);
 
             try {
-                const res = await fetch('/api/posts');
+                const res = await fetch('/api/posts?t=' + Date.now(), { cache: 'no-store' });
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data) && !data.error) {
@@ -1641,7 +1641,7 @@
         async function fetchMembers() {
             let users = getStoredMembers();
             try {
-                const res = await fetch('/api/users');
+                const res = await fetch('/api/users?t=' + Date.now(), { cache: 'no-store' });
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data) && data.length > 0 && !data.error) {

@@ -1277,7 +1277,7 @@
             }
 
             // Load live news feed into dashboard
-            fetch('/api/posts')
+            fetch('/api/posts?t=' + Date.now(), { cache: 'no-store' })
                 .then(r => r.json())
                 .then(posts => {
                     if (Array.isArray(posts) && posts.length > 0) {
@@ -1352,7 +1352,7 @@
             renderMembersDirectory(members);
 
             try {
-                const res = await fetch('/api/settings')
+                const res = await fetch('/api/settings?t=' + Date.now(), { cache: 'no-store' })
             .then(r => r.json())
             .then(settings => {
                 if (settings && typeof settings === 'object' && !settings.error) {
@@ -1366,7 +1366,7 @@
                 }
             }).catch(e => {});
 
-        fetch('/api/users');
+        fetch('/api/users?t=' + Date.now(), { cache: 'no-store' });
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data) && data.length > 0 && !data.error) {
