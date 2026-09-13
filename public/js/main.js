@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Require login for subpages while allowing public home page view
     checkPageAccess();
+    syncGlobalSettings();
 
 });
 
@@ -479,3 +480,44 @@ function initGoogleTranslate(targetLang) {
 }
 
 
+
+
+// Global System Settings & Numbers Sync Handler
+async function syncGlobalSettings() {
+    try {
+        const res = await fetch('/api/settings');
+        if (res.ok) {
+            const settings = await res.json();
+            if (settings && typeof settings === 'object' && !settings.error) {
+                // Update local storage cache
+                if (settings.stat_members !== undefined) localStorage.setItem('rhnd_custom_stat_members', settings.stat_members);
+                if (settings.stat_news !== undefined) localStorage.setItem('rhnd_custom_stat_news', settings.stat_news);
+                if (settings.stat_requests !== undefined) localStorage.setItem('rhnd_custom_stat_requests', settings.stat_requests);
+                if (settings.stat_media !== undefined) localStorage.setItem('rhnd_custom_stat_media', settings.stat_media);
+                if (settings.founder_phone !== undefined) localStorage.setItem('rhnd_founder_phone', settings.founder_phone);
+                if (settings.founder_name !== undefined) localStorage.setItem('rhnd_founder_name', settings.founder_name);
+
+                // Update DOM elements in real-time across user portal
+                const memberCountEls = document.querySelectorAll('#home-total-members-counter, #section-total-members-count, #stat-members-val, #membership-total-count, #total-members-count-badge, .stat-members-count');
+                memberCountEls.forEach(el => {
+                    if (settings.stat_members) el.textContent = settings.stat_members;
+                });
+
+                const newsCountEls = document.querySelectorAll('#stat-news-val, .stat-news-count');
+                newsCountEls.forEach(el => {
+                    if (settings.stat_news) el.textContent = settings.stat_news;
+                });
+
+                const reqCountEls = document.querySelectorAll('#stat-tickets-val, .stat-requests-count');
+                reqCountEls.forEach(el => {
+                    if (settings.stat_requests) el.textContent = settings.stat_requests;
+                });
+
+                const mediaCountEls = document.querySelectorAll('#stat-media-val, .stat-media-count');
+                mediaCountEls.forEach(el => {
+                    if (settings.stat_media) el.textContent = settings.stat_media;
+                });
+            }
+        }
+    } catch(e) {}
+}

@@ -1003,25 +1003,61 @@
             if (badgeCount) badgeCount.textContent = count;
         }
 
-        function applyCustomStatFromInput(type) {
+        async function applyCustomStatFromInput(type) {
             const input = document.getElementById(`input-stat-${type}`);
             if (!input || !input.value.trim()) return;
             const val = input.value.trim();
             localStorage.setItem(`rhnd_custom_stat_${type}`, val);
             updateStatDisplay(type, liveCounts[type] || 0);
             input.value = '';
+
+            try {
+                await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body: JSON.stringify({ key: `stat_${type}`, value: val, adminPassword: 'Admin@RHND2026' })
+                });
+            } catch(e) {
+                console.warn("Backend settings sync error:", e);
+            }
         }
 
-        function resetStatToOriginal(type) {
+        async function resetStatToOriginal(type) {
             localStorage.removeItem(`rhnd_custom_stat_${type}`);
             updateStatDisplay(type, liveCounts[type] || 0);
+            try {
+                await fetch('/api/settings?key=stat_' + type, { method: 'DELETE', headers: fetchHeaders });
+            } catch(e) {}
         }
 
-        function resetAllStatsToOriginal() {
-            ['members', 'news', 'requests', 'media'].forEach(type => {
+        async function resetAllStatsToOriginal() {
+            for (const type of ['members', 'news', 'requests', 'media']) {
                 localStorage.removeItem(`rhnd_custom_stat_${type}`);
                 updateStatDisplay(type, liveCounts[type] || 0);
-            });
+                try {
+                    await fetch('/api/settings?key=stat_' + type, { method: 'DELETE', headers: fetchHeaders });
+                } catch(e) {}
+            }
+        }
+
+        async function loadBackendSettings() {
+            try {
+                const res = await fetch('/api/settings');
+                if (res.ok) {
+                    const settings = await res.json();
+                    if (settings && typeof settings === 'object' && !settings.error) {
+                        ['members', 'news', 'requests', 'media'].forEach(t => {
+                            if (settings[`stat_${t}`] !== undefined && settings[`stat_${t}`] !== '') {
+                                localStorage.setItem(`rhnd_custom_stat_${t}`, settings[`stat_${t}`]);
+                            }
+                        });
+                        // Refresh display
+                        ['members', 'news', 'requests', 'media'].forEach(t => {
+                            updateStatDisplay(t, liveCounts[t] || 0);
+                        });
+                    }
+                }
+            } catch(e) {}
         }
 
         function scrollToManager() {
@@ -1654,6 +1690,7 @@
             members = members.filter(m => String(m.id) !== String(id));
             localStorage.setItem('rhnd_members_db', JSON.stringify(members));
             fetchMembers();
+            loadBackendSettings();
         }
 
         function handleAddMember(name, email, country, password, statusEl) {

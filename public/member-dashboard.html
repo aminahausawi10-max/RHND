@@ -1352,7 +1352,21 @@
             renderMembersDirectory(members);
 
             try {
-                const res = await fetch('/api/users');
+                const res = await fetch('/api/settings')
+            .then(r => r.json())
+            .then(settings => {
+                if (settings && typeof settings === 'object' && !settings.error) {
+                    if (settings.stat_members) {
+                        localStorage.setItem('rhnd_custom_stat_members', settings.stat_members);
+                        const totalEl = document.getElementById('dash-total-members-count');
+                        if (totalEl) totalEl.textContent = settings.stat_members;
+                        const badgeEl = document.getElementById('dash-total-members-badge');
+                        if (badgeEl) badgeEl.textContent = settings.stat_members;
+                    }
+                }
+            }).catch(e => {});
+
+        fetch('/api/users');
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data) && data.length > 0 && !data.error) {

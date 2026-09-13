@@ -474,6 +474,20 @@
             let homePosts = getHomeNews();
             renderHomeNews(homePosts);
 
+            fetch('/api/settings')
+                .then(r => r.json())
+                .then(settings => {
+                    if (settings && typeof settings === 'object' && !settings.error) {
+                        if (settings.stat_members) {
+                            localStorage.setItem('rhnd_custom_stat_members', settings.stat_members);
+                            const counter = document.getElementById('home-total-members-counter');
+                            if (counter) counter.textContent = settings.stat_members;
+                            const sectionCounter = document.getElementById('section-total-members-count');
+                            if (sectionCounter) sectionCounter.textContent = settings.stat_members;
+                        }
+                    }
+                }).catch(e => {});
+
             fetch('/api/posts')
                 .then(r => r.json())
                 .then(data => {

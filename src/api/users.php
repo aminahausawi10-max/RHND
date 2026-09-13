@@ -4,8 +4,13 @@ require __DIR__ . "/../../config/database.php";
 header("Content-Type: application/json");
 $method = $_SERVER['REQUEST_METHOD'];
 
+// Ensure users table has country column
+try {
+    $pdo->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS country VARCHAR(100) DEFAULT 'United Kingdom'");
+} catch(Exception $e) {}
+
 // Admin Auth check for write/delete
-if ($method === 'POST' || $method === 'DELETE') {
+if ($method === 'DELETE') {
     $adminPassword = $_SERVER['HTTP_X_ADMIN_PASSWORD'] ?? '';
     if (function_exists('getallheaders')) {
         $headers = getallheaders();
@@ -20,7 +25,7 @@ if ($method === 'POST' || $method === 'DELETE') {
 
 if ($method === 'GET') {
     try {
-        $stmt = $pdo->query("SELECT id, name, email, created_at FROM users ORDER BY id DESC");
+        $stmt = $pdo->query("SELECT id, name, email, COALESCE(country, 'United Kingdom') AS country, created_at FROM users ORDER BY id DESC");
         $users = $stmt->fetchAll();
         echo json_encode($users);
     } catch (Exception $e) {
@@ -36,8 +41,9 @@ if ($method === 'GET') {
     }
     try {
         $hash = password_hash($data['password'], PASSWORD_DEFAULT);
-        $stmt = $pdo->prepare("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)");
-        $stmt->execute([$data['name'], $data['email'], $hash]);
+        $country = $data['country'] ?? 'United Kingdom';
+        $stmt = $pdo->prepare("INSERT INTO users (name, email, password_hash, country) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$data['name'], $data['email'], $hash, $country]);
         echo json_encode(["success" => true, "id" => $pdo->lastInsertId()]);
     } catch (Exception $e) {
         http_response_code(400);
