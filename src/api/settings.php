@@ -36,7 +36,7 @@ try {
             'stat_news' => '3',
             'stat_requests' => '1',
             'stat_media' => '2',
-            'founder_name' => 'Alh. Inuwa Ahmed',
+            'founder_name' => 'Mr. Inuwa Ahmed',
             'founder_phone' => '07047000070'
         ];
         $ins = $pdo->prepare('INSERT INTO settings ("key", "value") VALUES (?, ?)');
