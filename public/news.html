@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nigerian Diaspora Update - Renewed Hope Nigeria Diaspora</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=3.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -63,34 +63,22 @@
     <!-- Page Header -->
     <section class="hero-section" style="padding: 55px 0 45px 0; min-height: 230px; background: linear-gradient(to right, rgba(0,77,46,0.95) 0%, rgba(0,135,81,0.9) 100%); text-align: center;">
         <div class="hero-content container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
-                <div style="width: 72px; height: 72px; background: white; border-radius: 50%; padding: 4px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.3); border: 2.5px solid var(--primary-gold); overflow: hidden; flex-shrink: 0;">
-                    <img src="images/logo.png" alt="RHND Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
+            <div class="hero-badge-group" style="display: flex; align-items: center; justify-content: center; flex-wrap: nowrap;">
+                <div class="hero-emblem-badge">
+                    <img src="images/logo.png" alt="RHND Logo" class="logo-img">
                 </div>
-                <div style="text-align: left; line-height: 1.15;">
-                    <span style="font-weight: 900; font-size: 1.85rem; color: #ffffff; display: block; letter-spacing: 0.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.3);">RENEWED HOPE</span>
-                    <span style="font-weight: 800; font-size: 1.25rem; color: var(--primary-gold); display: block; letter-spacing: 2px; text-shadow: 0 2px 6px rgba(0,0,0,0.3);">NIGERIA DIASPORA</span>
+                <div class="hero-title-group">
+                    <span class="title-main">RENEWED HOPE</span>
+                    <span class="title-sub">NIGERIA DIASPORA</span>
                 </div>
-                <div style="width: 72px; height: 72px; background: white; border-radius: 50%; padding: 3px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.3); border: 2.5px solid var(--primary-gold); overflow: hidden; flex-shrink: 0;">
-                    <img src="images/leader_portrait.png" alt="Leader Portrait" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                </div>
-            </div>
-            <p style="color: #ffffff; font-size: 1.25rem; font-weight: 700; margin: 0; letter-spacing: 0.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.3);">Keeping Nigerians Worldwide Connected to Home</p>
-        </div>
-    </section>
-
-    <!-- Main Content Area -->
-    <section class="section-padding">
-        <div class="container">
-            <div id="public-news-list" class="cards-grid">
-                <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-                    <p style="color: var(--text-light); font-size: 1.2rem;">Loading latest news...</p>
+                <div class="hero-emblem-badge">
+                    <img src="images/leader_portrait.png" alt="Leader Portrait" class="leader-img">
                 </div>
             </div>
         </div>
     </section>
 
-        <script>
+    <script>
     const defaultNews = [
         {
             id: 101,

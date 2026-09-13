@@ -168,6 +168,70 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
 .hero-section { position: relative; background: url('https://images.unsplash.com/photo-1590483840747-1959bd77e3ea?auto=format&fit=crop&q=80&w=1920&h=800') center/cover no-repeat; padding: 140px 0; color: white; }
 .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(3, 58, 32, 0.96) 0%, rgba(11, 19, 41, 0.90) 100%); }
 .hero-content { position: relative; z-index: 2; max-width: 820px; }
+.hero-badge-group {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
+    max-width: 100%;
+}
+.hero-emblem-badge {
+    width: 72px;
+    height: 72px;
+    min-width: 72px;
+    background: #ffffff;
+    border-radius: 50%;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+    border: 3px solid var(--primary-gold);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.hero-emblem-badge img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.hero-emblem-badge img.logo-img {
+    object-fit: contain;
+}
+.hero-emblem-badge img.leader-img {
+    object-fit: cover;
+}
+.hero-title-group {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.1;
+    flex-shrink: 0;
+}
+.hero-title-group .title-main {
+    font-weight: 900;
+    font-size: 2.1rem;
+    color: #ffffff;
+    display: block;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    white-space: nowrap;
+    line-height: 1.05;
+}
+.hero-title-group .title-sub {
+    font-weight: 800;
+    font-size: 1.35rem;
+    color: var(--primary-gold);
+    display: block;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    white-space: nowrap;
+    margin-top: 2px;
+    line-height: 1.1;
+}
 .hero-badge { 
     display: inline-flex; 
     align-items: center; 
@@ -179,10 +243,12 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
     border-radius: 30px; 
     font-size: 0.85rem; 
     font-weight: 700; 
-    margin-bottom: 22px; 
+    margin-bottom: 0; 
     letter-spacing: 1px; 
     text-transform: uppercase; 
     color: var(--primary-gold);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 .hero-content h1 { font-size: 3.8rem; margin-bottom: 22px; line-height: 1.12; font-weight: 800; letter-spacing: -1px; }
 .hero-content p { font-size: 1.25rem; margin-bottom: 38px; color: rgba(255,255,255,0.92); max-width: 640px; line-height: 1.65; }
@@ -486,8 +552,57 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
 
     /* Mobile Hero Section */
     .hero-section {
-        padding: 55px 0 !important;
+        padding: 40px 10px !important;
         text-align: center !important;
+    }
+    .hero-badge-group {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: clamp(6px, 2.5vw, 14px) !important;
+        flex-wrap: nowrap !important;
+        margin-bottom: 15px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .hero-emblem-badge {
+        width: clamp(38px, 10.5vw, 54px) !important;
+        height: clamp(38px, 10.5vw, 54px) !important;
+        min-width: clamp(38px, 10.5vw, 54px) !important;
+        border-width: 2px !important;
+        padding: 2px !important;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.3) !important;
+        flex-shrink: 0 !important;
+    }
+    .hero-badge {
+        font-size: 0.72rem !important;
+        padding: 5px 12px !important;
+        letter-spacing: 0.5px !important;
+        white-space: nowrap !important;
+        margin-bottom: 0 !important;
+    }
+    .hero-title-group {
+        text-align: left !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        line-height: 1.05 !important;
+        flex-shrink: 0 !important;
+    }
+    .hero-title-group .title-main {
+        font-size: clamp(0.95rem, 4.4vw, 1.35rem) !important;
+        letter-spacing: 0.3px !important;
+        white-space: nowrap !important;
+        line-height: 1.05 !important;
+    }
+    .hero-title-group .title-sub {
+        font-size: clamp(0.64rem, 2.8vw, 0.88rem) !important;
+        letter-spacing: clamp(0.4px, 1.2vw, 1.2px) !important;
+        white-space: nowrap !important;
+        margin-top: 1px !important;
+        line-height: 1.1 !important;
     }
     .hero-content h1 {
         font-size: 2rem !important;
