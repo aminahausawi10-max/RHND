@@ -57,7 +57,6 @@ function setupAuthState() {
         } else {
             container.innerHTML = `
                 <a href="login.html" class="auth-btn auth-btn-gold"><i class="fas fa-sign-in-alt"></i> <span>Sign In</span></a>
-                <a href="register.html" class="auth-btn auth-btn-outline"><i class="fas fa-user-plus"></i> <span>Register</span></a>
             `;
         }
     });

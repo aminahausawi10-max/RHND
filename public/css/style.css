@@ -525,10 +525,40 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
     .container {
         padding: 0 16px !important;
     }
+    .top-bar {
+        padding: 8px 0 !important;
+    }
     .top-bar-inner {
+        display: flex !important;
         flex-direction: row !important;
         justify-content: space-between !important;
         align-items: center !important;
+        gap: 8px !important;
+    }
+    .top-bar-left .top-bar-logo img {
+        width: 36px !important;
+        height: 36px !important;
+    }
+    .top-bar-left .top-bar-logo span:first-of-type {
+        font-size: 0.86rem !important;
+    }
+    .top-bar-left .top-bar-logo span:last-of-type {
+        font-size: 0.68rem !important;
+        letter-spacing: 0.8px !important;
+    }
+    .top-bar-right {
+        display: flex !important;
+        align-items: center !important;
+    }
+    .top-bar-right .auth-buttons {
+        display: flex !important;
+        gap: 6px !important;
+    }
+    .top-bar-right .auth-btn {
+        padding: 6px 13px !important;
+        font-size: 0.78rem !important;
+        border-radius: 6px !important;
+        letter-spacing: 0.2px !important;
     }
     .header-inner {
         flex-direction: column !important;
