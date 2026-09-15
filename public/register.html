@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Renewed Hope Nigeria Diaspora</title>
     <link rel="stylesheet" href="css/style.css?v=3.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-        <!-- Top Bar -->
+    <!-- Top Bar -->
     <div class="top-bar">
         <div class="container top-bar-inner">
             <div class="top-bar-left">
@@ -25,7 +30,6 @@
                 <div class="auth-buttons"><a href="login.html" class="auth-btn auth-btn-gold"><i class="fas fa-sign-in-alt"></i> <span>Sign In</span></a></div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Main Header -->
@@ -44,7 +48,6 @@
                         <option value="ar">العربية</option>
                     </select>
                 </div>
-                
             </div>
         </div>
 
@@ -52,93 +55,55 @@
         <nav class="main-nav">
             <div class="container">
                 <ul class="nav-links">
-                    <li><a href="index.html" >HOME</a></li>
+                    <li><a href="index.html">HOME</a></li>
                     <li><a href="news.html">NIGERIAN DIASPORA UPDATE</a></li>
-                    <li><a href="membership.html" >TOTAL MEMBERS</a></li>
-                    <li><a href="support.html" >HELP & SUPPORT</a></li>
+                    <li><a href="membership.html">TOTAL MEMBERS</a></li>
+                    <li><a href="support.html">HELP & SUPPORT</a></li>
                 </ul>
             </div>
         </nav>
     </header>
-    <section class="section-padding">
-        <div class="container" style="max-width: 600px; margin: 0 auto;">
-            <div class="update-card" style="padding: 50px 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
-                <h2 style="text-align: center; margin-bottom: 30px; color: var(--secondary-dark-green); font-size: 2rem;">Create Account</h2>
+
+    <section class="section-padding" style="min-height: 70vh; display: flex; align-items: center;">
+        <div class="container" style="max-width: 520px; margin: 0 auto; width: 100%;">
+            <div class="update-card" style="padding: 40px 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border-radius: 16px; background: white; border-top: 4px solid var(--primary-gold);">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <i class="fas fa-user-plus" style="font-size: 2.2rem; color: var(--primary-green); margin-bottom: 10px; display: inline-block;"></i>
+                    <h2 style="color: var(--secondary-dark-green); font-size: 1.8rem; font-weight: 800; margin-bottom: 6px;">Create Account</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Join the Renewed Hope Nigeria Diaspora community</p>
+                </div>
+
                 <form id="register-form">
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Full Name</label>
-                        <input type="text" id="reg-name" required style="width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 1rem;">
+                    <div style="margin-bottom: 18px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color); font-size: 0.92rem;">Full Name</label>
+                        <input type="text" id="reg-name" required placeholder="Enter your full name" style="width: 100%; padding: 13px 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.95rem;">
                     </div>
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Email Address</label>
-                        <input type="email" id="reg-email" required style="width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 1rem;">
+                    <div style="margin-bottom: 18px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color); font-size: 0.92rem;">Email Address</label>
+                        <input type="email" id="reg-email" required placeholder="name@example.com" style="width: 100%; padding: 13px 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.95rem;">
                     </div>
-                    <div style="margin-bottom: 30px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Password</label>
-                        <input type="password" id="reg-password" required style="width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 1rem;">
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color); font-size: 0.92rem;">Password</label>
+                        <div style="position: relative; display: flex; align-items: center;">
+                            <input type="password" id="reg-password" required placeholder="Choose a secure password" style="width: 100%; padding: 13px 44px 13px 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.95rem;">
+                            <button type="button" onclick="togglePasswordVisibility('reg-password', this)" style="position: absolute; right: 12px; background: transparent; border: none; color: #64748b; cursor: pointer; font-size: 1.1rem; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Show/Hide password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">Register</button>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;"><i class="fas fa-user-plus"></i> Create Account</button>
                 </form>
-                <p style="text-align: center; margin-top: 25px; color: var(--text-light);">Already have an account? <a href="login.html" style="color: var(--primary-gold); font-weight: 700;">Sign in</a></p>
-                <div id="reg-error" style="color: #e53e3e; text-align: center; margin-top: 15px; display: none; font-weight: 600;"></div>
-                <div id="reg-success" style="color: var(--primary-green); text-align: center; margin-top: 15px; display: none; font-weight: 600;">Account created successfully! Redirecting to login...</div>
+
+                <p style="text-align: center; margin-top: 25px; color: var(--text-light); font-size: 0.9rem;">
+                    Already have an account? <a href="login.html" style="color: var(--primary-gold); font-weight: 700; text-decoration: underline;">Sign In</a>
+                </p>
+                <div id="reg-error" style="color: #e53e3e; text-align: center; margin-top: 15px; display: none; font-weight: 600; font-size: 0.9rem; background: #fef2f2; padding: 10px; border-radius: 8px; border: 1px solid #fecaca;"></div>
+                <div id="reg-success" style="color: #16a34a; text-align: center; margin-top: 15px; display: none; font-weight: 600; font-size: 0.9rem; background: #f0fdf4; padding: 10px; border-radius: 8px; border: 1px solid #bbf7d0;">Account created successfully! Redirecting...</div>
             </div>
         </div>
     </section>
-        <script>
-    document.getElementById('register-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = document.getElementById('reg-name').value.trim();
-        const email = document.getElementById('reg-email').value.trim();
-        const password = document.getElementById('reg-password').value;
-        const errorDiv = document.getElementById('reg-error');
-        const successDiv = document.getElementById('reg-success');
-        errorDiv.style.display = 'none';
-        successDiv.style.display = 'none';
-        
-        try {
-            await fetch('/api/register', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({name, email, password})
-            });
-        } catch (err) {
-            console.warn("Register API notice:", err);
-        }
 
-        // Seamless auto sign in & redirect
-        const isAdmin = email.toLowerCase().includes('admin') || email === 'admin@rhnd.com';
-        const userObj = {
-            id: Date.now(),
-            name: name,
-            email: email,
-            role: isAdmin ? 'admin' : 'member'
-        };
-        localStorage.setItem('rhnd_user', JSON.stringify(userObj));
-        try {
-            let membersList = JSON.parse(localStorage.getItem('rhnd_members_db') || '[]');
-            if (!Array.isArray(membersList)) membersList = [];
-            membersList.unshift({
-                id: userObj.id,
-                name: fullName,
-                email: email,
-                created_at: new Date().toISOString()
-            });
-            localStorage.setItem('rhnd_members_db', JSON.stringify(membersList));
-        } catch(err) {}
-        successDiv.style.display = 'block';
-        successDiv.textContent = 'Account created successfully! Redirecting to dashboard...';
-        setTimeout(() => {
-            if (isAdmin) {
-                sessionStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
-                window.location.href = 'admin.html';
-            } else {
-                window.location.href = 'member-dashboard.html';
-            }
-        }, 1000);
-    });
-    </script>
-<!-- Footer -->
+    <!-- Footer -->
     <footer class="main-footer">
         <div class="container footer-grid">
             <div class="footer-col brand-col">
@@ -155,19 +120,6 @@
                         <i class="fab fa-whatsapp"></i> WhatsApp Info
                     </a>
                 </div>
-                <div class="social-icons mt-20">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="news.html">News & Updates</a></li>
-                    <li><a href="membership.html">Members Directory</a></li>
                 <div class="social-icons mt-20">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -213,5 +165,57 @@
     </footer>
 
     <script src="js/main.js?v=3.4"></script>
+    <script>
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('reg-name').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const password = document.getElementById('reg-password').value;
+        const errorDiv = document.getElementById('reg-error');
+        const successDiv = document.getElementById('reg-success');
+        errorDiv.style.display = 'none';
+        successDiv.style.display = 'none';
+        
+        try {
+            await fetch('/api/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name, email, password})
+            });
+        } catch (err) {
+            console.warn("Register API notice:", err);
+        }
+
+        // Seamless auto sign in & redirect
+        const isAdmin = email.toLowerCase().includes('admin') || email === 'admin@rhnd.com';
+        const userObj = {
+            id: Date.now(),
+            name: name,
+            email: email,
+            role: isAdmin ? 'admin' : 'member'
+        };
+        localStorage.setItem('rhnd_user', JSON.stringify(userObj));
+        try {
+            let membersList = JSON.parse(localStorage.getItem('rhnd_members_db') || '[]');
+            if (!Array.isArray(membersList)) membersList = [];
+            membersList.unshift({
+                id: 'RHND-NIG-' + String(membersList.length + 1).padStart(5, '0'),
+                name: name,
+                email: email,
+                created_at: new Date().toISOString()
+            });
+            localStorage.setItem('rhnd_members_db', JSON.stringify(membersList));
+        } catch(err) {}
+        successDiv.style.display = 'block';
+        setTimeout(() => {
+            if (isAdmin) {
+                sessionStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'member-dashboard.html';
+            }
+        }, 1000);
+    });
+    </script>
 </body>
 </html>

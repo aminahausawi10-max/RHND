@@ -606,76 +606,61 @@ async function syncGlobalSettings() {
             }
         }
     } catch(e) {
-        console.warn('Live settings sync warning:', e);
+        console.warn('Live settings sync notice:', e);
     }
-});
-    }
-    const cachedNews = localStorage.getItem('rhnd_custom_stat_news');
-    if (cachedNews) {
-        document.querySelectorAll('#stat-news-val, .stat-news-count').forEach(el => { el.textContent = cachedNews; });
-    }
-    const cachedTickets = localStorage.getItem('rhnd_custom_stat_requests');
-    if (cachedTickets) {
-        document.querySelectorAll('#stat-tickets-val, .stat-requests-count').forEach(el => { el.textContent = cachedTickets; });
-    }
-    const cachedMedia = localStorage.getItem('rhnd_custom_stat_media');
-    if (cachedMedia) {
-        document.querySelectorAll('#stat-media-val, .stat-media-count').forEach(el => { el.textContent = cachedMedia; });
-    }
-
-    // 2. Fetch fresh live settings from the backend database
-    try {
-        const res = await fetch('/api/settings?t=' + Date.now(), { cache: 'no-store' });
-        if (res.ok) {
-            const settings = await res.json();
-            if (settings && typeof settings === 'object' && !settings.error) {
-                if (settings.stat_members !== undefined && settings.stat_members !== '') {
-                    localStorage.setItem('rhnd_custom_stat_members', settings.stat_members);
-                    document.querySelectorAll('#home-total-members-counter, #section-total-members-count, #stat-members-val, #membership-total-count, #dash-total-members-count, #dash-total-members-badge, .stat-members-count').forEach(el => {
-                        el.textContent = settings.stat_members;
-                    });
-                }
-                if (settings.stat_news !== undefined && settings.stat_news !== '') {
-                    localStorage.setItem('rhnd_custom_stat_news', settings.stat_news);
-                    document.querySelectorAll('#stat-news-val, .stat-news-count').forEach(el => {
-                        el.textContent = settings.stat_news;
-                    });
-                }
-                if (settings.stat_requests !== undefined && settings.stat_requests !== '') {
-                    localStorage.setItem('rhnd_custom_stat_requests', settings.stat_requests);
-                    document.querySelectorAll('#stat-tickets-val, .stat-requests-count').forEach(el => {
-                        el.textContent = settings.stat_requests;
-                    });
-                }
-                if (settings.stat_media !== undefined && settings.stat_media !== '') {
-                    localStorage.setItem('rhnd_custom_stat_media', settings.stat_media);
-                    document.querySelectorAll('#stat-media-val, .stat-media-count').forEach(el => {
-                        el.textContent = settings.stat_media;
-                    });
-                }
-                if (settings.founder_phone !== undefined && settings.founder_phone !== '') {
-                    localStorage.setItem('rhnd_founder_phone', settings.founder_phone);
-                }
-            }
-        }
-    } catch(e) {}
-});
-
-                const newsCountEls = document.querySelectorAll('#stat-news-val, .stat-news-count');
-                newsCountEls.forEach(el => {
-                    if (settings.stat_news) el.textContent = settings.stat_news;
-                });
-
-                const reqCountEls = document.querySelectorAll('#stat-tickets-val, .stat-requests-count');
-                reqCountEls.forEach(el => {
-                    if (settings.stat_requests) el.textContent = settings.stat_requests;
-                });
-
-                const mediaCountEls = document.querySelectorAll('#stat-media-val, .stat-media-count');
-                mediaCountEls.forEach(el => {
-                    if (settings.stat_media) el.textContent = settings.stat_media;
-                });
-            }
-        }
-    } catch(e) {}
 }
+
+// Password Visibility Toggle Utility
+window.togglePasswordVisibility = function(target, btn) {
+    let input = null;
+    if (typeof target === 'string') {
+        input = document.getElementById(target);
+    } else if (target && target.tagName === 'INPUT') {
+        input = target;
+    } else if (btn) {
+        input = btn.closest('div').querySelector('input');
+    }
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+
+    const icon = btn ? btn.querySelector('i') : null;
+    if (icon) {
+        icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+    }
+};
+
+// Auto-attach eye icon to password inputs on page load
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input[type="password"]').forEach(input => {
+        // Skip if already has eye button or inside a toggle wrapper
+        if (input.dataset.eyeAttached || (input.parentElement && input.parentElement.querySelector('.pwd-toggle-btn'))) return;
+        input.dataset.eyeAttached = 'true';
+
+        // Wrap or place toggle button
+        const parent = input.parentElement;
+        if (parent) {
+            const currentPos = window.getComputedStyle(parent).position;
+            if (currentPos === 'static') {
+                parent.style.position = 'relative';
+            }
+            input.style.paddingRight = '42px';
+
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'pwd-toggle-btn';
+            toggleBtn.setAttribute('aria-label', 'Toggle password visibility');
+            toggleBtn.title = 'Show / Hide Password';
+            toggleBtn.style.cssText = 'position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #64748b; cursor: pointer; font-size: 1rem; padding: 6px; z-index: 5; display: flex; align-items: center; justify-content: center;';
+            toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+
+            toggleBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.togglePasswordVisibility(input, toggleBtn);
+            });
+
+            parent.appendChild(toggleBtn);
+        }
+    });
+});
