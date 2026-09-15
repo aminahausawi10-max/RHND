@@ -34,10 +34,50 @@ window.rhndLogout = function() {
 };
 
 function setupAuthState() {
-    // Keep the top bar clean with only official branding
-    const authContainer = document.querySelector(".top-bar-right .auth-buttons") || document.querySelector(".auth-buttons");
-    if (authContainer) {
-        authContainer.innerHTML = "";
+    const rawUser = localStorage.getItem("rhnd_user");
+    const adminPwd = sessionStorage.getItem("rhnd_admin_pwd") || localStorage.getItem("rhnd_admin_pwd");
+    let user = null;
+    if (rawUser) { try { user = JSON.parse(rawUser); } catch(e) {} }
+    const isAdmin = (user && (user.role === "admin" || (user.email && user.email.toLowerCase().includes("admin")))) || (adminPwd === "Admin@RHND2026");
+
+    const authContainers = document.querySelectorAll(".auth-buttons");
+    authContainers.forEach(container => {
+        if (isAdmin) {
+            container.innerHTML = `
+                <a href="admin.html" class="auth-btn auth-btn-gold" title="Admin Portal"><i class="fas fa-shield-alt"></i> <span>Admin</span></a>
+                <a href="member-dashboard.html" class="auth-btn auth-btn-outline" title="Dashboard"><i class="fas fa-user-circle"></i> <span>Dashboard</span></a>
+                <button onclick="rhndLogout()" class="auth-btn auth-btn-logout" title="Sign Out"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></button>
+            `;
+        } else if (user) {
+            container.innerHTML = `
+                <a href="member-dashboard.html" class="auth-btn auth-btn-gold" title="Member Dashboard"><i class="fas fa-user-circle"></i> <span>Dashboard</span></a>
+                <button onclick="rhndLogout()" class="auth-btn auth-btn-logout" title="Sign Out"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></button>
+            `;
+        } else {
+            container.innerHTML = `
+                <a href="login.html" class="auth-btn auth-btn-gold"><i class="fas fa-sign-in-alt"></i> <span>Sign In</span></a>
+                <a href="register.html" class="auth-btn auth-btn-outline"><i class="fas fa-user-plus"></i> <span>Register</span></a>
+            `;
+        }
+    });
+
+    // Also inject active navigation link into main navbar if missing
+    const navUl = document.querySelector(".main-nav .nav-links");
+    if (navUl && !navUl.querySelector(".nav-auth-item")) {
+        const li = document.createElement("li");
+        li.className = "nav-auth-item";
+        const isLoginPage = window.location.pathname.toLowerCase().includes("login");
+        const isDashboardPage = window.location.pathname.toLowerCase().includes("member-dashboard");
+        const isAdminPage = window.location.pathname.toLowerCase().includes("admin");
+
+        if (isAdmin) {
+            li.innerHTML = `<a href="admin.html" class="${isAdminPage ? 'active' : ''}" style="color: var(--primary-gold); font-weight: 800;"><i class="fas fa-shield-alt"></i> ADMIN PORTAL</a>`;
+        } else if (user) {
+            li.innerHTML = `<a href="member-dashboard.html" class="${isDashboardPage ? 'active' : ''}" style="color: var(--primary-green); font-weight: 800;"><i class="fas fa-user-circle"></i> DASHBOARD</a>`;
+        } else {
+            li.innerHTML = `<a href="login.html" class="${isLoginPage ? 'active' : ''}" style="color: var(--primary-green); font-weight: 800;"><i class="fas fa-sign-in-alt"></i> SIGN IN</a>`;
+        }
+        navUl.appendChild(li);
     }
 }
 

@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Renewed Hope Nigeria Diaspora</title>
+    <title>Sign In - Renewed Hope Nigeria Diaspora</title>
     <link rel="stylesheet" href="css/style.css?v=3.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-        <!-- Top Bar -->
+    <!-- Top Bar -->
     <div class="top-bar">
         <div class="container top-bar-inner">
             <div class="top-bar-left">
@@ -25,7 +25,6 @@
                 <div class="auth-buttons"></div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Main Header -->
@@ -44,7 +43,6 @@
                         <option value="ar">العربية</option>
                     </select>
                 </div>
-                
             </div>
         </div>
 
@@ -52,97 +50,45 @@
         <nav class="main-nav">
             <div class="container">
                 <ul class="nav-links">
-                    <li><a href="index.html" >HOME</a></li>
+                    <li><a href="index.html">HOME</a></li>
                     <li><a href="news.html">NIGERIAN DIASPORA UPDATE</a></li>
-                    <li><a href="membership.html" >TOTAL MEMBERS</a></li>
-                    <li><a href="support.html" >HELP & SUPPORT</a></li>
+                    <li><a href="membership.html">TOTAL MEMBERS</a></li>
+                    <li><a href="support.html">HELP & SUPPORT</a></li>
                 </ul>
             </div>
         </nav>
     </header>
-    <section class="section-padding">
-        <div class="container" style="max-width: 500px; margin: 0 auto;">
-            <div class="update-card" style="padding: 50px 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
-                <h2 style="text-align: center; margin-bottom: 30px; color: var(--secondary-dark-green); font-size: 2rem;">Sign In</h2>
+
+    <section class="section-padding" style="min-height: 70vh; display: flex; align-items: center;">
+        <div class="container" style="max-width: 480px; margin: 0 auto; width: 100%;">
+            <div class="update-card" style="padding: 40px 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border-radius: 16px; background: white; border-top: 4px solid var(--primary-gold);">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <i class="fas fa-sign-in-alt" style="font-size: 2.2rem; color: var(--primary-green); margin-bottom: 10px; display: inline-block;"></i>
+                    <h2 style="color: var(--secondary-dark-green); font-size: 1.8rem; font-weight: 800; margin-bottom: 6px;">Sign In</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Sign in to access your portal and member dashboard</p>
+                </div>
+
                 <form id="login-form">
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Email Address</label>
-                        <input type="email" id="login-email" required style="width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 1rem;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color); font-size: 0.92rem;">Email Address</label>
+                        <input type="email" id="login-email" required placeholder="name@example.com" style="width: 100%; padding: 13px 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.95rem;">
                     </div>
-                    <div style="margin-bottom: 30px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Password</label>
-                        <input type="password" id="login-password" required style="width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 1rem;">
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color); font-size: 0.92rem;">Password</label>
+                        <input type="password" id="login-password" required placeholder="Enter password" style="width: 100%; padding: 13px 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.95rem;">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">Access Dashboard</button>
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;"><i class="fas fa-sign-in-alt"></i> Access Dashboard</button>
                 </form>
-                <p style="text-align: center; margin-top: 25px; color: var(--text-light);">Don't have an account? <a href="register.html" style="color: var(--primary-gold); font-weight: 700;">Create one</a></p>
-                <div id="login-error" style="color: #e53e3e; text-align: center; margin-top: 15px; display: none; font-weight: 600;"></div>
+
+                <p style="text-align: center; margin-top: 25px; color: var(--text-light); font-size: 0.9rem;">
+                    Don't have an account? <a href="register.html" style="color: var(--primary-gold); font-weight: 700; text-decoration: underline;">Create one</a>
+                </p>
+                <div id="login-error" style="color: #e53e3e; text-align: center; margin-top: 15px; display: none; font-weight: 600; font-size: 0.9rem; background: #fef2f2; padding: 10px; border-radius: 8px; border: 1px solid #fecaca;"></div>
             </div>
         </div>
     </section>
-        <script>
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value.trim();
-        const password = document.getElementById('login-password').value;
-        const errorDiv = document.getElementById('login-error');
-        errorDiv.style.display = 'none';
-        
-        const btn = e.target.querySelector('button[type="submit"]');
-        const oldText = btn.textContent;
-        btn.disabled = true;
-        btn.textContent = 'Authenticating...';
 
-        try {
-            const res = await fetch('/api/login', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({email, password})
-            });
-            let data = null;
-            try { data = await res.json(); } catch(jsonErr) {}
-
-            if (res.ok && data && data.status === 'success') {
-                const userObj = data.user || { name: email.split('@')[0], email: email, role: data.role || 'member' };
-                localStorage.setItem('rhnd_user', JSON.stringify(userObj));
-                if (userObj.role === 'admin' || email.toLowerCase().includes('admin')) {
-                    sessionStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
-                    localStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
-                    window.location.href = 'admin.html';
-                } else {
-                    window.location.href = 'member-dashboard.html';
-                }
-                return;
-            } else if (res.status === 401 && data && data.error === 'Invalid credentials') {
-                errorDiv.textContent = 'Invalid email or password. Please check your credentials or register an account.';
-                errorDiv.style.display = 'block';
-                btn.disabled = false;
-                btn.textContent = oldText;
-                return;
-            }
-        } catch (err) {
-            console.warn("Login API error:", err);
-        }
-
-        // Direct fallback for admin and members
-        const isAdmin = email.toLowerCase().includes('admin') || email === 'admin@rhnd.com';
-        const userObj = {
-            id: Date.now(),
-            name: email.split('@')[0],
-            email: email,
-            role: isAdmin ? 'admin' : 'member'
-        };
-        localStorage.setItem('rhnd_user', JSON.stringify(userObj));
-        if (isAdmin) {
-            sessionStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
-            localStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
-            window.location.href = 'admin.html';
-        } else {
-            window.location.href = 'member-dashboard.html';
-        }
-    });
-    </script>
-<!-- Footer -->
+    <!-- Footer -->
     <footer class="main-footer">
         <div class="container footer-grid">
             <div class="footer-col brand-col">
@@ -204,5 +150,67 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value;
+        const errorDiv = document.getElementById('login-error');
+        errorDiv.style.display = 'none';
+        
+        const btn = e.target.querySelector('button[type="submit"]');
+        const oldText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({email, password})
+            });
+            let data = null;
+            try { data = await res.json(); } catch(jsonErr) {}
+
+            if (res.ok && data && data.status === 'success') {
+                const userObj = data.user || { name: email.split('@')[0], email: email, role: data.role || 'member' };
+                localStorage.setItem('rhnd_user', JSON.stringify(userObj));
+                if (userObj.role === 'admin' || email.toLowerCase().includes('admin')) {
+                    sessionStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
+                    localStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'member-dashboard.html';
+                }
+                return;
+            } else if (res.status === 401 && data && data.error === 'Invalid credentials') {
+                errorDiv.textContent = 'Invalid email or password. Please check your credentials or register an account.';
+                errorDiv.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = oldText;
+                return;
+            }
+        } catch (err) {
+            console.warn("Login API error:", err);
+        }
+
+        // Direct fallback for admin and members
+        const isAdmin = email.toLowerCase().includes('admin') || email === 'admin@rhnd.com';
+        const userObj = {
+            id: Date.now(),
+            name: email.split('@')[0],
+            email: email,
+            role: isAdmin ? 'admin' : 'member'
+        };
+        localStorage.setItem('rhnd_user', JSON.stringify(userObj));
+        if (isAdmin) {
+            sessionStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
+            localStorage.setItem('rhnd_admin_pwd', 'Admin@RHND2026');
+            window.location.href = 'admin.html';
+        } else {
+            window.location.href = 'member-dashboard.html';
+        }
+    });
+    </script>
 </body>
 </html>
