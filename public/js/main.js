@@ -34,6 +34,26 @@ window.rhndLogout = function() {
     window.location.href = "index.html";
 };
 
+function checkPageAccess() {
+    const path = window.location.pathname.toLowerCase();
+    const rawUser = localStorage.getItem("rhnd_user");
+    const adminPwd = sessionStorage.getItem("rhnd_admin_pwd") || localStorage.getItem("rhnd_admin_pwd");
+    if (!rawUser && !adminPwd) return;
+
+    let user = null;
+    if (rawUser) { try { user = JSON.parse(rawUser); } catch(e) {} }
+    const isAdmin = (user && (user.role === "admin" || (user.email && user.email.toLowerCase().includes("admin")))) || (adminPwd === "Admin@RHND2026");
+
+    // Seamless auto-redirect to portal if already signed in and visiting login.html or register.html
+    if (path.includes("login.html") || path.endsWith("/login")) {
+        if (isAdmin) {
+            window.location.href = "admin.html";
+        } else if (user) {
+            window.location.href = "member-dashboard.html";
+        }
+    }
+}
+
 function setupAuthState() {
     const rawUser = localStorage.getItem("rhnd_user");
     const adminPwd = sessionStorage.getItem("rhnd_admin_pwd") || localStorage.getItem("rhnd_admin_pwd");
@@ -45,23 +65,22 @@ function setupAuthState() {
     authContainers.forEach(container => {
         if (isAdmin) {
             container.innerHTML = `
-                <a href="admin.html" class="auth-btn auth-btn-gold" title="Admin Portal"><i class="fas fa-shield-alt"></i> <span>Admin</span></a>
-                <a href="member-dashboard.html" class="auth-btn auth-btn-outline" title="Dashboard"><i class="fas fa-user-circle"></i> <span>Dashboard</span></a>
-                <button onclick="rhndLogout()" class="auth-btn auth-btn-logout" title="Sign Out"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></button>
+                <a href="admin.html" class="auth-btn auth-btn-gold" title="Enter Admin Portal"><i class="fas fa-shield-alt"></i> <span>Admin Portal</span></a>
+                <button onclick="rhndLogout()" class="auth-btn auth-btn-logout" title="Sign Out / Logout"><i class="fas fa-sign-out-alt"></i></button>
             `;
         } else if (user) {
             container.innerHTML = `
-                <a href="member-dashboard.html" class="auth-btn auth-btn-gold" title="Member Dashboard"><i class="fas fa-user-circle"></i> <span>Dashboard</span></a>
-                <button onclick="rhndLogout()" class="auth-btn auth-btn-logout" title="Sign Out"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></button>
+                <a href="member-dashboard.html" class="auth-btn auth-btn-gold" title="Enter My Portal / Dashboard"><i class="fas fa-id-card"></i> <span>My Portal</span></a>
+                <button onclick="rhndLogout()" class="auth-btn auth-btn-logout" title="Sign Out / Logout"><i class="fas fa-sign-out-alt"></i></button>
             `;
         } else {
             container.innerHTML = `
-                <a href="login.html" class="auth-btn auth-btn-gold"><i class="fas fa-sign-in-alt"></i> <span>Sign In</span></a>
+                <a href="login.html" class="auth-btn auth-btn-gold" title="Sign In to Your Account"><i class="fas fa-sign-in-alt"></i> <span>Sign In</span></a>
             `;
         }
     });
 
-    // Also inject active navigation link into main navbar if missing
+    // Also inject active navigation link into main navbar
     const navUl = document.querySelector(".main-nav .nav-links");
     if (navUl && !navUl.querySelector(".nav-auth-item")) {
         const li = document.createElement("li");
@@ -73,7 +92,7 @@ function setupAuthState() {
         if (isAdmin) {
             li.innerHTML = `<a href="admin.html" class="${isAdminPage ? 'active' : ''}" style="color: var(--primary-gold); font-weight: 800;"><i class="fas fa-shield-alt"></i> ADMIN PORTAL</a>`;
         } else if (user) {
-            li.innerHTML = `<a href="member-dashboard.html" class="${isDashboardPage ? 'active' : ''}" style="color: var(--primary-green); font-weight: 800;"><i class="fas fa-user-circle"></i> DASHBOARD</a>`;
+            li.innerHTML = `<a href="member-dashboard.html" class="${isDashboardPage ? 'active' : ''}" style="color: var(--primary-gold); font-weight: 800;"><i class="fas fa-id-card"></i> MY PORTAL</a>`;
         } else {
             li.innerHTML = `<a href="login.html" class="${isLoginPage ? 'active' : ''}" style="color: var(--primary-green); font-weight: 800;"><i class="fas fa-sign-in-alt"></i> SIGN IN</a>`;
         }
