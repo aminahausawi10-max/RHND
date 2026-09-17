@@ -163,7 +163,13 @@
                         ${hasAudio ? '<span style="background: rgba(217,119,6,0.9); color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 4px;"><i class="fas fa-microphone"></i> Voice Note</span>' : ''}
                     </div>
                 </div>
-                ` : ''}
+                ` : (hasVideo ? `
+                <div style="width: 100%; height: 190px; background: #000; overflow: hidden; position: relative;" onclick="event.stopPropagation()">
+                    <video controls preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block; background: #000;" src="${post.video}">
+                        Your browser does not support HTML video.
+                    </video>
+                </div>
+                ` : '')}
                 <div class="card-content" style="padding: 22px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
