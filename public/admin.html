@@ -1113,8 +1113,8 @@
 
         // --- MULTIMEDIA (PHOTO, VIDEO, VOICE NOTE) ATTACHMENT STATE & HANDLERS ---
         const newsMediaState = {
-            'post': { photo: '', video: '', audio: '' },
-            'ov-post': { photo: '', video: '', audio: '' }
+            'post': { photo: '', video: '', audio: '', videoFile: null },
+            'ov-post': { photo: '', video: '', audio: '', videoFile: null }
         };
 
         let mediaRecorder = null;
@@ -1148,6 +1148,7 @@
             } else if (type === 'video') {
                 const vid = document.getElementById(`${key}-elem`);
                 if (vid) { vid.pause(); vid.src = ''; }
+                if (newsMediaState[prefix]) newsMediaState[prefix].videoFile = null;
             } else if (type === 'audio') {
                 const aud = document.getElementById(`${key}-elem`);
                 if (aud) { aud.pause(); aud.src = ''; }
@@ -1259,23 +1260,21 @@
                 });
             }
 
-            // Video File
+            // Video File — store raw File object, preview with object URL (avoids base64 size bloat)
             const videoFile = document.getElementById(`${prefix}-video-file`);
             if (videoFile) {
                 videoFile.addEventListener('change', (e) => {
                     const file = e.target.files[0];
                     if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (evt) => {
-                            newsMediaState[prefix].video = evt.target.result;
-                            const vid = document.getElementById(`${prefix}-video-elem`);
-                            const prev = document.getElementById(`${prefix}-video-preview`);
-                            if (vid && prev) {
-                                vid.src = evt.target.result;
-                                prev.style.display = 'block';
-                            }
-                        };
-                        reader.readAsDataURL(file);
+                        newsMediaState[prefix].videoFile = file; // store raw File
+                        newsMediaState[prefix].video = '';       // clear any old URL/base64
+                        const vid = document.getElementById(`${prefix}-video-elem`);
+                        const prev = document.getElementById(`${prefix}-video-preview`);
+                        if (vid && prev) {
+                            const objUrl = URL.createObjectURL(file);
+                            vid.src = objUrl;
+                            prev.style.display = 'block';
+                        }
                     }
                 });
             }
@@ -1558,7 +1557,7 @@
             fetchPosts();
         }
 
-        async function handleAddPost(title, content, category, photo, video, audio, statusEl) {
+        async function handleAddPost(title, content, category, photo, video, audio, statusEl, videoFile) {
             if (!title || !content) return;
 
             if (statusEl) {
@@ -1567,12 +1566,46 @@
                 statusEl.style.display = 'inline';
             }
 
+            // If a raw video File object exists, upload it first via multipart
+            let finalVideo = video || '';
+            if (videoFile && videoFile instanceof File) {
+                try {
+                    if (statusEl) statusEl.textContent = 'Uploading video file...';
+                    const formData = new FormData();
+                    formData.append('video', videoFile);
+                    const uploadRes = await fetch('/api/upload', {
+                        method: 'POST',
+                        headers: { 'X-Admin-Password': 'Admin@RHND2026' },
+                        body: formData
+                    });
+                    if (uploadRes.ok) {
+                        const uploadData = await uploadRes.json();
+                        if (uploadData.video) finalVideo = uploadData.video;
+                    } else {
+                        // Fallback: read as base64 and send inline
+                        finalVideo = await new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = (e) => resolve(e.target.result);
+                            reader.readAsDataURL(videoFile);
+                        });
+                    }
+                    if (statusEl) statusEl.textContent = 'Video uploaded! Publishing post...';
+                } catch(uploadErr) {
+                    console.warn('Video upload error, using base64 fallback:', uploadErr);
+                    finalVideo = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => resolve(e.target.result);
+                        reader.readAsDataURL(videoFile);
+                    });
+                }
+            }
+
             const postPayload = {
                 title,
                 content,
                 category: category || 'Official Update',
                 photo: photo || '',
-                video: video || '',
+                video: finalVideo,
                 audio: audio || ''
             };
 
@@ -2059,13 +2092,15 @@
                     const photo = newsMediaState['ov-post'].photo || document.getElementById('ov-post-photo-url').value.trim();
                     const video = newsMediaState['ov-post'].video || document.getElementById('ov-post-video-url').value.trim();
                     const audio = newsMediaState['ov-post'].audio || '';
+                    const videoFile = newsMediaState['ov-post'].videoFile || null;
                     const status = document.getElementById('ov-post-status');
 
-                    handleAddPost(title, content, category, photo, video, audio, status);
+                    handleAddPost(title, content, category, photo, video, audio, status, videoFile);
                     ovPostForm.reset();
                     clearMedia('ov-post-photo');
                     clearMedia('ov-post-video');
                     clearMedia('ov-post-audio');
+                    newsMediaState['ov-post'].videoFile = null;
                 });
             }
 
@@ -2079,13 +2114,15 @@
                     const photo = newsMediaState['post'].photo || document.getElementById('post-photo-url').value.trim();
                     const video = newsMediaState['post'].video || document.getElementById('post-video-url').value.trim();
                     const audio = newsMediaState['post'].audio || document.getElementById('post-audio-url').value.trim();
+                    const videoFile = newsMediaState['post'].videoFile || null;
                     const status = document.getElementById('post-status');
 
-                    handleAddPost(title, content, category, photo, video, audio, status);
+                    handleAddPost(title, content, category, photo, video, audio, status, videoFile);
                     addPostForm.reset();
                     clearMedia('post-photo');
                     clearMedia('post-video');
                     clearMedia('post-audio');
+                    newsMediaState['post'].videoFile = null;
                 });
             }
 
