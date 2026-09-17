@@ -1,22 +1,23 @@
 {
+    "cleanUrls": true,
     "functions": {
         "api/**/*.php": {
             "runtime": "vercel-php@0.6.2"
         }
     },
-    "routes": [
-        { "src": "/css/(.*)", "dest": "/public/css/$1" },
-        { "src": "/js/(.*)", "dest": "/public/js/$1" },
-        { "src": "/admin", "dest": "/public/admin.html" },
-        { "src": "/login", "dest": "/public/login.html" },
-        { "src": "/register", "dest": "/public/register.html" },
-        { "src": "/dashboard", "dest": "/public/member-dashboard.html" },
-        { "src": "/members", "dest": "/public/membership.html" },
-        { "src": "/membership", "dest": "/public/membership.html" },
-        { "src": "/news", "dest": "/public/news.html" },
-        { "src": "/support", "dest": "/public/support.html" },
-        { "src": "/(.*\\.html)", "dest": "/public/$1" },
-        { "src": "/", "dest": "/public/index.html" },
-        { "src": "/api/(.*)", "dest": "/api/index.php" }
+    "rewrites": [
+        { "source": "/api/(.*)", "destination": "/api/index.php" },
+        { "source": "/admin", "destination": "/public/admin.html" },
+        { "source": "/login", "destination": "/public/login.html" },
+        { "source": "/register", "destination": "/public/register.html" },
+        { "source": "/dashboard", "destination": "/public/member-dashboard.html" },
+        { "source": "/membership", "destination": "/public/membership.html" },
+        { "source": "/members", "destination": "/public/membership.html" },
+        { "source": "/news", "destination": "/public/news.html" },
+        { "source": "/support", "destination": "/public/support.html" },
+        { "source": "/css/(.*)", "destination": "/public/css/$1" },
+        { "source": "/js/(.*)", "destination": "/public/js/$1" },
+        { "source": "/(.*\\.html)", "destination": "/public/$1" },
+        { "source": "/", "destination": "/public/index.html" }
     ]
 }
