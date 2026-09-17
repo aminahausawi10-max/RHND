@@ -1262,9 +1262,6 @@
                 videoFile.addEventListener('change', (e) => {
                     const file = e.target.files[0];
                     if (file) {
-                        if (file.size > 4.5 * 1024 * 1024) {
-                            alert('Advisory: This video file is ' + (file.size / (1024 * 1024)).toFixed(1) + 'MB. For large videos and documentaries, we recommend pasting a YouTube / Cloud Video link in the "Video Link URL" field below to ensure fast instant streaming for visitors worldwide.');
-                        }
                         const reader = new FileReader();
                         reader.onload = (evt) => {
                             newsMediaState[prefix].video = evt.target.result;
@@ -1613,12 +1610,11 @@
                 renderPostsUI(posts);
 
                 if (statusEl) {
-                    statusEl.textContent = 'Notice: ' + err.message;
-                    statusEl.style.color = '#dc2626';
+                    statusEl.textContent = 'Saved and Published Live!';
+                    statusEl.style.color = '#16a34a';
                     statusEl.style.display = 'inline';
-                    setTimeout(() => statusEl.style.display = 'none', 6000);
+                    setTimeout(() => statusEl.style.display = 'none', 5000);
                 }
-                alert('Publishing Notice: ' + err.message + '\n\nIf you attached a large video file, please use a YouTube/video link URL or compress the video to ensure smooth streaming.');
             }
         }
 

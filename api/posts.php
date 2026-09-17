@@ -1,4 +1,5 @@
 <?php
+@ini_set('memory_limit', '256M');
 header("Content-Type: application/json");
 header("Cache-Control: no-cache, no-store, must-revalidate");
 
