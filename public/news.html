@@ -288,23 +288,17 @@
         let posts = getStoredNews();
         renderNews(posts);
         try {
-            const res = await fetch('/api/posts');
+            const res = await fetch('/api/posts?t=' + Date.now(), { cache: 'no-store' });
             if (res.ok) {
                 const data = await res.json();
                 if (Array.isArray(data) && data.length > 0 && !data.error) {
-                    const combined = [...data];
-                    posts.forEach(p => {
-                        if (!combined.some(c => c.id == p.id || c.title === p.title)) {
-                            combined.push(p);
-                        }
-                    });
-                    posts = combined;
-                    try { localStorage.setItem('rhnd_news_db', JSON.stringify(posts)); } catch(e) {}
-                    renderNews(posts);
+                    allNewsPosts = data;
+                    try { localStorage.setItem('rhnd_news_db', JSON.stringify(data)); } catch(e) {}
+                    renderNews(data);
                 }
             }
         } catch(e) {
-            console.warn("Using local news cache");
+            console.warn("Using local news cache:", e);
         }
     }
     loadNews();
@@ -329,14 +323,16 @@
             <button type="button" onclick="closeNewsArticleModal()" class="btn btn-secondary" style="padding: 8px 22px; font-size: 0.9rem; font-weight: 700;">Close</button>
         </div>
     </div>
-</div><!-- Footer -->
-    <footer class="main-footer">
-        <div class="container footer-grid">
-            <div class="footer-col brand-col">
-                <div class="logo-text footer-logo">
-                    <h2 class="text-white">RENEWED HOPE</h2>
-                    <h3 class="text-gold">NIGERIA DIASPORA</h3>
-                </div>
+</div>
+
+<!-- Footer -->
+<footer class="main-footer">
+    <div class="container footer-grid">
+        <div class="footer-col brand-col">
+            <div class="logo-text footer-logo">
+                <h2 class="text-white">RENEWED HOPE</h2>
+                <h3 class="text-gold">NIGERIA DIASPORA</h3>
+            </div>
                 <p class="mt-20">Connecting Nigerians Worldwide. A professional platform for diaspora information and support.</p>
                 <div style="margin-top: 15px; padding: 12px 14px; background: rgba(255,255,255,0.08); border-radius: 8px; border-left: 3px solid var(--primary-gold);">
                     <small style="display: block; color: var(--primary-gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Founder & Consultant:</small>

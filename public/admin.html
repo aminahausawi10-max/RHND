@@ -1262,6 +1262,9 @@
                 videoFile.addEventListener('change', (e) => {
                     const file = e.target.files[0];
                     if (file) {
+                        if (file.size > 4.5 * 1024 * 1024) {
+                            alert('Advisory: This video file is ' + (file.size / (1024 * 1024)).toFixed(1) + 'MB. For large videos and documentaries, we recommend pasting a YouTube / Cloud Video link in the "Video Link URL" field below to ensure fast instant streaming for visitors worldwide.');
+                        }
                         const reader = new FileReader();
                         reader.onload = (evt) => {
                             newsMediaState[prefix].video = evt.target.result;
@@ -1491,29 +1494,21 @@
         }
 
         async function fetchPosts() {
-            let posts = getStoredPosts();
-            renderPostsUI(posts);
-
             try {
                 const res = await fetch('/api/posts?t=' + Date.now(), { cache: 'no-store' });
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data) && !data.error) {
-                        const combined = [...data];
-                        posts.forEach(p => {
-                            if (!combined.some(c => c.id == p.id || c.title === p.title)) {
-                                combined.push(p);
-                            }
-                        });
-                        posts = combined;
-                        saveStoredPosts(posts);
-                        renderPostsUI(posts);
+                        saveStoredPosts(data);
+                        renderPostsUI(data);
+                        return;
                     }
                 }
             } catch(e) {
                 console.warn("Using local news cache:", e);
-                renderPostsUI(posts);
             }
+            let posts = getStoredPosts();
+            renderPostsUI(posts);
         }
 
         function renderPostsUI(posts) {
@@ -1549,55 +1544,81 @@
         async function deletePost(id) {
             if(!confirm('Delete this news update?')) return;
             
+            try {
+                await fetch('/api/posts?id=' + id, { method: 'DELETE', headers: fetchHeaders });
+            } catch(e) {
+                console.warn("Delete API error:", e);
+            }
+
             let posts = getStoredPosts();
             posts = posts.filter(p => p.id != id);
             saveStoredPosts(posts);
             renderPostsUI(posts);
 
-            try {
-                fetch('/api/posts?id=' + id, { method: 'DELETE', headers: fetchHeaders }).catch(e => {});
-            } catch(e) {}
+            fetchPosts();
         }
 
-        function handleAddPost(title, content, category, photo, video, audio, statusEl) {
+        async function handleAddPost(title, content, category, photo, video, audio, statusEl) {
             if (!title || !content) return;
 
-            const newPost = {
-                id: Date.now(),
-                title: title,
-                content: content,
+            if (statusEl) {
+                statusEl.textContent = 'Saving to Database & Publishing Live...';
+                statusEl.style.color = '#2563eb';
+                statusEl.style.display = 'inline';
+            }
+
+            const postPayload = {
+                title,
+                content,
                 category: category || 'Official Update',
                 photo: photo || '',
                 video: video || '',
-                audio: audio || '',
-                created_at: new Date().toISOString()
+                audio: audio || ''
             };
 
-            let posts = getStoredPosts();
-            posts.unshift(newPost);
-            saveStoredPosts(posts);
-            renderPostsUI(posts);
-
             try {
-                fetch('/api/posts', {
+                const res = await fetch('/api/posts', {
                     method: 'POST',
                     headers: fetchHeaders,
-                    body: JSON.stringify({
-                        title,
-                        content,
-                        category: newPost.category,
-                        photo: newPost.photo,
-                        video: newPost.video,
-                        audio: newPost.audio
-                    })
-                }).catch(err => console.log("Background API sync:", err));
-            } catch(e) {}
+                    body: JSON.stringify(postPayload)
+                });
 
-            if (statusEl) {
-                statusEl.textContent = 'Published Live Successfully with Attachments!';
-                statusEl.style.color = '#16a34a';
-                statusEl.style.display = 'inline';
-                setTimeout(() => statusEl.style.display = 'none', 3500);
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.error || ('Server returned HTTP status ' + res.status));
+                }
+
+                const data = await res.json();
+                
+                // Immediately refresh posts from live database
+                await fetchPosts();
+
+                if (statusEl) {
+                    statusEl.textContent = 'Published Live to Database & Worldwide Successfully!';
+                    statusEl.style.color = '#16a34a';
+                    statusEl.style.display = 'inline';
+                    setTimeout(() => statusEl.style.display = 'none', 4500);
+                }
+            } catch(err) {
+                console.error("News publishing error:", err);
+                // Fallback to local storage so admin doesn't lose work
+                const fallbackPost = {
+                    id: Date.now(),
+                    ...postPayload,
+                    created_at: new Date().toISOString()
+                };
+                let posts = getStoredPosts();
+                posts.unshift(fallbackPost);
+                saveStoredPosts(posts);
+                renderPostsUI(posts);
+
+                if (statusEl) {
+                    statusEl.textContent = 'Notice: ' + err.message;
+                    statusEl.style.color = '#dc2626';
+                    statusEl.style.display = 'inline';
+                    setTimeout(() => statusEl.style.display = 'none', 6000);
+                }
+                alert('Publishing Notice: ' + err.message + '\n\nIf you attached a large video file, please use a YouTube/video link URL or compress the video to ensure smooth streaming.');
             }
         }
 

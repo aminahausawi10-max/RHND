@@ -426,21 +426,47 @@
                 const grid = document.getElementById('home-news-cards-grid');
                 if (!grid) return;
                 
-                grid.innerHTML = posts.slice(0, 6).map(post => `
-                    <div class="update-card" style="cursor: pointer;" onclick="openHomeNewsArticle(${post.id})">
-                        <div class="card-content">
-                            <div class="category">Official Update</div>
-                            <h3 style="font-size: 1.15rem; margin-bottom: 10px; color: #0f172a;">${post.title}</h3>
-                            <p style="color: #64748b; font-size: 0.9rem;">${(post.content || '').length > 120 ? (post.content || '').substring(0, 120) + '...' : (post.content || '')}</p>
-                            <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                                <span style="color: #94a3b8; font-size: 0.8rem;"><i class="far fa-calendar-alt"></i> ${new Date(post.created_at || Date.now()).toLocaleDateString()}</span>
-                                <a href="javascript:void(0)" onclick="event.stopPropagation(); openHomeNewsArticle(${post.id})" class="read-more" style="color: var(--primary-green); font-weight: 700; text-decoration: none; font-size: 0.88rem;">
-                                    Read Full Update <i class="fas fa-arrow-right"></i>
+                grid.innerHTML = posts.slice(0, 6).map(post => {
+                    const hasPhoto = !!post.photo;
+                    const hasVideo = !!post.video;
+                    const hasAudio = !!post.audio;
+                    const category = post.category || 'Official Update';
+
+                    return `
+                    <div class="update-card" style="cursor: pointer; overflow: hidden; display: flex; flex-direction: column; border-radius: 12px; border: 1px solid #edf2f7; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease;" onclick="openHomeNewsArticle(${post.id})">
+                        ${hasPhoto ? `
+                        <div style="width: 100%; height: 170px; overflow: hidden; background: #0f172a; position: relative;">
+                            <img src="${post.photo}" alt="${post.title}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none'">
+                            <div style="position: absolute; bottom: 8px; left: 8px; display: flex; gap: 5px;">
+                                ${hasVideo ? '<span style="background: rgba(37,99,235,0.9); color: white; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;"><i class="fas fa-video"></i> Video</span>' : ''}
+                                ${hasAudio ? '<span style="background: rgba(217,119,6,0.9); color: white; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;"><i class="fas fa-microphone"></i> Audio</span>' : ''}
+                            </div>
+                        </div>
+                        ` : ''}
+                        <div class="card-content" style="padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <div class="category" style="font-size: 0.75rem; font-weight: 800; color: var(--primary-green); background: #f0fdf4; padding: 2px 8px; border-radius: 20px; border: 1px solid #dcfce7; text-transform: uppercase;">${category}</div>
+                                    ${!hasPhoto && (hasVideo || hasAudio) ? `
+                                    <div style="display: flex; gap: 4px;">
+                                        ${hasVideo ? '<span style="background: #eff6ff; color: #2563eb; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;"><i class="fas fa-video"></i> Video</span>' : ''}
+                                        ${hasAudio ? '<span style="background: #fef3c7; color: #b45309; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;"><i class="fas fa-microphone"></i> Audio</span>' : ''}
+                                    </div>
+                                    ` : ''}
+                                </div>
+                                <h3 style="font-size: 1.15rem; margin-bottom: 10px; color: #0f172a; line-height: 1.35;">${post.title}</h3>
+                                <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5;">${(post.content || '').length > 120 ? (post.content || '').substring(0, 120) + '...' : (post.content || '')}</p>
+                            </div>
+                            <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 10px;">
+                                <span style="color: #94a3b8; font-size: 0.8rem; font-weight: 600;"><i class="far fa-calendar-alt"></i> ${new Date(post.created_at || Date.now()).toLocaleDateString()}</span>
+                                <a href="javascript:void(0)" onclick="event.stopPropagation(); openHomeNewsArticle(${post.id})" class="read-more" style="color: var(--primary-green); font-weight: 700; text-decoration: none; font-size: 0.88rem; display: flex; align-items: center; gap: 4px;">
+                                    Read Update <i class="fas fa-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
-                `).join('');
+                    `;
+                }).join('');
             }
 
             window.openHomeNewsArticle = function(postId) {
@@ -449,18 +475,63 @@
                 
                 const titleEl = document.getElementById('modal-article-title');
                 const dateEl = document.getElementById('modal-article-date');
+                const catEl = document.getElementById('modal-article-category');
                 const contentEl = document.getElementById('modal-article-content');
+                const mediaWrap = document.getElementById('modal-media-wrapper');
                 const modal = document.getElementById('newsArticleModal');
                 
                 if (titleEl) titleEl.textContent = post.title;
                 if (dateEl) dateEl.textContent = new Date(post.created_at || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                if (contentEl) contentEl.textContent = post.content;
+                if (catEl) catEl.textContent = post.category || 'Official Update';
+                if (contentEl) {
+                    contentEl.innerHTML = (post.content || '').split('\n\n').map(p => `<p style="margin-bottom: 12px; line-height: 1.7; color: #334155;">${p}</p>`).join('');
+                }
+                
+                if (mediaWrap) {
+                    let mediaHTML = '';
+                    if (post.photo) {
+                        mediaHTML += `
+                        <div style="margin-bottom: 16px; border-radius: 10px; overflow: hidden; background: #0f172a; max-height: 320px;">
+                            <img src="${post.photo}" alt="${post.title}" style="width: 100%; height: 100%; max-height: 320px; object-fit: contain;">
+                        </div>`;
+                    }
+                    if (post.video) {
+                        const isYouTube = post.video.includes('youtube.com') || post.video.includes('youtu.be');
+                        if (isYouTube) {
+                            let ytUrl = post.video.replace('watch?v=', 'embed/').replace('youtu.be/', 'www.youtube.com/embed/');
+                            mediaHTML += `
+                            <div style="margin-bottom: 16px; border-radius: 10px; overflow: hidden; position: relative; padding-bottom: 56.25%; height: 0; background: #000;">
+                                <iframe src="${ytUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+                            </div>`;
+                        } else {
+                            mediaHTML += `
+                            <div style="margin-bottom: 16px; border-radius: 10px; overflow: hidden; background: #000;">
+                                <video controls style="width: 100%; max-height: 320px; display: block;" src="${post.video}">Your browser does not support HTML video.</video>
+                            </div>`;
+                        }
+                    }
+                    if (post.audio) {
+                        mediaHTML += `
+                        <div style="margin-bottom: 16px; background: #fef3c7; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 16px;">
+                            <div style="font-weight: 700; color: #92400e; font-size: 0.9rem; margin-bottom: 8px;"><i class="fas fa-microphone-alt"></i> Voice Note Briefing</div>
+                            <audio controls style="width: 100%;" src="${post.audio}">Your browser does not support audio playback.</audio>
+                        </div>`;
+                    }
+                    mediaWrap.innerHTML = mediaHTML;
+                }
+
                 if (modal) modal.style.display = 'flex';
             };
 
             window.closeNewsArticleModal = function() {
                 const modal = document.getElementById('newsArticleModal');
-                if (modal) modal.style.display = 'none';
+                if (modal) {
+                    const v = modal.querySelector('video');
+                    if (v) v.pause();
+                    const a = modal.querySelector('audio');
+                    if (a) a.pause();
+                    modal.style.display = 'none';
+                }
             };
 
             let homePosts = getHomeNews();
@@ -484,14 +555,8 @@
                 .then(r => r.json())
                 .then(data => {
                     if (Array.isArray(data) && data.length > 0 && !data.error) {
-                        const combined = [...data];
-                        homePosts.forEach(p => {
-                            if (!combined.some(c => c.id == p.id || c.title === p.title)) {
-                                combined.push(p);
-                            }
-                        });
-                        homePosts = combined;
-                        try { localStorage.setItem('rhnd_news_db', JSON.stringify(homePosts)); } catch(e) {}
+                        homePosts = data;
+                        try { localStorage.setItem('rhnd_news_db', JSON.stringify(data)); } catch(e) {}
                         renderHomeNews(homePosts);
                     }
                 })
@@ -519,15 +584,18 @@
 
     <!-- News Article Modal -->
     <div id="newsArticleModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
-        <div style="background: white; width: 100%; max-width: 650px; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.25); display: flex; flex-direction: column; max-height: 90vh;">
+        <div style="background: white; width: 100%; max-width: 680px; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.25); display: flex; flex-direction: column; max-height: 90vh;">
             <div style="background: var(--primary-green); color: white; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-weight: 700; font-size: 1.1rem;"><i class="fas fa-newspaper text-gold" style="margin-right: 8px;"></i> RHND Official Update</span>
+                <div>
+                    <span id="modal-article-category" style="background: rgba(255,255,255,0.2); color: white; font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; font-weight: 800; text-transform: uppercase;">Official Update</span>
+                </div>
                 <button onclick="closeNewsArticleModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
             </div>
             <div style="padding: 24px; overflow-y: auto;">
                 <span id="modal-article-date" style="color: #64748b; font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 8px;"></span>
-                <h2 id="modal-article-title" style="font-size: 1.5rem; color: #0f172a; margin-bottom: 16px; line-height: 1.3;"></h2>
-                <div id="modal-article-content" style="color: #334155; line-height: 1.7; font-size: 1rem; white-space: pre-line;"></div>
+                <h2 id="modal-article-title" style="font-size: 1.45rem; color: #0f172a; margin-bottom: 16px; line-height: 1.35;"></h2>
+                <div id="modal-media-wrapper"></div>
+                <div id="modal-article-content" style="color: #334155; line-height: 1.7; font-size: 1rem;"></div>
             </div>
             <div style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; text-align: right;">
                 <button onclick="closeNewsArticleModal()" class="btn btn-primary" style="padding: 8px 20px;">Close</button>
