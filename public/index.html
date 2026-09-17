@@ -496,12 +496,12 @@
                         </div>`;
                     }
                     if (post.video) {
-                        const isYouTube = post.video.includes('youtube.com') || post.video.includes('youtu.be');
-                        if (isYouTube) {
-                            let ytUrl = post.video.replace('watch?v=', 'embed/').replace('youtu.be/', 'www.youtube.com/embed/');
+                        const ytMatch = post.video.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+                        if (ytMatch && ytMatch[1]) {
+                            const ytUrl = `https://www.youtube.com/embed/${ytMatch[1]}`;
                             mediaHTML += `
                             <div style="margin-bottom: 16px; border-radius: 10px; overflow: hidden; position: relative; padding-bottom: 56.25%; height: 0; background: #000;">
-                                <iframe src="${ytUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+                                <iframe src="${ytUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>`;
                         } else {
                             mediaHTML += `
