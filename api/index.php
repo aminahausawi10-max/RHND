@@ -26,6 +26,8 @@ if (strpos($requestUri, "/api/") === 0) {
         require __DIR__ . "/media.php";
     } elseif ($requestUri === "/api/upload" || $requestUri === "/api/upload.php") {
         require __DIR__ . "/upload.php";
+    } elseif ($requestUri === "/api/sign_upload" || $requestUri === "/api/sign_upload.php") {
+        require __DIR__ . "/sign_upload.php";
     } elseif ($requestUri === "/api/entities" || $requestUri === "/api/entities.php") {
         require __DIR__ . "/entities.php";
     } elseif ($requestUri === "/api/settings" || $requestUri === "/api/settings.php" || $requestUri === "/api/stats") {

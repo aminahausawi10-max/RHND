@@ -1113,8 +1113,8 @@
 
         // --- MULTIMEDIA (PHOTO, VIDEO, VOICE NOTE) ATTACHMENT STATE & HANDLERS ---
         const newsMediaState = {
-            'post': { photo: '', video: '', audio: '', videoFile: null },
-            'ov-post': { photo: '', video: '', audio: '', videoFile: null }
+            'post': { photo: '', video: '', audio: '', videoFile: null, photoFile: null },
+            'ov-post': { photo: '', video: '', audio: '', videoFile: null, photoFile: null }
         };
 
         let mediaRecorder = null;
@@ -1131,6 +1131,8 @@
 
             if (newsMediaState[prefix]) {
                 newsMediaState[prefix][type] = '';
+                if (type === 'video') newsMediaState[prefix].videoFile = null;
+                if (type === 'photo') newsMediaState[prefix].photoFile = null;
             }
 
             const preview = document.getElementById(`${key}-preview`);
@@ -1148,7 +1150,6 @@
             } else if (type === 'video') {
                 const vid = document.getElementById(`${key}-elem`);
                 if (vid) { vid.pause(); vid.src = ''; }
-                if (newsMediaState[prefix]) newsMediaState[prefix].videoFile = null;
             } else if (type === 'audio') {
                 const aud = document.getElementById(`${key}-elem`);
                 if (aud) { aud.pause(); aud.src = ''; }
@@ -1222,23 +1223,20 @@
         }
 
         function initMediaInputListeners(prefix) {
-            // Photo File
+            // Photo File — store raw File object, preview with object URL
             const photoFile = document.getElementById(`${prefix}-photo-file`);
             if (photoFile) {
                 photoFile.addEventListener('change', (e) => {
                     const file = e.target.files[0];
                     if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (evt) => {
-                            newsMediaState[prefix].photo = evt.target.result;
-                            const img = document.getElementById(`${prefix}-photo-img`);
-                            const prev = document.getElementById(`${prefix}-photo-preview`);
-                            if (img && prev) {
-                                img.src = evt.target.result;
-                                prev.style.display = 'block';
-                            }
-                        };
-                        reader.readAsDataURL(file);
+                        newsMediaState[prefix].photoFile = file;
+                        newsMediaState[prefix].photo = '';
+                        const img = document.getElementById(`${prefix}-photo-img`);
+                        const prev = document.getElementById(`${prefix}-photo-preview`);
+                        if (img && prev) {
+                            img.src = URL.createObjectURL(file);
+                            prev.style.display = 'block';
+                        }
                     }
                 });
             }
@@ -1557,46 +1555,104 @@
             fetchPosts();
         }
 
-        async function handleAddPost(title, content, category, photo, video, audio, statusEl, videoFile) {
+        async function uploadFileToCloudinary(file, resourceType = 'auto', onProgress = null) {
+            let cloudName = 'dpghoiocq';
+            let apiKey = '283943216837512';
+            let timestamp = Math.floor(Date.now() / 1000);
+            let signature = '';
+
+            try {
+                const signRes = await fetch('/api/sign_upload');
+                if (signRes.ok) {
+                    const signData = await signRes.json();
+                    if (signData.cloud_name) cloudName = signData.cloud_name;
+                    if (signData.api_key) apiKey = signData.api_key;
+                    if (signData.timestamp) timestamp = signData.timestamp;
+                    if (signData.signature) signature = signData.signature;
+                }
+            } catch(e) {
+                console.warn('Sign API warning:', e);
+            }
+
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+                
+                xhr.open('POST', uploadUrl);
+
+                if (onProgress && xhr.upload) {
+                    xhr.upload.onprogress = (evt) => {
+                        if (evt.lengthComputable) {
+                            const percent = Math.round((evt.loaded / evt.total) * 100);
+                            onProgress(percent);
+                        }
+                    };
+                }
+
+                xhr.onload = () => {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            const res = JSON.parse(xhr.responseText);
+                            resolve(res.secure_url || res.url);
+                        } catch(err) {
+                            reject(new Error('Invalid response from cloud storage'));
+                        }
+                    } else {
+                        let errMessage = 'Upload failed with status ' + xhr.status;
+                        try {
+                            const res = JSON.parse(xhr.responseText);
+                            if (res.error && res.error.message) errMessage = res.error.message;
+                        } catch(e) {}
+                        reject(new Error(errMessage));
+                    }
+                };
+
+                xhr.onerror = () => reject(new Error('Network error during file upload'));
+
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('api_key', apiKey);
+                formData.append('timestamp', timestamp);
+                formData.append('signature', signature);
+
+                xhr.send(formData);
+            });
+        }
+
+        async function handleAddPost(title, content, category, photo, video, audio, statusEl, videoFile, photoFile) {
             if (!title || !content) return;
 
+            let finalVideo = video || '';
+            let finalPhoto = photo || '';
+            let finalAudio = audio || '';
+
             if (statusEl) {
-                statusEl.textContent = 'Saving to Database & Publishing Live...';
+                statusEl.textContent = 'Preparing post...';
                 statusEl.style.color = '#2563eb';
                 statusEl.style.display = 'inline';
             }
 
-            // If a raw video File object exists, upload it first via multipart
-            let finalVideo = video || '';
+            // 1. Upload Video File directly to Cloudinary CDN
             if (videoFile && videoFile instanceof File) {
                 try {
-                    if (statusEl) statusEl.textContent = 'Uploading video file...';
-                    const formData = new FormData();
-                    formData.append('video', videoFile);
-                    const uploadRes = await fetch('/api/upload', {
-                        method: 'POST',
-                        headers: { 'X-Admin-Password': 'Admin@RHND2026' },
-                        body: formData
+                    if (statusEl) statusEl.textContent = 'Uploading video to Cloud CDN (0%)...';
+                    finalVideo = await uploadFileToCloudinary(videoFile, 'video', (pct) => {
+                        if (statusEl) statusEl.textContent = `Uploading video to Cloud CDN (${pct}%)...`;
                     });
-                    if (uploadRes.ok) {
-                        const uploadData = await uploadRes.json();
-                        if (uploadData.video) finalVideo = uploadData.video;
-                    } else {
-                        // Fallback: read as base64 and send inline
-                        finalVideo = await new Promise((resolve) => {
-                            const reader = new FileReader();
-                            reader.onload = (e) => resolve(e.target.result);
-                            reader.readAsDataURL(videoFile);
-                        });
-                    }
-                    if (statusEl) statusEl.textContent = 'Video uploaded! Publishing post...';
+                    if (statusEl) statusEl.textContent = 'Video uploaded successfully! Publishing...';
                 } catch(uploadErr) {
-                    console.warn('Video upload error, using base64 fallback:', uploadErr);
-                    finalVideo = await new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onload = (e) => resolve(e.target.result);
-                        reader.readAsDataURL(videoFile);
-                    });
+                    console.error('Video upload error:', uploadErr);
+                    alert('Video Upload Notice: ' + uploadErr.message);
+                }
+            }
+
+            // 2. Upload Photo File directly to Cloudinary CDN (to avoid large base64 in database)
+            if (photoFile && photoFile instanceof File) {
+                try {
+                    if (statusEl) statusEl.textContent = 'Uploading photo to Cloud CDN...';
+                    finalPhoto = await uploadFileToCloudinary(photoFile, 'image');
+                } catch(photoErr) {
+                    console.warn('Photo upload warning, using local:', photoErr);
                 }
             }
 
@@ -1604,10 +1660,15 @@
                 title,
                 content,
                 category: category || 'Official Update',
-                photo: photo || '',
+                photo: finalPhoto,
                 video: finalVideo,
-                audio: audio || ''
+                audio: finalAudio
             };
+
+            if (statusEl) {
+                statusEl.textContent = 'Saving to Database & Publishing Live...';
+                statusEl.style.color = '#2563eb';
+            }
 
             try {
                 const res = await fetch('/api/posts', {
@@ -1630,27 +1691,17 @@
                     statusEl.textContent = 'Published Live to Database & Worldwide Successfully!';
                     statusEl.style.color = '#16a34a';
                     statusEl.style.display = 'inline';
-                    setTimeout(() => statusEl.style.display = 'none', 4500);
+                    setTimeout(() => statusEl.style.display = 'none', 5000);
                 }
             } catch(err) {
                 console.error("News publishing error:", err);
-                // Fallback to local storage so admin doesn't lose work
-                const fallbackPost = {
-                    id: Date.now(),
-                    ...postPayload,
-                    created_at: new Date().toISOString()
-                };
-                let posts = getStoredPosts();
-                posts.unshift(fallbackPost);
-                saveStoredPosts(posts);
-                renderPostsUI(posts);
-
                 if (statusEl) {
-                    statusEl.textContent = 'Saved and Published Live!';
-                    statusEl.style.color = '#16a34a';
+                    statusEl.textContent = 'Error: ' + err.message;
+                    statusEl.style.color = '#dc2626';
                     statusEl.style.display = 'inline';
-                    setTimeout(() => statusEl.style.display = 'none', 5000);
+                    setTimeout(() => statusEl.style.display = 'none', 6000);
                 }
+                alert('Publishing Error: ' + err.message);
             }
         }
 
@@ -2093,14 +2144,14 @@
                     const video = newsMediaState['ov-post'].video || document.getElementById('ov-post-video-url').value.trim();
                     const audio = newsMediaState['ov-post'].audio || '';
                     const videoFile = newsMediaState['ov-post'].videoFile || null;
+                    const photoFile = newsMediaState['ov-post'].photoFile || null;
                     const status = document.getElementById('ov-post-status');
 
-                    handleAddPost(title, content, category, photo, video, audio, status, videoFile);
+                    handleAddPost(title, content, category, photo, video, audio, status, videoFile, photoFile);
                     ovPostForm.reset();
                     clearMedia('ov-post-photo');
                     clearMedia('ov-post-video');
                     clearMedia('ov-post-audio');
-                    newsMediaState['ov-post'].videoFile = null;
                 });
             }
 
@@ -2115,14 +2166,14 @@
                     const video = newsMediaState['post'].video || document.getElementById('post-video-url').value.trim();
                     const audio = newsMediaState['post'].audio || document.getElementById('post-audio-url').value.trim();
                     const videoFile = newsMediaState['post'].videoFile || null;
+                    const photoFile = newsMediaState['post'].photoFile || null;
                     const status = document.getElementById('post-status');
 
-                    handleAddPost(title, content, category, photo, video, audio, status, videoFile);
+                    handleAddPost(title, content, category, photo, video, audio, status, videoFile, photoFile);
                     addPostForm.reset();
                     clearMedia('post-photo');
                     clearMedia('post-video');
                     clearMedia('post-audio');
-                    newsMediaState['post'].videoFile = null;
                 });
             }
 
