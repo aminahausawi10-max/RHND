@@ -8,6 +8,24 @@
             "runtime": "vercel-php@0.6.2"
         }
     },
+    "headers": [
+        {
+            "source": "/admin",
+            "headers": [
+                { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+                { "key": "Pragma", "value": "no-cache" },
+                { "key": "Expires", "value": "0" }
+            ]
+        },
+        {
+            "source": "/public/admin.html",
+            "headers": [
+                { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+                { "key": "Pragma", "value": "no-cache" },
+                { "key": "Expires", "value": "0" }
+            ]
+        }
+    ],
     "rewrites": [
         { "source": "/admin", "destination": "/public/admin.html" },
         { "source": "/login", "destination": "/public/login.html" },
