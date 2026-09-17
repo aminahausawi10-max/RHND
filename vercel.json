@@ -1,12 +1,14 @@
 {
     "cleanUrls": true,
     "functions": {
+        "api/*.php": {
+            "runtime": "vercel-php@0.6.2"
+        },
         "api/**/*.php": {
             "runtime": "vercel-php@0.6.2"
         }
     },
     "rewrites": [
-        { "source": "/api/(.*)", "destination": "/api/index.php" },
         { "source": "/admin", "destination": "/public/admin.html" },
         { "source": "/login", "destination": "/public/login.html" },
         { "source": "/register", "destination": "/public/register.html" },
