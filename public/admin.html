@@ -1687,6 +1687,7 @@
                     statusEl.style.display = 'inline';
                     setTimeout(() => statusEl.style.display = 'none', 5000);
                 }
+                return true;
             } catch(err) {
                 console.error("News publishing error:", err);
                 if (statusEl) {
@@ -1696,6 +1697,7 @@
                     setTimeout(() => statusEl.style.display = 'none', 6000);
                 }
                 alert('Publishing Error: ' + err.message);
+                return false;
             }
         }
 
@@ -2129,8 +2131,11 @@
             // News Forms
             const ovPostForm = document.getElementById('ov-add-post-form');
             if (ovPostForm) {
-                ovPostForm.addEventListener('submit', (e) => {
+                ovPostForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
+                    const submitBtn = ovPostForm.querySelector('button[type="submit"]');
+                    const origBtnText = submitBtn ? submitBtn.innerHTML : '';
+                    
                     const title = document.getElementById('ov-post-title').value.trim();
                     const content = document.getElementById('ov-post-content').value.trim();
                     const category = document.getElementById('ov-post-category').value;
@@ -2141,18 +2146,35 @@
                     const photoFile = newsMediaState['ov-post'].photoFile || null;
                     const status = document.getElementById('ov-post-status');
 
-                    handleAddPost(title, content, category, photo, video, audio, status, videoFile, photoFile);
-                    ovPostForm.reset();
-                    clearMedia('ov-post-photo');
-                    clearMedia('ov-post-video');
-                    clearMedia('ov-post-audio');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading & Publishing...';
+                    }
+
+                    try {
+                        const ok = await handleAddPost(title, content, category, photo, video, audio, status, videoFile, photoFile);
+                        if (ok) {
+                            ovPostForm.reset();
+                            clearMedia('ov-post-photo');
+                            clearMedia('ov-post-video');
+                            clearMedia('ov-post-audio');
+                        }
+                    } finally {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = origBtnText;
+                        }
+                    }
                 });
             }
 
             const addPostForm = document.getElementById('add-post-form');
             if (addPostForm) {
-                addPostForm.addEventListener('submit', (e) => {
+                addPostForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
+                    const submitBtn = addPostForm.querySelector('button[type="submit"]');
+                    const origBtnText = submitBtn ? submitBtn.innerHTML : '';
+
                     const title = document.getElementById('post-title').value.trim();
                     const content = document.getElementById('post-content').value.trim();
                     const category = document.getElementById('post-category').value;
@@ -2163,11 +2185,25 @@
                     const photoFile = newsMediaState['post'].photoFile || null;
                     const status = document.getElementById('post-status');
 
-                    handleAddPost(title, content, category, photo, video, audio, status, videoFile, photoFile);
-                    addPostForm.reset();
-                    clearMedia('post-photo');
-                    clearMedia('post-video');
-                    clearMedia('post-audio');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading & Publishing...';
+                    }
+
+                    try {
+                        const ok = await handleAddPost(title, content, category, photo, video, audio, status, videoFile, photoFile);
+                        if (ok) {
+                            addPostForm.reset();
+                            clearMedia('post-photo');
+                            clearMedia('post-video');
+                            clearMedia('post-audio');
+                        }
+                    } finally {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = origBtnText;
+                        }
+                    }
                 });
             }
 
