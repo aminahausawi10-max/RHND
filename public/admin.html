@@ -1555,24 +1555,18 @@
             fetchPosts();
         }
 
-        async function uploadFileToCloudinary(file, resourceType = 'auto', onProgress = null) {
-            let cloudName = 'dpghoiocq';
-            let apiKey = '283943216837512';
-            let timestamp = Math.floor(Date.now() / 1000);
-            let signature = '';
+        async function getSha1Hex(text) {
+            const enc = new TextEncoder().encode(text);
+            const buf = await window.crypto.subtle.digest('SHA-1', enc);
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
 
-            try {
-                const signRes = await fetch('/api/sign_upload');
-                if (signRes.ok) {
-                    const signData = await signRes.json();
-                    if (signData.cloud_name) cloudName = signData.cloud_name;
-                    if (signData.api_key) apiKey = signData.api_key;
-                    if (signData.timestamp) timestamp = signData.timestamp;
-                    if (signData.signature) signature = signData.signature;
-                }
-            } catch(e) {
-                console.warn('Sign API warning:', e);
-            }
+        async function uploadFileToCloudinary(file, resourceType = 'auto', onProgress = null) {
+            const cloudName = 'dpghoiocq';
+            const apiKey = '283943216837512';
+            const apiSecret = 'y_c8wSat2wFRqfuIjFuAwkA1aKE';
+            const timestamp = Math.floor(Date.now() / 1000);
+            const signature = await getSha1Hex(`timestamp=${timestamp}${apiSecret}`);
 
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
