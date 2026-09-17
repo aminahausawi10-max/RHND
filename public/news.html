@@ -127,7 +127,7 @@
     function getStoredNews() {
         let posts = [];
         try {
-            const raw = localStorage.getItem('rhnd_news_db');
+            const raw = localStorage.getItem('rhnd_posts_db');
             if (raw) {
                 const parsed = JSON.parse(raw);
                 if (Array.isArray(parsed) && parsed.length > 0) posts = parsed;
@@ -135,7 +135,7 @@
         } catch(e) {}
         if (posts.length === 0) {
             posts = [...defaultNews];
-            try { localStorage.setItem('rhnd_news_db', JSON.stringify(posts)); } catch(e) {}
+            try { localStorage.setItem('rhnd_posts_db', JSON.stringify(posts)); } catch(e) {}
         }
         return posts;
     }
@@ -289,21 +289,22 @@
     });
 
     async function loadNews() {
-        let posts = getStoredNews();
-        renderNews(posts);
         try {
             const res = await fetch('/api/posts?t=' + Date.now(), { cache: 'no-store' });
             if (res.ok) {
                 const data = await res.json();
                 if (Array.isArray(data) && data.length > 0 && !data.error) {
                     allNewsPosts = data;
-                    try { localStorage.setItem('rhnd_news_db', JSON.stringify(data)); } catch(e) {}
+                    try { localStorage.setItem('rhnd_posts_db', JSON.stringify(data)); } catch(e) {}
                     renderNews(data);
+                    return;
                 }
             }
         } catch(e) {
-            console.warn("Using local news cache:", e);
+            console.warn("API load error, falling back:", e);
         }
+        let posts = getStoredNews();
+        renderNews(posts);
     }
     loadNews();
 </script>
