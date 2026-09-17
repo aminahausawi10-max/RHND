@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require __DIR__ . "/../../config/database.php";
+require __DIR__ . "/../config/database.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 

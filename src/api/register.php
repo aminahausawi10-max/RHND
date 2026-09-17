@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . "/../../config/database.php";
+require __DIR__ . "/../config/database.php";
 
 $data = json_decode(file_get_contents("php://input"), true);
 if (!$data || !isset($data["name"]) || !isset($data["email"]) || !isset($data["password"])) {

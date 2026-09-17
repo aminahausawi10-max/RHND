@@ -1,43 +1,31 @@
 {
-    "cleanUrls": true,
     "functions": {
-        "api/*.php": {
-            "runtime": "vercel-php@0.6.2"
-        },
         "api/**/*.php": {
             "runtime": "vercel-php@0.6.2"
         }
     },
-    "headers": [
-        {
-            "source": "/admin",
-            "headers": [
-                { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
-                { "key": "Pragma", "value": "no-cache" },
-                { "key": "Expires", "value": "0" }
-            ]
-        },
-        {
-            "source": "/public/admin-v2.html",
-            "headers": [
-                { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
-                { "key": "Pragma", "value": "no-cache" },
-                { "key": "Expires", "value": "0" }
-            ]
-        }
-    ],
-    "rewrites": [
-        { "source": "/admin", "destination": "/public/admin-v2.html" },
-        { "source": "/login", "destination": "/public/login.html" },
-        { "source": "/register", "destination": "/public/register.html" },
-        { "source": "/dashboard", "destination": "/public/member-dashboard.html" },
-        { "source": "/membership", "destination": "/public/membership.html" },
-        { "source": "/members", "destination": "/public/membership.html" },
-        { "source": "/news", "destination": "/public/news.html" },
-        { "source": "/support", "destination": "/public/support.html" },
-        { "source": "/css/(.*)", "destination": "/public/css/$1" },
-        { "source": "/js/(.*)", "destination": "/public/js/$1" },
-        { "source": "/(.*\\.html)", "destination": "/public/$1" },
-        { "source": "/", "destination": "/public/index.html" }
+    "routes": [
+        { "src": "/css/(.*)", "dest": "/public/css/$1" },
+        { "src": "/js/(.*)", "dest": "/public/js/$1" },
+        { "src": "/images/(.*)", "dest": "/public/images/$1" },
+        { "src": "/admin", "dest": "/public/admin.html" },
+        { "src": "/login", "dest": "/public/login.html" },
+        { "src": "/register", "dest": "/public/register.html" },
+        { "src": "/dashboard", "dest": "/public/member-dashboard.html" },
+        { "src": "/members", "dest": "/public/membership.html" },
+        { "src": "/membership", "dest": "/public/membership.html" },
+        { "src": "/news", "dest": "/public/news.html" },
+        { "src": "/support", "dest": "/public/support.html" },
+        { "src": "/agencies", "dest": "/public/agencies.html" },
+        { "src": "/ministries", "dest": "/public/ministries.html" },
+        { "src": "/national-assembly", "dest": "/public/national-assembly.html" },
+        { "src": "/diaspora", "dest": "/public/diaspora.html" },
+        { "src": "/government", "dest": "/public/government.html" },
+        { "src": "/media", "dest": "/public/media.html" },
+        { "src": "/api/(.*)", "dest": "/api/index.php" },
+        { "src": "/(.*\\.html)", "dest": "/public/$1" },
+        { "src": "/(.*\\.(?:png|jpg|jpeg|gif|svg|ico|css|js|woff|woff2|ttf|eot))", "dest": "/public/$1" },
+        { "src": "/", "dest": "/public/index.html" }
     ]
 }
+

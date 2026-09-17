@@ -3,7 +3,7 @@
 header("Content-Type: application/json");
 header("Cache-Control: no-cache, no-store, must-revalidate");
 
-require __DIR__ . "/../../config/database.php";
+require __DIR__ . "/../config/database.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 
