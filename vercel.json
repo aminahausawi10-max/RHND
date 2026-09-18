@@ -6,22 +6,21 @@
         }
     },
     "rewrites": [
-        { "source": "/admin", "destination": "/public/admin.html" },
-        { "source": "/news", "destination": "/public/news.html" },
-        { "source": "/login", "destination": "/public/login.html" },
-        { "source": "/register", "destination": "/public/register.html" },
-        { "source": "/dashboard", "destination": "/public/member-dashboard.html" },
-        { "source": "/membership", "destination": "/public/membership.html" },
-        { "source": "/members", "destination": "/public/membership.html" },
-        { "source": "/support", "destination": "/public/support.html" },
-        { "source": "/agencies", "destination": "/public/agencies.html" },
-        { "source": "/ministries", "destination": "/public/ministries.html" },
-        { "source": "/national-assembly", "destination": "/public/national-assembly.html" },
-        { "source": "/diaspora", "destination": "/public/diaspora.html" },
-        { "source": "/government", "destination": "/public/government.html" },
-        { "source": "/media", "destination": "/public/media.html" },
         { "source": "/api/(.*)", "destination": "/api/index.php" },
-        { "source": "/", "destination": "/public/index.html" }
+        { "source": "/admin", "destination": "/admin.html" },
+        { "source": "/news", "destination": "/news.html" },
+        { "source": "/login", "destination": "/login.html" },
+        { "source": "/register", "destination": "/register.html" },
+        { "source": "/dashboard", "destination": "/member-dashboard.html" },
+        { "source": "/membership", "destination": "/membership.html" },
+        { "source": "/members", "destination": "/membership.html" },
+        { "source": "/support", "destination": "/support.html" },
+        { "source": "/agencies", "destination": "/agencies.html" },
+        { "source": "/ministries", "destination": "/ministries.html" },
+        { "source": "/national-assembly", "destination": "/national-assembly.html" },
+        { "source": "/diaspora", "destination": "/diaspora.html" },
+        { "source": "/government", "destination": "/government.html" },
+        { "source": "/media", "destination": "/media.html" }
     ]
 }
 
