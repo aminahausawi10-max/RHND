@@ -20,52 +20,80 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Admin auth
-$adminPassword = '';
+$adminPassword = $_SERVER['HTTP_X_ADMIN_PASSWORD'] ?? '';
 if (function_exists('getallheaders')) {
     $headers = getallheaders();
-    $adminPassword = $headers['X-Admin-Password'] ?? $headers['x-admin-password'] ?? '';
+    $adminPassword = $headers['X-Admin-Password'] ?? $headers['x-admin-password'] ?? $adminPassword;
 }
-$adminPassword = $adminPassword ?: ($_SERVER['HTTP_X_ADMIN_PASSWORD'] ?? '');
+$adminPassword = $adminPassword ?: ($_POST['admin_password'] ?? $_GET['admin_password'] ?? '');
 if (trim($adminPassword) !== 'Admin@RHND2026') {
     http_response_code(401);
-    echo json_encode(["error" => "Unauthorized"]);
+    echo json_encode(["error" => "Unauthorized: Incorrect Admin Password"]);
     exit;
 }
 
-// Accept video file upload
-if (!isset($_FILES['video']) || $_FILES['video']['error'] !== UPLOAD_ERR_OK) {
-    // Try reading raw body as base64 fallback
-    $rawInput = file_get_contents("php://input");
-    if ($rawInput) {
-        $data = json_decode($rawInput, true);
-        if (!empty($data['video_base64'])) {
-            echo json_encode([
-                "success" => true,
-                "video" => $data['video_base64'],
-                "method" => "base64"
-            ]);
-            exit;
-        }
-    }
+$uploadedFile = $_FILES['video'] ?? $_FILES['file'] ?? $_FILES['photo'] ?? null;
+
+if (!$uploadedFile || $uploadedFile['error'] !== UPLOAD_ERR_OK) {
     http_response_code(400);
-    echo json_encode(["error" => "No video file received", "files" => $_FILES, "err" => $_FILES['video']['error'] ?? 'none']);
+    echo json_encode([
+        "error" => "No file uploaded or upload error occurred",
+        "code" => $uploadedFile['error'] ?? 'missing'
+    ]);
     exit;
 }
 
-$file = $_FILES['video'];
-$fileData = file_get_contents($file['tmp_name']);
-if ($fileData === false) {
+$cloudName = "dpghoiocq";
+$apiKey = "283943216837512";
+$apiSecret = "y_c8wSat2wFRqfuIjFuAwkA1aKE";
+$timestamp = time();
+$signature = sha1("timestamp=" . $timestamp . $apiSecret);
+
+$mimeType = $uploadedFile['type'] ?? '';
+$resourceType = (strpos($mimeType, 'video') !== false || strpos($uploadedFile['name'], '.mp4') !== false || strpos($uploadedFile['name'], '.mov') !== false) ? 'video' : 'auto';
+
+$cfile = new CURLFile($uploadedFile['tmp_name'], $uploadedFile['type'], $uploadedFile['name']);
+
+$postFields = [
+    'file' => $cfile,
+    'api_key' => $apiKey,
+    'timestamp' => $timestamp,
+    'signature' => $signature
+];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api.cloudinary.com/v1_1/{$cloudName}/{$resourceType}/upload");
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curlErr = curl_error($ch);
+curl_close($ch);
+
+if ($curlErr) {
     http_response_code(500);
-    echo json_encode(["error" => "Failed to read uploaded file"]);
+    echo json_encode(["error" => "Cloudinary cURL error: " . $curlErr]);
     exit;
 }
 
-$mimeType = $file['type'] ?: 'video/mp4';
-$base64 = 'data:' . $mimeType . ';base64,' . base64_encode($fileData);
-
-echo json_encode([
-    "success" => true,
-    "video" => $base64,
-    "size" => $file['size'],
-    "method" => "upload"
-]);
+$resData = json_decode($response, true);
+if ($httpCode >= 200 && $httpCode < 300 && !empty($resData['secure_url'])) {
+    echo json_encode([
+        "success" => true,
+        "url" => $resData['secure_url'],
+        "video" => $resData['secure_url'],
+        "public_id" => $resData['public_id'] ?? null,
+        "format" => $resData['format'] ?? null,
+        "bytes" => $resData['bytes'] ?? $uploadedFile['size']
+    ]);
+} else {
+    http_response_code(500);
+    echo json_encode([
+        "error" => $resData['error']['message'] ?? ("Cloud storage upload failed with HTTP " . $httpCode),
+        "raw" => $resData
+    ]);
+}

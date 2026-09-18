@@ -1592,56 +1592,82 @@
             const apiKey = '283943216837512';
             const apiSecret = 'y_c8wSat2wFRqfuIjFuAwkA1aKE';
             const timestamp = Math.floor(Date.now() / 1000);
-            const signature = await computeSha1(`timestamp=${timestamp}${apiSecret}`);
+            const signature = computeSha1(`timestamp=${timestamp}${apiSecret}`);
 
-            return new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
-                
-                xhr.open('POST', uploadUrl);
+            // Primary: Direct Cloudinary Upload with Live Progress
+            try {
+                return await new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+                    
+                    xhr.open('POST', uploadUrl);
 
-                if (onProgress && xhr.upload) {
-                    xhr.upload.onprogress = (evt) => {
-                        if (evt.lengthComputable) {
-                            const percent = Math.round((evt.loaded / evt.total) * 100);
-                            onProgress(percent);
+                    if (onProgress && xhr.upload) {
+                        xhr.upload.onprogress = (evt) => {
+                            if (evt.lengthComputable) {
+                                const percent = Math.round((evt.loaded / evt.total) * 100);
+                                onProgress(percent);
+                            }
+                        };
+                    }
+
+                    xhr.onload = () => {
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            try {
+                                const res = JSON.parse(xhr.responseText);
+                                if (res.secure_url || res.url) {
+                                    resolve(res.secure_url || res.url);
+                                } else {
+                                    reject(new Error('Cloud storage returned no video URL'));
+                                }
+                            } catch(err) {
+                                reject(new Error('Invalid response from cloud storage'));
+                            }
+                        } else {
+                            let errMessage = 'Upload failed (HTTP ' + xhr.status + ')';
+                            try {
+                                const res = JSON.parse(xhr.responseText);
+                                if (res.error && res.error.message) errMessage = res.error.message;
+                            } catch(e) {}
+                            reject(new Error(errMessage));
                         }
                     };
+
+                    xhr.onerror = () => reject(new Error('Direct connection error, trying backup route'));
+                    xhr.ontimeout = () => reject(new Error('Upload timed out, trying backup route'));
+
+                    const formData = new FormData();
+                    formData.append('file', file, file.name || 'upload.mp4');
+                    formData.append('api_key', apiKey);
+                    formData.append('timestamp', timestamp);
+                    formData.append('signature', signature);
+
+                    xhr.send(formData);
+                });
+            } catch(directErr) {
+                console.warn('Direct upload failed, using server backup route:', directErr);
+                // Secondary Fallback: Backend Upload via /api/upload
+                const formData = new FormData();
+                formData.append('video', file, file.name || 'upload.mp4');
+                formData.append('admin_password', 'Admin@RHND2026');
+
+                const backupRes = await fetch('/api/upload', {
+                    method: 'POST',
+                    headers: { 'X-Admin-Password': 'Admin@RHND2026' },
+                    body: formData
+                });
+
+                if (!backupRes.ok) {
+                    const backupErr = await backupRes.json().catch(() => ({}));
+                    throw new Error(backupErr.error || ('Server backup upload failed with HTTP ' + backupRes.status));
                 }
 
-                xhr.onload = () => {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        try {
-                            const res = JSON.parse(xhr.responseText);
-                            if (res.secure_url || res.url) {
-                                resolve(res.secure_url || res.url);
-                            } else {
-                                reject(new Error('Cloud storage returned no video URL'));
-                            }
-                        } catch(err) {
-                            reject(new Error('Invalid response from cloud storage'));
-                        }
-                    } else {
-                        let errMessage = 'Upload failed (HTTP ' + xhr.status + ')';
-                        try {
-                            const res = JSON.parse(xhr.responseText);
-                            if (res.error && res.error.message) errMessage = res.error.message;
-                        } catch(e) {}
-                        reject(new Error(errMessage));
-                    }
-                };
-
-                xhr.onerror = () => reject(new Error('Network connection error during file upload'));
-                xhr.ontimeout = () => reject(new Error('Upload timed out, please check your network connection'));
-
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('api_key', apiKey);
-                formData.append('timestamp', timestamp);
-                formData.append('signature', signature);
-
-                xhr.send(formData);
-            });
+                const backupData = await backupRes.json();
+                if (backupData.url || backupData.video) {
+                    return backupData.url || backupData.video;
+                }
+                throw new Error('No valid URL returned from backup upload');
+            }
         }
 
         async function handleAddPost(title, content, category, photo, video, audio, statusEl, videoFile, photoFile) {
