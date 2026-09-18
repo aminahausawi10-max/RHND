@@ -1,31 +1,27 @@
 {
+    "cleanUrls": true,
     "functions": {
         "api/**/*.php": {
             "runtime": "vercel-php@0.6.2"
         }
     },
-    "routes": [
-        { "src": "/css/(.*)", "dest": "/public/css/$1" },
-        { "src": "/js/(.*)", "dest": "/public/js/$1" },
-        { "src": "/images/(.*)", "dest": "/public/images/$1" },
-        { "src": "/admin", "dest": "/public/admin.html" },
-        { "src": "/login", "dest": "/public/login.html" },
-        { "src": "/register", "dest": "/public/register.html" },
-        { "src": "/dashboard", "dest": "/public/member-dashboard.html" },
-        { "src": "/members", "dest": "/public/membership.html" },
-        { "src": "/membership", "dest": "/public/membership.html" },
-        { "src": "/news", "dest": "/public/news.html" },
-        { "src": "/support", "dest": "/public/support.html" },
-        { "src": "/agencies", "dest": "/public/agencies.html" },
-        { "src": "/ministries", "dest": "/public/ministries.html" },
-        { "src": "/national-assembly", "dest": "/public/national-assembly.html" },
-        { "src": "/diaspora", "dest": "/public/diaspora.html" },
-        { "src": "/government", "dest": "/public/government.html" },
-        { "src": "/media", "dest": "/public/media.html" },
-        { "src": "/api/(.*)", "dest": "/api/index.php" },
-        { "src": "/(.*\\.html)", "dest": "/public/$1" },
-        { "src": "/(.*\\.(?:png|jpg|jpeg|gif|svg|ico|css|js|woff|woff2|ttf|eot))", "dest": "/public/$1" },
-        { "src": "/", "dest": "/public/index.html" }
+    "rewrites": [
+        { "source": "/admin", "destination": "/public/admin.html" },
+        { "source": "/news", "destination": "/public/news.html" },
+        { "source": "/login", "destination": "/public/login.html" },
+        { "source": "/register", "destination": "/public/register.html" },
+        { "source": "/dashboard", "destination": "/public/member-dashboard.html" },
+        { "source": "/membership", "destination": "/public/membership.html" },
+        { "source": "/members", "destination": "/public/membership.html" },
+        { "source": "/support", "destination": "/public/support.html" },
+        { "source": "/agencies", "destination": "/public/agencies.html" },
+        { "source": "/ministries", "destination": "/public/ministries.html" },
+        { "source": "/national-assembly", "destination": "/public/national-assembly.html" },
+        { "source": "/diaspora", "destination": "/public/diaspora.html" },
+        { "source": "/government", "destination": "/public/government.html" },
+        { "source": "/media", "destination": "/public/media.html" },
+        { "source": "/api/(.*)", "destination": "/api/index.php" },
+        { "source": "/", "destination": "/public/index.html" }
     ]
 }
 
