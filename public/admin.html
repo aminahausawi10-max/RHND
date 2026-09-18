@@ -1699,8 +1699,6 @@
                     throw new Error(errData.error || ('Server returned HTTP status ' + res.status));
                 }
 
-                const data = await res.json();
-                
                 // Immediately refresh posts from live database
                 await fetchPosts();
 
@@ -1710,6 +1708,9 @@
                     statusEl.style.display = 'inline';
                     setTimeout(() => statusEl.style.display = 'none', 5000);
                 }
+                alert('✅ Success! Your video update has been published live and is now visible on the News page and Homepage!');
+                const listElem = document.getElementById('posts-list');
+                if (listElem) listElem.scrollIntoView({ behavior: 'smooth' });
                 return true;
             } catch(err) {
                 console.error("News publishing error:", err);
