@@ -29,13 +29,16 @@ try {
     // Ignore if table exists or permission quirks
 }
 
-// Admin Authentication Check for modifications
 if ($method === 'POST' || $method === 'DELETE') {
+    $rawInput = file_get_contents("php://input");
+    $data = json_decode($rawInput, true) ?: [];
+
     $adminPassword = $_SERVER['HTTP_X_ADMIN_PASSWORD'] ?? '';
     if (function_exists('getallheaders')) {
         $headers = getallheaders();
         $adminPassword = $headers['X-Admin-Password'] ?? $headers['x-admin-password'] ?? $adminPassword;
     }
+    $adminPassword = $adminPassword ?: ($data['admin_password'] ?? $_GET['admin_password'] ?? $_GET['password'] ?? '');
     
     $adminPassword = trim($adminPassword);
     
@@ -57,8 +60,6 @@ if ($method === 'GET') {
     }
 } 
 elseif ($method === 'POST') {
-    $rawInput = file_get_contents("php://input");
-    $data = json_decode($rawInput, true);
     if (!isset($data['title']) || !isset($data['content'])) {
         http_response_code(400);
         echo json_encode(["error" => "Missing title or content"]);
