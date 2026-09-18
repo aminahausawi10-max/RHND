@@ -63,6 +63,7 @@
     <title>RHND Super Admin Portal - Diaspora Administration Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <link rel="stylesheet" href="css/style.css?v=3.4">
     <style>
         :root {
@@ -1555,10 +1556,19 @@
             fetchPosts();
         }
 
-        async function getSha1Hex(text) {
-            const enc = new TextEncoder().encode(text);
-            const buf = await window.crypto.subtle.digest('SHA-1', enc);
-            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        async function computeSha1(text) {
+            if (typeof CryptoJS !== 'undefined' && CryptoJS.SHA1) {
+                return CryptoJS.SHA1(text).toString();
+            }
+            if (window.crypto && window.crypto.subtle) {
+                const enc = new TextEncoder().encode(text);
+                const buf = await window.crypto.subtle.digest('SHA-1', enc);
+                return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+            // Fallback to server signature endpoint
+            const signRes = await fetch('/api/sign_upload');
+            const signData = await signRes.json();
+            return signData.signature;
         }
 
         async function uploadFileToCloudinary(file, resourceType = 'auto', onProgress = null) {
@@ -1566,7 +1576,7 @@
             const apiKey = '283943216837512';
             const apiSecret = 'y_c8wSat2wFRqfuIjFuAwkA1aKE';
             const timestamp = Math.floor(Date.now() / 1000);
-            const signature = await getSha1Hex(`timestamp=${timestamp}${apiSecret}`);
+            const signature = await computeSha1(`timestamp=${timestamp}${apiSecret}`);
 
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
@@ -1587,12 +1597,16 @@
                     if (xhr.status >= 200 && xhr.status < 300) {
                         try {
                             const res = JSON.parse(xhr.responseText);
-                            resolve(res.secure_url || res.url);
+                            if (res.secure_url || res.url) {
+                                resolve(res.secure_url || res.url);
+                            } else {
+                                reject(new Error('Cloud storage returned no video URL'));
+                            }
                         } catch(err) {
                             reject(new Error('Invalid response from cloud storage'));
                         }
                     } else {
-                        let errMessage = 'Upload failed with status ' + xhr.status;
+                        let errMessage = 'Upload failed (HTTP ' + xhr.status + ')';
                         try {
                             const res = JSON.parse(xhr.responseText);
                             if (res.error && res.error.message) errMessage = res.error.message;
@@ -1601,7 +1615,8 @@
                     }
                 };
 
-                xhr.onerror = () => reject(new Error('Network error during file upload'));
+                xhr.onerror = () => reject(new Error('Network connection error during file upload'));
+                xhr.ontimeout = () => reject(new Error('Upload timed out, please check your network connection'));
 
                 const formData = new FormData();
                 formData.append('file', file);
@@ -1614,7 +1629,10 @@
         }
 
         async function handleAddPost(title, content, category, photo, video, audio, statusEl, videoFile, photoFile) {
-            if (!title || !content) return;
+            if (!title || !content) {
+                alert('Please enter a Title and Content body.');
+                return false;
+            }
 
             let finalVideo = video || '';
             let finalPhoto = photo || '';
@@ -1636,11 +1654,16 @@
                     if (statusEl) statusEl.textContent = 'Video uploaded successfully! Publishing...';
                 } catch(uploadErr) {
                     console.error('Video upload error:', uploadErr);
-                    alert('Video Upload Notice: ' + uploadErr.message);
+                    if (statusEl) {
+                        statusEl.textContent = 'Video Upload Error: ' + uploadErr.message;
+                        statusEl.style.color = '#dc2626';
+                    }
+                    alert('Video Upload Failed: ' + uploadErr.message + '\n\nPlease ensure you have an internet connection and try again.');
+                    return false; // STOP: Do not publish empty post
                 }
             }
 
-            // 2. Upload Photo File directly to Cloudinary CDN (to avoid large base64 in database)
+            // 2. Upload Photo File directly to Cloudinary CDN
             if (photoFile && photoFile instanceof File) {
                 try {
                     if (statusEl) statusEl.textContent = 'Uploading photo to Cloud CDN...';
