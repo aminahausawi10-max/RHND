@@ -1556,19 +1556,35 @@
             fetchPosts();
         }
 
-        async function computeSha1(text) {
-            if (typeof CryptoJS !== 'undefined' && CryptoJS.SHA1) {
-                return CryptoJS.SHA1(text).toString();
+        function computeSha1(str) {
+            const utf8 = new TextEncoder().encode(str);
+            const words = [];
+            for (let i = 0; i < utf8.length; i++) words[i >> 2] |= utf8[i] << (24 - (i % 4) * 8);
+            const bitLen = utf8.length * 8;
+            words[bitLen >> 5] |= 0x80 << (24 - (bitLen % 32));
+            words[(((bitLen + 64) >> 9) << 4) + 15] = bitLen;
+            let h0 = 0x67452301, h1 = 0xEFCDAB89, h2 = 0x98BADCFE, h3 = 0x10325476, h4 = 0xC3D2E1F0;
+            for (let i = 0; i < words.length; i += 16) {
+                const w = new Array(80);
+                for (let j = 0; j < 16; j++) w[j] = words[i + j] || 0;
+                for (let j = 16; j < 80; j++) {
+                    const n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
+                    w[j] = (n << 1) | (n >>> 31);
+                }
+                let a = h0, b = h1, c = h2, d = h3, e = h4;
+                for (let j = 0; j < 80; j++) {
+                    let f, k;
+                    if (j < 20) { f = (b & c) | ((~b) & d); k = 0x5A827999; }
+                    else if (j < 40) { f = b ^ c ^ d; k = 0x6ED9EBA1; }
+                    else if (j < 60) { f = (b & c) | (b & d) | (c & d); k = 0x8F1BBCDC; }
+                    else { f = b ^ c ^ d; k = 0xCA62C1D6; }
+                    const temp = (((a << 5) | (a >>> 27)) + f + e + k + w[j]) | 0;
+                    e = d; d = c; c = (b << 30) | (b >>> 2); b = a; a = temp;
+                }
+                h0 = (h0 + a) | 0; h1 = (h1 + b) | 0; h2 = (h2 + c) | 0; h3 = (h3 + d) | 0; h4 = (h4 + e) | 0;
             }
-            if (window.crypto && window.crypto.subtle) {
-                const enc = new TextEncoder().encode(text);
-                const buf = await window.crypto.subtle.digest('SHA-1', enc);
-                return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-            }
-            // Fallback to server signature endpoint
-            const signRes = await fetch('/api/sign_upload');
-            const signData = await signRes.json();
-            return signData.signature;
+            const toHex = n => (n >>> 0).toString(16).padStart(8, '0');
+            return toHex(h0) + toHex(h1) + toHex(h2) + toHex(h3) + toHex(h4);
         }
 
         async function uploadFileToCloudinary(file, resourceType = 'auto', onProgress = null) {
