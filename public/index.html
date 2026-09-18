@@ -512,7 +512,7 @@
                         } else {
                             mediaHTML += `
                             <div style="margin-bottom: 16px; border-radius: 10px; overflow: hidden; background: #000;">
-                                <video controls style="width: 100%; max-height: 320px; display: block;" src="${post.video}">Your browser does not support HTML video.</video>
+                                <video controls playsinline webkit-playsinline style="width: 100%; max-height: 320px; display: block;" src="${post.video}">Your browser does not support HTML video.</video>
                             </div>`;
                         }
                     }

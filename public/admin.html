@@ -1598,7 +1598,7 @@
             try {
                 return await new Promise((resolve, reject) => {
                     const xhr = new XMLHttpRequest();
-                    const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+                    const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
                     
                     xhr.open('POST', uploadUrl);
 
@@ -2209,8 +2209,10 @@
                     const photo = newsMediaState['ov-post'].photo || document.getElementById('ov-post-photo-url').value.trim();
                     const video = newsMediaState['ov-post'].video || document.getElementById('ov-post-video-url').value.trim();
                     const audio = newsMediaState['ov-post'].audio || '';
-                    const videoFile = newsMediaState['ov-post'].videoFile || null;
-                    const photoFile = newsMediaState['ov-post'].photoFile || null;
+                    const ovVideoFileInput = document.getElementById('ov-post-video-file');
+                    const videoFile = (ovVideoFileInput && ovVideoFileInput.files && ovVideoFileInput.files[0]) ? ovVideoFileInput.files[0] : (newsMediaState['ov-post'].videoFile || null);
+                    const ovPhotoFileInput = document.getElementById('ov-post-photo-file');
+                    const photoFile = (ovPhotoFileInput && ovPhotoFileInput.files && ovPhotoFileInput.files[0]) ? ovPhotoFileInput.files[0] : (newsMediaState['ov-post'].photoFile || null);
                     const status = document.getElementById('ov-post-status');
 
                     if (submitBtn) {
@@ -2248,8 +2250,10 @@
                     const photo = newsMediaState['post'].photo || document.getElementById('post-photo-url').value.trim();
                     const video = newsMediaState['post'].video || document.getElementById('post-video-url').value.trim();
                     const audio = newsMediaState['post'].audio || document.getElementById('post-audio-url').value.trim();
-                    const videoFile = newsMediaState['post'].videoFile || null;
-                    const photoFile = newsMediaState['post'].photoFile || null;
+                    const videoFileInput = document.getElementById('post-video-file');
+                    const videoFile = (videoFileInput && videoFileInput.files && videoFileInput.files[0]) ? videoFileInput.files[0] : (newsMediaState['post'].videoFile || null);
+                    const photoFileInput = document.getElementById('post-photo-file');
+                    const photoFile = (photoFileInput && photoFileInput.files && photoFileInput.files[0]) ? photoFileInput.files[0] : (newsMediaState['post'].photoFile || null);
                     const status = document.getElementById('post-status');
 
                     if (submitBtn) {

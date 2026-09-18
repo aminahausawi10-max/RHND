@@ -50,7 +50,7 @@ $timestamp = time();
 $signature = sha1("timestamp=" . $timestamp . $apiSecret);
 
 $mimeType = $uploadedFile['type'] ?? '';
-$resourceType = (strpos($mimeType, 'video') !== false || strpos($uploadedFile['name'], '.mp4') !== false || strpos($uploadedFile['name'], '.mov') !== false) ? 'video' : 'auto';
+$resourceType = 'auto';
 
 $cfile = new CURLFile($uploadedFile['tmp_name'], $uploadedFile['type'], $uploadedFile['name']);
 
