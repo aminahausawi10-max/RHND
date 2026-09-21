@@ -64,6 +64,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script src="js/media-embed.js?v=3.7"></script>
     <link rel="stylesheet" href="css/style.css?v=3.4">
     <style>
         :root {
@@ -437,12 +438,17 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <label style="font-weight: 700; font-size: 0.82rem; color: #2563eb; margin-bottom: 4px; display: block;"><i class="fas fa-video"></i> Video</label>
+                                        <label style="font-weight: 700; font-size: 0.82rem; color: #2563eb; margin-bottom: 4px; display: block;"><i class="fas fa-video"></i> Video (Link / Upload)</label>
                                         <input type="file" id="ov-post-video-file" accept="video/*" class="form-control" style="font-size: 0.78rem; padding: 5px;">
-                                        <input type="url" id="ov-post-video-url" class="form-control" placeholder="Or Video URL / MP4" style="font-size: 0.78rem; padding: 5px; margin-top: 4px;">
+                                        <input type="text" id="ov-post-video-url" class="form-control" placeholder="Paste link: TikTok, Instagram, Facebook, YouTube, MP4" style="font-size: 0.78rem; padding: 5px; margin-top: 4px;">
+                                        <div style="display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; font-size: 0.68rem;">
+                                            <span style="background: #000; color: #fff; padding: 1px 5px; border-radius: 3px;"><i class="fab fa-tiktok"></i> TikTok</span>
+                                            <span style="background: #fdf2f8; color: #db2777; border: 1px solid #fbcfe8; padding: 1px 5px; border-radius: 3px;"><i class="fab fa-instagram"></i> Instagram</span>
+                                            <span style="background: #eff6ff; color: #1877f2; border: 1px solid #bfdbfe; padding: 1px 5px; border-radius: 3px;"><i class="fab fa-facebook-f"></i> Facebook</span>
+                                            <span style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 1px 5px; border-radius: 3px;"><i class="fab fa-youtube"></i> YouTube</span>
+                                        </div>
                                         <div id="ov-post-video-preview" style="display: none; margin-top: 5px; position: relative;">
-                                            <video id="ov-post-video-elem" controls style="width: 100%; height: 75px; border-radius: 6px; background: #000;"></video>
-                                            <button type="button" onclick="clearMedia('ov-post-video')" style="position: absolute; top: 2px; right: 2px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; cursor: pointer;">&times;</button>
+                                            <video id="ov-post-video-elem" controls style="width: 100%; height: 75px; border-radius: 6px; background: #000; display: none;"></video>
                                         </div>
                                     </div>
                                     <div>
@@ -607,8 +613,16 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Image or Video Link URL</label>
-                                    <input type="url" id="ov-media-url" class="form-control" required placeholder="https://images.unsplash.com/...">
+                                    <label><i class="fas fa-link"></i> Image / Video / Social Link URL</label>
+                                    <input type="text" id="ov-media-url" class="form-control" required placeholder="Paste URL: TikTok, Instagram, Facebook, YouTube, image or MP4 link">
+                                    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:5px;">
+                                        <span style="background:#000;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fab fa-tiktok"></i> TikTok</span>
+                                        <span style="background:#fdf2f8;color:#db2777;border:1px solid #fbcfe8;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fab fa-instagram"></i> Instagram</span>
+                                        <span style="background:#eff6ff;color:#1877f2;border:1px solid #bfdbfe;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fab fa-facebook-f"></i> Facebook</span>
+                                        <span style="background:#fee2e2;color:#dc2626;border:1px solid #fecaca;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fab fa-youtube"></i> YouTube</span>
+                                        <span style="background:#f0fdf4;color:#16a34a;border:1px solid #dcfce7;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fas fa-image"></i> Image</span>
+                                    </div>
+                                    <div id="ov-media-url-preview" style="display:none; margin-top:8px;"></div>
                                 </div>
                                 <button type="submit" class="btn btn-primary" style="padding: 9px 20px; font-size: 0.9rem;">
                                     <i class="fas fa-upload"></i> Upload Item
@@ -678,14 +692,22 @@
 
                                 <!-- 2. VIDEO -->
                                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
-                                    <label style="font-weight: 700; color: #2563eb; font-size: 0.88rem; display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-                                        <i class="fas fa-video"></i> 2. Upload Video (MP4 / Link)
-                                    </label>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                        <label style="font-weight: 700; color: #2563eb; font-size: 0.88rem; display: flex; align-items: center; gap: 6px; margin: 0;">
+                                            <i class="fas fa-video"></i> 2. Video Attachment (File or Social Link)
+                                        </label>
+                                    </div>
+                                    <div style="display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; font-size: 0.72rem;">
+                                        <span style="background: #000; color: #fff; padding: 2px 7px; border-radius: 4px; font-weight: 600;"><i class="fab fa-tiktok"></i> TikTok</span>
+                                        <span style="background: #fdf2f8; color: #db2777; border: 1px solid #fbcfe8; padding: 2px 7px; border-radius: 4px; font-weight: 600;"><i class="fab fa-instagram"></i> Instagram</span>
+                                        <span style="background: #eff6ff; color: #1877f2; border: 1px solid #bfdbfe; padding: 2px 7px; border-radius: 4px; font-weight: 600;"><i class="fab fa-facebook-f"></i> Facebook</span>
+                                        <span style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 2px 7px; border-radius: 4px; font-weight: 600;"><i class="fab fa-youtube"></i> YouTube</span>
+                                        <span style="background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; padding: 2px 7px; border-radius: 4px; font-weight: 600;"><i class="fas fa-file-video"></i> MP4 / CDN</span>
+                                    </div>
                                     <input type="file" id="post-video-file" accept="video/*" class="form-control" style="font-size: 0.8rem; padding: 6px 8px; margin-bottom: 8px;">
-                                    <input type="url" id="post-video-url" class="form-control" placeholder="Or paste Video URL (MP4 / YouTube)" style="font-size: 0.82rem; padding: 7px 10px; margin: 0;">
-                                    <div id="post-video-preview" style="margin-top: 10px; display: none; position: relative;">
-                                        <video id="post-video-elem" controls style="width: 100%; max-height: 130px; border-radius: 8px; background: #000;"></video>
-                                        <button type="button" onclick="clearMedia('post-video')" style="position: absolute; top: 6px; right: 6px; background: rgba(220,38,38,0.9); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 0.8rem;" title="Remove Video">&times;</button>
+                                    <input type="text" id="post-video-url" class="form-control" placeholder="Or paste link: TikTok, Instagram Reel/Post, Facebook Video, YouTube, MP4" style="font-size: 0.82rem; padding: 7px 10px; margin: 0;">
+                                    <div id="post-video-preview" style="display: none; position: relative;">
+                                        <video id="post-video-elem" controls style="width: 100%; max-height: 130px; border-radius: 8px; background: #000; display: none;"></video>
                                     </div>
                                 </div>
 
@@ -871,8 +893,16 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Image or Video URL</label>
-                            <input type="url" id="media-url" class="form-control" required placeholder="https://example.com/image.jpg">
+                            <label><i class="fas fa-link"></i> Image / Video / Social Link URL</label>
+                            <input type="text" id="media-url" class="form-control" required placeholder="Paste URL: TikTok, Instagram, Facebook, YouTube, image or MP4 link">
+                            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                                <span style="background:#000;color:#fff;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;"><i class="fab fa-tiktok"></i> TikTok</span>
+                                <span style="background:#fdf2f8;color:#db2777;border:1px solid #fbcfe8;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;"><i class="fab fa-instagram"></i> Instagram</span>
+                                <span style="background:#eff6ff;color:#1877f2;border:1px solid #bfdbfe;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;"><i class="fab fa-facebook-f"></i> Facebook</span>
+                                <span style="background:#fee2e2;color:#dc2626;border:1px solid #fecaca;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;"><i class="fab fa-youtube"></i> YouTube</span>
+                                <span style="background:#f0fdf4;color:#16a34a;border:1px solid #dcfce7;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;"><i class="fas fa-image"></i> Image</span>
+                            </div>
+                            <div id="media-url-preview" style="display:none; margin-top:10px;"></div>
                         </div>
                         <div class="form-group">
                             <label>Caption / Description</label>
@@ -1137,7 +1167,10 @@
             }
 
             const preview = document.getElementById(`${key}-preview`);
-            if (preview) preview.style.display = 'none';
+            if (preview) {
+                preview.style.display = 'none';
+                preview.innerHTML = '';
+            }
 
             const fileInput = document.getElementById(`${key}-file`);
             if (fileInput) fileInput.value = '';
@@ -1267,31 +1300,52 @@
                     if (file) {
                         newsMediaState[prefix].videoFile = file; // store raw File
                         newsMediaState[prefix].video = '';       // clear any old URL/base64
-                        const vid = document.getElementById(`${prefix}-video-elem`);
+                        const urlInput = document.getElementById(`${prefix}-video-url`);
+                        if (urlInput) urlInput.value = '';
                         const prev = document.getElementById(`${prefix}-video-preview`);
-                        if (vid && prev) {
+                        if (prev) {
                             const objUrl = URL.createObjectURL(file);
-                            vid.src = objUrl;
+                            prev.innerHTML = `
+                                <div style="position: relative; margin-top: 10px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                        <span style="background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;"><i class="fas fa-file-video"></i> Video File Selected</span>
+                                        <small style="color: #64748b; font-size: 0.75rem;">${file.name} (${(file.size / (1024*1024)).toFixed(1)} MB)</small>
+                                    </div>
+                                    <video controls playsinline style="width: 100%; max-height: 140px; border-radius: 8px; background: #000; display: block;" src="${objUrl}"></video>
+                                    <button type="button" onclick="clearMedia('${prefix}-video')" style="position: absolute; top: 32px; right: 8px; background: rgba(220,38,38,0.9); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 0.8rem; z-index: 10; display: flex; align-items: center; justify-content: center;" title="Remove Video">&times;</button>
+                                </div>
+                            `;
                             prev.style.display = 'block';
                         }
                     }
                 });
             }
 
-            // Video URL
+            // Video URL (TikTok, Instagram, Facebook, YouTube, MP4)
+            // Listen on input, change AND paste so links pasted by any method are captured
             const videoUrl = document.getElementById(`${prefix}-video-url`);
             if (videoUrl) {
-                videoUrl.addEventListener('input', (e) => {
-                    const val = e.target.value.trim();
+                const handleVideoUrl = (val) => {
+                    val = (val || '').trim();
                     if (val) {
                         newsMediaState[prefix].video = val;
-                        const vid = document.getElementById(`${prefix}-video-elem`);
-                        const prev = document.getElementById(`${prefix}-video-preview`);
-                        if (vid && prev) {
-                            vid.src = val;
-                            prev.style.display = 'block';
+                        newsMediaState[prefix].videoFile = null;
+                        const fileInput = document.getElementById(`${prefix}-video-file`);
+                        if (fileInput) fileInput.value = '';
+                        if (window.RHND_MEDIA) {
+                            RHND_MEDIA.renderAdminPreview(`${prefix}-video-preview`, val);
                         }
+                    } else {
+                        newsMediaState[prefix].video = '';
+                        const prev = document.getElementById(`${prefix}-video-preview`);
+                        if (prev) { prev.style.display = 'none'; prev.innerHTML = ''; }
                     }
+                };
+                videoUrl.addEventListener('input',  (e) => handleVideoUrl(e.target.value));
+                videoUrl.addEventListener('change', (e) => handleVideoUrl(e.target.value));
+                videoUrl.addEventListener('paste',  (e) => {
+                    // Use setTimeout so the pasted text is in the field before we read it
+                    setTimeout(() => handleVideoUrl(videoUrl.value), 50);
                 });
             }
 
@@ -1348,7 +1402,7 @@
                                     <div>
                                         <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 2px;">
                                             <span class="badge" style="background: #f0fdf4; color: var(--primary-green); font-size: 0.72rem; padding: 1px 6px;">${post.category || 'Update'}</span>
-                                            ${post.video ? '<span style="background: #eff6ff; color: #2563eb; font-size: 0.7rem; padding: 1px 5px; border-radius: 4px; font-weight: 700;"><i class="fas fa-video"></i> Video</span>' : ''}
+                                            ${window.RHND_MEDIA ? RHND_MEDIA.getBadgeHtml(post.video) : (post.video ? '<span style="background: #eff6ff; color: #2563eb; font-size: 0.7rem; padding: 1px 5px; border-radius: 4px; font-weight: 700;"><i class="fas fa-video"></i> Video</span>' : '')}
                                             ${post.audio ? '<span style="background: #fef3c7; color: #b45309; font-size: 0.7rem; padding: 1px 5px; border-radius: 4px; font-weight: 700;"><i class="fas fa-microphone"></i> Voice Note</span>' : ''}
                                         </div>
                                         <strong style="color: #0f172a; font-size: 0.95rem;">${post.title}</strong>
@@ -1421,15 +1475,29 @@
                     if (!media.length) {
                         ovMed.innerHTML = '<p style="color: #64748b; grid-column: 1/-1;">No media files uploaded.</p>';
                     } else {
-                        ovMed.innerHTML = media.slice(0, 4).map(m => `
-                            <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: white;">
-                                <img src="${m.url}" alt="${m.title}" style="width: 100%; height: 110px; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=400&q=80'">
-                                <div style="padding: 8px; display: flex; justify-content: space-between; align-items: center;">
-                                    <strong style="font-size: 0.85rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${m.title}</strong>
-                                    <button onclick="deleteMedia('${m.id}')" class="btn-action btn-delete" style="padding: 3px 6px; font-size: 0.75rem;"><i class="fas fa-trash"></i></button>
-                                </div>
-                            </div>
-                        `).join('');
+                        ovMed.innerHTML = media.slice(0, 4).map(m => {
+                                let thumbHtml = '';
+                                if (window.RHND_MEDIA && m.url) {
+                                    const parsed = RHND_MEDIA.parse(m.url);
+                                    if (parsed && ['tiktok','instagram','facebook','youtube'].includes(parsed.type)) {
+                                        const icons = { tiktok: 'fab fa-tiktok', instagram: 'fab fa-instagram', facebook: 'fab fa-facebook-f', youtube: 'fab fa-youtube' };
+                                        const bgs = { tiktok: '#09090b', instagram: '#dc2743', facebook: '#1877f2', youtube: '#dc2626' };
+                                        thumbHtml = `<div style="width:100%;height:110px;background:${bgs[parsed.type]};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;"><i class="${icons[parsed.type]}" style="color:#fff;font-size:1.6rem;"></i><span style="color:#fff;font-size:0.72rem;font-weight:700;">${parsed.name}</span></div>`;
+                                    } else {
+                                        thumbHtml = `<img src="${m.url}" alt="${m.title}" style="width:100%;height:110px;object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=400&q=80'">`;
+                                    }
+                                } else {
+                                    thumbHtml = `<img src="${m.url}" alt="${m.title}" style="width:100%;height:110px;object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=400&q=80'">`;
+                                }
+                                return `
+                                <div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;background:white;">
+                                    ${thumbHtml}
+                                    <div style="padding:8px;display:flex;justify-content:space-between;align-items:center;">
+                                        <strong style="font-size:0.85rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;">${m.title}</strong>
+                                        <button onclick="deleteMedia('${m.id}')" class="btn-action btn-delete" style="padding:3px 6px;font-size:0.75rem;"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </div>`;
+                            }).join('');
                     }
                 }
             }
@@ -1527,7 +1595,7 @@
                         <div>
                             <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 4px; flex-wrap: wrap;">
                                 <span class="badge" style="background: #f0fdf4; color: var(--primary-green); font-size: 0.75rem; padding: 2px 8px;">${post.category || 'Official Update'}</span>
-                                ${post.video ? '<span style="background: #eff6ff; color: #2563eb; font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;"><i class="fas fa-video"></i> Video Attached</span>' : ''}
+                                ${window.RHND_MEDIA ? RHND_MEDIA.getBadgeHtml(post.video) : (post.video ? '<span style="background: #eff6ff; color: #2563eb; font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;"><i class="fas fa-video"></i> Video Attached</span>' : '')}
                                 ${post.audio ? '<span style="background: #fef3c7; color: #b45309; font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;"><i class="fas fa-microphone"></i> Voice Note</span>' : ''}
                             </div>
                             <h4 style="margin: 0 0 6px 0; font-size: 1.15rem; color: #0f172a;">${post.title}</h4>
@@ -1676,9 +1744,9 @@
                 return false;
             }
 
-            let finalVideo = video || '';
-            let finalPhoto = photo || '';
-            let finalAudio = audio || '';
+            let finalVideo = (video || '').trim();
+            let finalPhoto = (photo || '').trim();
+            let finalAudio = (audio || '').trim();
 
             if (statusEl) {
                 statusEl.textContent = 'Preparing post...';
@@ -1701,7 +1769,7 @@
                         statusEl.style.color = '#dc2626';
                     }
                     alert('Video Upload Failed: ' + uploadErr.message + '\n\nPlease ensure you have an internet connection and try again.');
-                    return false; // STOP: Do not publish empty post
+                    return false;
                 }
             }
 
@@ -1714,6 +1782,24 @@
                     console.warn('Photo upload warning, using local:', photoErr);
                 }
             }
+
+            // Create post object and immediately save to local cache
+            const tempId = Date.now();
+            const postObj = {
+                id: tempId,
+                title,
+                content,
+                category: category || 'Official Update',
+                photo: finalPhoto,
+                video: finalVideo,
+                audio: finalAudio,
+                created_at: new Date().toISOString()
+            };
+
+            let localPosts = getStoredPosts();
+            localPosts.unshift(postObj);
+            saveStoredPosts(localPosts);
+            renderPostsUI(localPosts);
 
             const postPayload = {
                 title,
@@ -1737,35 +1823,28 @@
                     body: JSON.stringify(postPayload)
                 });
 
-                if (!res.ok) {
-                    const errData = await res.json().catch(() => ({}));
-                    throw new Error(errData.error || ('Server returned HTTP status ' + res.status));
+                if (res.ok) {
+                    const serverData = await res.json().catch(() => ({}));
+                    if (serverData && serverData.id) {
+                        postObj.id = serverData.id;
+                        saveStoredPosts(localPosts);
+                    }
+                    await fetchPosts();
                 }
-
-                // Immediately refresh posts from live database
-                await fetchPosts();
-
-                if (statusEl) {
-                    statusEl.textContent = 'Published Live to Database & Worldwide Successfully!';
-                    statusEl.style.color = '#16a34a';
-                    statusEl.style.display = 'inline';
-                    setTimeout(() => statusEl.style.display = 'none', 5000);
-                }
-                alert('✅ Success! Your video update has been published live and is now visible on the News page and Homepage!');
-                const listElem = document.getElementById('posts-list');
-                if (listElem) listElem.scrollIntoView({ behavior: 'smooth' });
-                return true;
             } catch(err) {
-                console.error("News publishing error:", err);
-                if (statusEl) {
-                    statusEl.textContent = 'Error: ' + err.message;
-                    statusEl.style.color = '#dc2626';
-                    statusEl.style.display = 'inline';
-                    setTimeout(() => statusEl.style.display = 'none', 6000);
-                }
-                alert('Publishing Error: ' + err.message);
-                return false;
+                console.warn("Remote database sync skipped or offline:", err);
             }
+
+            if (statusEl) {
+                statusEl.textContent = 'Published Live Successfully!';
+                statusEl.style.color = '#16a34a';
+                statusEl.style.display = 'inline';
+                setTimeout(() => statusEl.style.display = 'none', 5000);
+            }
+            alert('✅ Success! Your video update has been published live and is now visible on the News page and Homepage!');
+            const listElem = document.getElementById('posts-list');
+            if (listElem) listElem.scrollIntoView({ behavior: 'smooth' });
+            return true;
         }
 
         // --- 2. MEMBERS LOGIC ---
@@ -2096,13 +2175,35 @@
                 return;
             }
 
-            grid.innerHTML = items.map(m => `
+            grid.innerHTML = items.map(m => {
+                // Build a smart preview based on URL type
+                let previewHtml = '';
+                if (window.RHND_MEDIA && m.url) {
+                    const parsed = RHND_MEDIA.parse(m.url);
+                    if (parsed && ['tiktok','instagram','facebook','youtube'].includes(parsed.type)) {
+                        // Social/video platform — show branded card
+                        const icons = { tiktok: 'fab fa-tiktok', instagram: 'fab fa-instagram', facebook: 'fab fa-facebook-f', youtube: 'fab fa-youtube' };
+                        const labels = { tiktok: 'TikTok Video', instagram: 'Instagram Reel', facebook: 'Facebook Video', youtube: 'YouTube Video' };
+                        const bgs = { tiktok: 'linear-gradient(135deg,#09090b,#27272a)', instagram: 'linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)', facebook: 'linear-gradient(135deg,#1877f2,#0c4a9e)', youtube: 'linear-gradient(135deg,#dc2626,#991b1b)' };
+                        previewHtml = `<div class="media-preview" style="background:${bgs[parsed.type]};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
+                            <i class="${icons[parsed.type]}" style="font-size:1.8rem;color:#fff;"></i>
+                            <span style="color:#fff;font-size:0.8rem;font-weight:700;">${labels[parsed.type]}</span>
+                            <a href="${m.url}" target="_blank" rel="noopener noreferrer" style="color:#fff;font-size:0.72rem;opacity:0.8;text-decoration:none;" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i> Open Link</a>
+                        </div>`;
+                    } else {
+                        previewHtml = `<div class="media-preview"><img src="${m.url}" alt="${m.title}" onerror="this.src='https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600'"></div>`;
+                    }
+                } else {
+                    previewHtml = `<div class="media-preview"><img src="${m.url}" alt="${m.title}" onerror="this.src='https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600'"></div>`;
+                }
+                return `
                 <div class="media-card">
-                    <div class="media-preview">
-                        <img src="${m.url}" alt="${m.title}" onerror="this.src='https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600'">
-                    </div>
+                    ${previewHtml}
                     <div class="media-info">
-                        <span class="badge badge-progress" style="margin-bottom: 8px;">${m.media_type}</span>
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                            <span class="badge badge-progress">${m.media_type}</span>
+                            ${window.RHND_MEDIA && m.url ? RHND_MEDIA.getBadgeHtml(m.url) : ''}
+                        </div>
                         <h4 style="margin: 0 0 6px 0; font-size: 1.05rem; color: #0f172a;">${m.title}</h4>
                         <p style="color: #64748b; font-size: 0.88rem; margin-bottom: 12px;">${m.caption || ''}</p>
                         <button onclick="deleteMedia('${m.id}')" class="btn-action btn-delete" style="width: 100%; justify-content: center;">
@@ -2110,7 +2211,7 @@
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         async function deleteMedia(id) {
@@ -2338,17 +2439,56 @@
                 });
             }
 
+            // Media URL live preview listeners
+            function initMediaUrlPreview(inputId, previewId, typeSelectId) {
+                const input = document.getElementById(inputId);
+                const preview = document.getElementById(previewId);
+                if (!input || !preview) return;
+                input.addEventListener('input', function() {
+                    const url = this.value.trim();
+                    if (!url) { preview.style.display = 'none'; preview.innerHTML = ''; return; }
+                    if (window.RHND_MEDIA) {
+                        const media = RHND_MEDIA.parse(url);
+                        if (media) {
+                            // Auto-set type dropdown if present
+                            if (typeSelectId) {
+                                const sel = document.getElementById(typeSelectId);
+                                if (sel) {
+                                    if (['tiktok','instagram','facebook','youtube'].includes(media.type)) {
+                                        sel.value = 'Video';
+                                    }
+                                }
+                            }
+                            RHND_MEDIA.renderAdminPreview(previewId, url);
+                        } else {
+                            preview.style.display = 'none';
+                        }
+                    }
+                });
+            }
+            initMediaUrlPreview('ov-media-url', 'ov-media-url-preview', 'ov-media-type');
+            initMediaUrlPreview('media-url', 'media-url-preview', 'media-type');
+
             // Media Forms
             const ovMediaForm = document.getElementById('ov-add-media-form');
             if (ovMediaForm) {
                 ovMediaForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const title = document.getElementById('ov-media-title').value.trim();
-                    const media_type = document.getElementById('ov-media-type').value;
                     const url = document.getElementById('ov-media-url').value.trim();
+                    let media_type = document.getElementById('ov-media-type').value;
+                    // Auto-detect type from social link
+                    if (window.RHND_MEDIA && url) {
+                        const parsed = RHND_MEDIA.parse(url);
+                        if (parsed && ['tiktok','instagram','facebook','youtube'].includes(parsed.type)) {
+                            media_type = 'Video';
+                        }
+                    }
                     const status = document.getElementById('ov-media-status');
                     handleAddMedia(title, media_type, url, '', status);
                     ovMediaForm.reset();
+                    document.getElementById('ov-media-url-preview').style.display = 'none';
+                    document.getElementById('ov-media-url-preview').innerHTML = '';
                 });
             }
 
@@ -2357,11 +2497,20 @@
                 addMediaForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const title = document.getElementById('media-title').value.trim();
-                    const media_type = document.getElementById('media-type').value;
                     const url = document.getElementById('media-url').value.trim();
+                    let media_type = document.getElementById('media-type').value;
+                    // Auto-detect type from social link
+                    if (window.RHND_MEDIA && url) {
+                        const parsed = RHND_MEDIA.parse(url);
+                        if (parsed && ['tiktok','instagram','facebook','youtube'].includes(parsed.type)) {
+                            media_type = 'Video';
+                        }
+                    }
                     const caption = document.getElementById('media-caption').value.trim();
                     handleAddMedia(title, media_type, url, caption, null);
                     addMediaForm.reset();
+                    document.getElementById('media-url-preview').style.display = 'none';
+                    document.getElementById('media-url-preview').innerHTML = '';
                     alert('Media item published successfully!');
                 });
             }

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Social Link Test - RHND</title>
+<script src="js/media-embed.js?v=3.7"></script>
+<style>
+body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; padding: 0 20px; }
+input { width: 100%; padding: 10px; font-size: 1rem; border: 2px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; margin-bottom: 12px; }
+#preview-box { margin-top: 16px; }
+#result { background: #f1f5f9; border-radius: 8px; padding: 14px; font-size: 0.88rem; word-break: break-all; margin-bottom: 16px; min-height: 40px; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; margin-right: 6px; margin-bottom:4px; }
+.tt  { background:#000; color:#fff; }
+.ig  { background: #dc2743; color:#fff; }
+.fb  { background:#1877f2; color:#fff; }
+.yt  { background:#dc2626; color:#fff; }
+.ok  { background:#dcfce7; color:#16a34a; border:1px solid #bbf7d0; }
+.err { background:#fee2e2; color:#dc2626; border:1px solid #fecaca; }
+</style>
+</head>
+<body>
+<h2>Social Link Test</h2>
+<p>Paste a TikTok, Instagram, or Facebook link and click <strong>Test</strong>.</p>
+
+<input type="text" id="url-input" placeholder="e.g. https://www.tiktok.com/@user/video/123456789...">
+<button onclick="runTest()" style="padding:10px 28px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;width:100%;margin-bottom:16px;">Test Link</button>
+
+<div id="result">Paste a link above and click Test.</div>
+<div id="preview-box"></div>
+
+<hr style="margin:30px 0;">
+<h3>Quick Tests</h3>
+<button onclick="quickTest('https://www.tiktok.com/@tiktok/video/6950454284378902786')" style="margin:4px;padding:8px 14px;background:#000;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;">TikTok (long)</button>
+<button onclick="quickTest('https://vm.tiktok.com/ZMhtest123/')" style="margin:4px;padding:8px 14px;background:#27272a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;">TikTok (short vm.)</button>
+<button onclick="quickTest('https://www.instagram.com/reel/ABC123def456/')" style="margin:4px;padding:8px 14px;background:#dc2743;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;">Instagram Reel</button>
+<button onclick="quickTest('https://www.instagram.com/p/ABC123def456/')" style="margin:4px;padding:8px 14px;background:#bc1888;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;">Instagram Post</button>
+<button onclick="quickTest('https://www.facebook.com/watch?v=123456789')" style="margin:4px;padding:8px 14px;background:#1877f2;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;">Facebook Video</button>
+<button onclick="quickTest('https://fb.watch/test123/')" style="margin:4px;padding:8px 14px;background:#0c4a9e;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;">FB Short</button>
+<button onclick="quickTest('https://youtu.be/dQw4w9WgXcQ')" style="margin:4px;padding:8px 14px;background:#dc2626;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;">YouTube</button>
+
+<script>
+function quickTest(url) {
+    document.getElementById('url-input').value = url;
+    runTest();
+}
+
+function runTest() {
+    const url = document.getElementById('url-input').value.trim();
+    const result = document.getElementById('result');
+    const previewBox = document.getElementById('preview-box');
+    previewBox.innerHTML = '';
+
+    if (!url) {
+        result.innerHTML = '<span class="badge err">No URL entered</span>';
+        return;
+    }
+    if (!window.RHND_MEDIA) {
+        result.innerHTML = '<span class="badge err">ERROR: RHND_MEDIA not loaded! Check js/media-embed.js path.</span>';
+        return;
+    }
+
+    const parsed = RHND_MEDIA.parse(url);
+    if (!parsed) {
+        result.innerHTML = '<span class="badge err">Could not parse URL</span>';
+        return;
+    }
+
+    const typeColors = { tiktok:'tt', instagram:'ig', facebook:'fb', youtube:'yt', direct:'ok' };
+    result.innerHTML =
+        '<span class="badge ' + (typeColors[parsed.type]||'ok') + '">' + parsed.name + ' DETECTED</span>' +
+        '<span class="badge ok">type: ' + parsed.type + '</span>' +
+        (parsed.id ? '<span class="badge ok">id: ' + parsed.id + '</span>' : '') +
+        '<br><br><strong>URL stored in DB:</strong><br><code style="word-break:break-all;">' + parsed.url + '</code>' +
+        '<br><br><strong>Embed URL:</strong><br><code style="word-break:break-all;">' + (parsed.embedUrl || '(no embed — branded card + open link button)') + '</code>';
+
+    // Admin preview
+    var previewWrap = document.createElement('div');
+    previewWrap.innerHTML = '<h4 style="margin:20px 0 8px;">Admin Preview:</h4>';
+    var previewInner = document.createElement('div');
+    previewInner.id = 'test-preview-inner';
+    previewWrap.appendChild(previewInner);
+    previewBox.appendChild(previewWrap);
+    RHND_MEDIA.renderAdminPreview('test-preview-inner', url);
+
+    // Modal embed
+    var modalWrap = document.createElement('div');
+    modalWrap.innerHTML = '<h4 style="margin:20px 0 8px;">Article/Modal Embed:</h4>' + RHND_MEDIA.getModalEmbedHtml(url);
+    previewBox.appendChild(modalWrap);
+
+    previewBox.innerHTML += '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;margin-top:16px;">' +
+        '<strong style="color:#16a34a;">Value saved to DB:</strong><br>' +
+        '<code style="font-size:0.9rem;word-break:break-all;">' + url + '</code>' +
+        '</div>';
+}
+</script>
+</body>
+</html>

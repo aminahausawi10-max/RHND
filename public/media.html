@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/style.css?v=3.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/media-embed.js?v=3.7"></script>
 </head>
 <body>
         <!-- Top Bar -->
@@ -71,7 +72,16 @@
     <!-- Main Content Area -->
     <section class="section-padding">
         <div class="container">
-            <div class="cards-grid">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="media-filter-buttons">
+                    <button class="btn btn-secondary" onclick="filterMedia('all', this)" style="padding: 6px 16px; font-size: 0.85rem; border-radius: 20px; font-weight: 700; background: var(--primary-green); color: white; border-color: var(--primary-green);"><i class="fas fa-layer-group"></i> All Media</button>
+                    <button class="btn btn-secondary" onclick="filterMedia('video', this)" style="padding: 6px 16px; font-size: 0.85rem; border-radius: 20px; font-weight: 700;"><i class="fas fa-video"></i> Videos & Social Media</button>
+                    <button class="btn btn-secondary" onclick="filterMedia('photo', this)" style="padding: 6px 16px; font-size: 0.85rem; border-radius: 20px; font-weight: 700;"><i class="fas fa-image"></i> Photos</button>
+                    <button class="btn btn-secondary" onclick="filterMedia('audio', this)" style="padding: 6px 16px; font-size: 0.85rem; border-radius: 20px; font-weight: 700;"><i class="fas fa-microphone"></i> Voice Briefings</button>
+                </div>
+                <div id="media-count-badge" style="color: #64748b; font-size: 0.85rem; font-weight: 600;">Loading updates...</div>
+            </div>
+            <div class="cards-grid" id="public-media-list">
                 <div class="update-card" style="padding: 60px; text-align: center; border: 2px dashed #cbd5e1; background: transparent; box-shadow: none; grid-column: 1 / -1;">
                     <h3 style="color: var(--text-light); margin-bottom: 10px;">Content for Media Centre is being updated.</h3>
                     <p style="color: #94a3b8;">Our administrators are currently populating this section with official data.</p>
@@ -140,6 +150,205 @@
         </div>
     </footer>
 
+    <!-- Media Article Modal -->
+    <div id="newsArticleModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.7); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
+        <div style="background: white; border-radius: 16px; max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 28px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <span id="modal-article-category" style="background: #f0fdf4; color: var(--primary-green); font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 20px; border: 1px solid #dcfce7; text-transform: uppercase;"></span>
+                    <span id="modal-article-date" style="color: #94a3b8; font-size: 0.8rem; font-weight: 600;"></span>
+                </div>
+                <button type="button" onclick="closeNewsArticleModal()" style="background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.3rem; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;">&times;</button>
+            </div>
+            <h2 id="modal-article-title" style="font-size: 1.45rem; color: #0f172a; margin: 0 0 16px 0; line-height: 1.35; font-weight: 800;"></h2>
+            <div id="modal-media-wrapper"></div>
+            <div id="modal-article-content" style="color: #334155; line-height: 1.7; font-size: 0.95rem; margin-bottom: 20px;"></div>
+            <div style="text-align: right; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+                <button type="button" onclick="closeNewsArticleModal()" class="btn btn-secondary" style="padding: 8px 22px; font-size: 0.9rem; font-weight: 700;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allMediaPosts = [];
+        let currentFilter = 'all';
+
+        async function loadMediaCentre() {
+            let posts = [];
+            try {
+                const res = await fetch('/api/posts?t=' + Date.now(), { cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) posts = data;
+                }
+            } catch(e) {}
+
+            if (!posts || posts.length === 0) {
+                try {
+                    const local = localStorage.getItem('rhnd_news_db');
+                    if (local) {
+                        const parsed = JSON.parse(local);
+                        if (Array.isArray(parsed) && parsed.length > 0) posts = parsed;
+                    }
+                } catch(e) {}
+            }
+
+            allMediaPosts = (posts || []).filter(p => !!(p.video || p.photo || p.audio));
+            renderMediaGrid();
+        }
+
+        function filterMedia(type, btn) {
+            currentFilter = type;
+            const btnGroup = document.getElementById('media-filter-buttons');
+            if (btnGroup) {
+                btnGroup.querySelectorAll('button').forEach(b => {
+                    b.style.background = '';
+                    b.style.color = '';
+                    b.style.borderColor = '';
+                });
+                if (btn) {
+                    btn.style.background = 'var(--primary-green)';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = 'var(--primary-green)';
+                }
+            }
+            renderMediaGrid();
+        }
+
+        function renderMediaGrid() {
+            const list = document.getElementById('public-media-list');
+            const badge = document.getElementById('media-count-badge');
+            if (!list) return;
+
+            let filtered = allMediaPosts;
+            if (currentFilter === 'video') filtered = allMediaPosts.filter(p => !!p.video);
+            else if (currentFilter === 'photo') filtered = allMediaPosts.filter(p => !!p.photo);
+            else if (currentFilter === 'audio') filtered = allMediaPosts.filter(p => !!p.audio);
+
+            if (badge) badge.textContent = `Showing ${filtered.length} media ${filtered.length === 1 ? 'item' : 'items'}`;
+
+            if (!filtered || filtered.length === 0) {
+                list.innerHTML = `
+                <div class="update-card" style="padding: 60px; text-align: center; border: 2px dashed #cbd5e1; background: transparent; box-shadow: none; grid-column: 1 / -1;">
+                    <div style="width: 50px; height: 50px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-size: 1.4rem; color: #94a3b8;">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    <h3 style="color: var(--text-light); margin-bottom: 8px;">No media updates found in this category</h3>
+                    <p style="color: #94a3b8;">Switch tabs above to view all community photos, videos, and briefings.</p>
+                </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = filtered.map(post => {
+                const hasPhoto = !!post.photo;
+                const hasVideo = !!post.video;
+                const hasAudio = !!post.audio;
+                const category = post.category || 'Official Update';
+
+                return `
+                <div class="update-card" style="cursor: pointer; overflow: hidden; display: flex; flex-direction: column; border-radius: 14px; border: 1px solid #edf2f7; box-shadow: 0 4px 15px rgba(0,0,0,0.04); background: white; transition: transform 0.2s ease, box-shadow 0.2s ease;" onclick="openMediaArticle(${post.id})">
+                    ${hasPhoto ? `
+                    <div style="width: 100%; height: 190px; overflow: hidden; background: #0f172a; position: relative;">
+                        <img src="${post.photo}" alt="${post.title}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none'">
+                        <div style="position: absolute; bottom: 10px; left: 10px; display: flex; gap: 6px;">
+                            ${hasVideo ? (window.RHND_MEDIA ? RHND_MEDIA.getBadgeHtml(post.video) : '<span style="background: rgba(37,99,235,0.9); color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;"><i class="fas fa-video"></i> Video</span>') : ''}
+                            ${hasAudio ? '<span style="background: rgba(217,119,6,0.9); color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;"><i class="fas fa-microphone"></i> Voice Note</span>' : ''}
+                        </div>
+                    </div>
+                    ` : (hasVideo ? (window.RHND_MEDIA ? RHND_MEDIA.getCardMediaHtml(post, 190) : `
+                    <div style="width: 100%; height: 190px; background: #000; overflow: hidden; position: relative;" onclick="event.stopPropagation()">
+                        <video controls playsinline preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block; background: #000;" src="${post.video}">Your browser does not support HTML video.</video>
+                    </div>
+                    `) : '')}
+                    <div class="card-content" style="padding: 22px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+                                <span class="category" style="font-size: 0.76rem; font-weight: 800; color: var(--primary-green); background: #f0fdf4; padding: 3px 10px; border-radius: 20px; border: 1px solid #dcfce7; text-transform: uppercase;">${category}</span>
+                                ${!hasPhoto && (hasVideo || hasAudio) ? `
+                                <div style="display: flex; gap: 6px;">
+                                    ${hasVideo ? (window.RHND_MEDIA ? RHND_MEDIA.getBadgeHtml(post.video) : '<span style="background: #eff6ff; color: #2563eb; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;"><i class="fas fa-video"></i> Video</span>') : ''}
+                                    ${hasAudio ? '<span style="background: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;"><i class="fas fa-microphone"></i> Voice Note</span>' : ''}
+                                </div>
+                                ` : ''}
+                            </div>
+                            <h3 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0 0 10px 0; line-height: 1.4;">${post.title}</h3>
+                            <p style="color: #64748b; font-size: 0.92rem; line-height: 1.5; margin: 0 0 16px 0;">${(post.content || '').length > 130 ? (post.content || '').substring(0, 130) + '...' : (post.content || '')}</p>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 12px;">
+                            <span style="color: #94a3b8; font-size: 0.82rem; font-weight: 600;"><i class="far fa-calendar-alt"></i> ${new Date(post.created_at || Date.now()).toLocaleDateString()}</span>
+                            <span class="read-more" style="color: var(--primary-green); font-weight: 700; font-size: 0.88rem; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                                View Update <i class="fas fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function openMediaArticle(id) {
+            const post = allMediaPosts.find(p => p.id == id);
+            if (!post) return;
+
+            document.getElementById('modal-article-title').textContent = post.title;
+            document.getElementById('modal-article-category').textContent = post.category || 'Official Update';
+            document.getElementById('modal-article-date').textContent = new Date(post.created_at || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('modal-article-content').innerHTML = (post.content || '').split('\n\n').map(p => `<p style="margin-bottom: 14px; line-height: 1.7; color: #334155; font-size: 1rem;">${p}</p>`).join('');
+
+            const mediaWrap = document.getElementById('modal-media-wrapper');
+            if (mediaWrap) {
+                let html = '';
+                if (post.photo) {
+                    html += `
+                    <div style="margin: 0 0 20px 0; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; max-height: 380px; background: #0f172a;">
+                        <img src="${post.photo}" alt="${post.title}" style="width: 100%; height: 100%; max-height: 380px; object-fit: contain;">
+                    </div>`;
+                }
+                if (post.video) {
+                    if (window.RHND_MEDIA) {
+                        html += RHND_MEDIA.getModalEmbedHtml(post.video);
+                    } else {
+                        html += `
+                        <div style="margin: 0 0 20px 0; border-radius: 12px; overflow: hidden; background: #000;">
+                            <video controls playsinline style="width: 100%; max-height: 360px; display: block;" src="${post.video}">Your browser does not support HTML video.</video>
+                        </div>`;
+                    }
+                }
+                if (post.audio) {
+                    html += `
+                    <div style="margin: 0 0 20px 0; background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1px solid #fde68a; border-radius: 12px; padding: 16px 20px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: #d97706; color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                                <i class="fas fa-microphone-alt"></i>
+                            </div>
+                            <strong style="color: #92400e;">Official Voice Briefing</strong>
+                        </div>
+                        <audio controls style="width: 100%;" src="${post.audio}">Your browser does not support audio.</audio>
+                    </div>`;
+                }
+                mediaWrap.innerHTML = html;
+            }
+
+            const modal = document.getElementById('newsArticleModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeNewsArticleModal() {
+            const modal = document.getElementById('newsArticleModal');
+            if (modal) {
+                const v = modal.querySelector('video');
+                if (v) v.pause();
+                const a = modal.querySelector('audio');
+                if (a) a.pause();
+                const mediaWrap = document.getElementById('modal-media-wrapper');
+                if (mediaWrap) mediaWrap.innerHTML = '';
+                modal.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadMediaCentre);
+    </script>
     <script src="js/main.js?v=3.4"></script>
 </body>
 </html>
