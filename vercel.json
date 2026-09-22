@@ -1,26 +1,14 @@
 {
     "cleanUrls": true,
     "functions": {
-        "api/**/*.php": {
+        "api/index.php": {
             "runtime": "vercel-php@0.6.2"
         }
     },
     "rewrites": [
-        { "source": "/api/(.*)", "destination": "/api/index.php" },
-        { "source": "/admin", "destination": "/admin.html" },
-        { "source": "/news", "destination": "/news.html" },
-        { "source": "/login", "destination": "/login.html" },
-        { "source": "/register", "destination": "/register.html" },
+        { "source": "/api/(.*)", "destination": "/api?route=$1" },
         { "source": "/dashboard", "destination": "/member-dashboard.html" },
-        { "source": "/membership", "destination": "/membership.html" },
-        { "source": "/members", "destination": "/membership.html" },
-        { "source": "/support", "destination": "/support.html" },
-        { "source": "/agencies", "destination": "/agencies.html" },
-        { "source": "/ministries", "destination": "/ministries.html" },
-        { "source": "/national-assembly", "destination": "/national-assembly.html" },
-        { "source": "/diaspora", "destination": "/diaspora.html" },
-        { "source": "/government", "destination": "/government.html" },
-        { "source": "/media", "destination": "/media.html" }
+        { "source": "/members", "destination": "/membership.html" }
     ]
 }
 

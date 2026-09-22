@@ -3,12 +3,23 @@
 
 session_start();
 
-$requestUri = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
-$method = $_SERVER["REQUEST_METHOD"];
+$routeParam = $_GET['route'] ?? null;
+if ($routeParam) {
+    $requestUri = '/api/' . ltrim($routeParam, '/');
+} else {
+    $requestUri = parse_url($_SERVER["REQUEST_URI"] ?? '', PHP_URL_PATH);
+}
+// Strip query strings if present in requestUri
+$requestUri = explode('?', $requestUri)[0];
+$method = $_SERVER["REQUEST_METHOD"] ?? 'GET';
 
 // Route mapping
-if (strpos($requestUri, "/api/") === 0) {
+if (strpos($requestUri, "/api/") === 0 || $requestUri === '/api') {
     header("Content-Type: application/json");
+    if ($requestUri === '/api') {
+        echo json_encode(["status" => "RHND API is online", "time" => date('c')]);
+        exit;
+    }
     
     if (($requestUri === "/api/login" || $requestUri === "/api/login.php") && $method === "POST") {
         require __DIR__ . "/login.php";
