@@ -64,7 +64,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-    <script src="js/media-embed.js?v=3.7"></script>
+    <script src="js/media-embed.js?v=3.8"></script>
     <link rel="stylesheet" href="css/style.css?v=3.4">
     <style>
         :root {
@@ -1540,7 +1540,7 @@
         function getStoredPosts() {
             let list = [];
             try {
-                const local = localStorage.getItem('rhnd_news_db');
+                const local = localStorage.getItem('rhnd_news_db') || localStorage.getItem('rhnd_posts_db');
                 if (local) {
                     const parsed = JSON.parse(local);
                     if (Array.isArray(parsed) && parsed.length > 0) list = parsed;
@@ -1548,7 +1548,10 @@
             } catch(e) {}
             if (list.length === 0) {
                 list = [...defaultNews];
-                try { localStorage.setItem('rhnd_news_db', JSON.stringify(list)); } catch(e) {}
+                try {
+                    localStorage.setItem('rhnd_news_db', JSON.stringify(list));
+                    localStorage.setItem('rhnd_posts_db', JSON.stringify(list));
+                } catch(e) {}
             }
             return list;
         }
@@ -1556,6 +1559,7 @@
         function saveStoredPosts(posts) {
             try {
                 localStorage.setItem('rhnd_news_db', JSON.stringify(posts));
+                localStorage.setItem('rhnd_posts_db', JSON.stringify(posts));
             } catch(e) {}
         }
 

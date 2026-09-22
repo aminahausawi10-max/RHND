@@ -42,11 +42,12 @@
             var ttIdMatch = ttLong || ttV;
             if (ttIdMatch || ttShort || url.indexOf('tiktok.com') !== -1) {
                 var ttVideoId = ttIdMatch ? ttIdMatch[1] : (ttShort ? ttShort[1] : null);
+                var ttEmbedUrl = ttIdMatch ? ('https://www.tiktok.com/embed/v2/' + ttIdMatch[1]) : null;
                 return {
                     type: 'tiktok',
                     id: ttVideoId,
                     url: url,
-                    embedUrl: null,
+                    embedUrl: ttEmbedUrl,
                     thumbnail: null,
                     name: 'TikTok',
                     icon: 'fab fa-tiktok',
@@ -63,7 +64,7 @@
                     type: 'instagram',
                     id: igCode,
                     url: url,
-                    embedUrl: null,
+                    embedUrl: 'https://www.instagram.com/reel/' + igCode + '/embed/',
                     thumbnail: null,
                     name: 'Instagram',
                     icon: 'fab fa-instagram',
@@ -78,7 +79,7 @@
                     type: 'facebook',
                     id: null,
                     url: url,
-                    embedUrl: null,
+                    embedUrl: 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=0&width=500',
                     thumbnail: null,
                     name: 'Facebook',
                     icon: 'fab fa-facebook-f',
@@ -172,6 +173,8 @@
             var media = this.parse(videoUrl);
             if (!media) return '';
 
+            this.ensureThirdPartyScripts();
+
             if (media.type === 'youtube') {
                 return '<div style="margin:0 0 20px 0;">' +
                     '<div style="border-radius:12px;overflow:hidden;position:relative;padding-bottom:56.25%;height:0;background:#000;box-shadow:0 4px 20px rgba(0,0,0,0.25);">' +
@@ -185,42 +188,59 @@
             }
 
             if (media.type === 'tiktok') {
-                return '<div style="margin:0 0 20px 0;">' +
-                    '<div style="background:linear-gradient(135deg,#050505 0%,#18181b 50%,#000000 100%);border:2px solid #27272a;border-radius:16px;padding:32px 20px;text-align:center;color:white;box-shadow:0 10px 30px rgba(0,242,254,0.15);position:relative;overflow:hidden;">' +
-                        '<div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:#00f2fe;filter:blur(60px);opacity:0.2;border-radius:50%;"></div>' +
-                        '<div style="position:absolute;bottom:-40px;left:-40px;width:120px;height:120px;background:#fe2c55;filter:blur(60px);opacity:0.2;border-radius:50%;"></div>' +
-                        '<div style="width:64px;height:64px;border-radius:50%;background:#18181b;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#00f2fe;border:2px solid #3f3f46;box-shadow:0 0 20px rgba(0,242,254,0.3);"><i class="fab fa-tiktok"></i></div>' +
-                        '<h3 style="margin:0 0 6px;font-size:1.3rem;color:#ffffff;font-weight:800;">Official TikTok Video Update</h3>' +
-                        '<p style="margin:0 0 20px;color:#a1a1aa;font-size:0.92rem;max-width:440px;margin-left:auto;margin-right:auto;">Click below to watch this official broadcast directly on TikTok with full audio and interaction.</p>' +
-                        '<a href="' + media.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 32px;background:linear-gradient(90deg,#00f2fe 0%,#fe2c55 100%);color:#000;border-radius:30px;font-weight:900;font-size:1rem;text-decoration:none;box-shadow:0 4px 20px rgba(254,44,85,0.4);transition:transform 0.2s ease;"><i class="fab fa-tiktok" style="font-size:1.15rem;"></i> Watch Video on TikTok <i class="fas fa-external-link-alt" style="font-size:0.8rem;"></i></a>' +
+                if (media.embedUrl) {
+                    return '<div style="margin:0 0 20px 0;text-align:center;">' +
+                        '<div style="max-width:400px;margin:0 auto;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 6px 25px rgba(0,0,0,0.25);">' +
+                            '<iframe src="' + media.embedUrl + '" style="width:100%;height:580px;border:none;" allow="encrypted-media; fullscreen" allowfullscreen></iframe>' +
+                        '</div>' +
+                        '<div style="margin-top:12px;display:flex;justify-content:center;gap:12px;">' +
+                            '<a href="' + media.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:8px 20px;background:#000;color:#fff;border-radius:25px;font-weight:800;font-size:0.88rem;text-decoration:none;border:1px solid #3f3f46;"><i class="fab fa-tiktok" style="color:#00f2fe;"></i> Open in TikTok <i class="fas fa-external-link-alt" style="font-size:0.75rem;"></i></a>' +
+                        '</div>' +
+                    '</div>';
+                }
+
+                setTimeout(function() {
+                    if (window.tiktokEmbed) {
+                        try { window.tiktokEmbed.lib.render(); } catch(e) {}
+                    }
+                }, 300);
+
+                return '<div style="margin:0 0 20px 0;text-align:center;">' +
+                    '<div style="max-width:440px;margin:0 auto;border-radius:14px;overflow:hidden;background:#000;padding:12px;box-shadow:0 6px 25px rgba(0,0,0,0.25);">' +
+                        '<blockquote class="tiktok-embed" cite="' + media.url + '" style="max-width:605px;min-width:300px;margin:0 auto;">' +
+                            '<section><a target="_blank" href="' + media.url + '" style="color:#fff;">Loading TikTok Video...</a></section>' +
+                        '</blockquote>' +
+                    '</div>' +
+                    '<div style="margin-top:12px;display:flex;justify-content:center;gap:12px;">' +
+                        '<a href="' + media.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:8px 20px;background:#000;color:#fff;border-radius:25px;font-weight:800;font-size:0.88rem;text-decoration:none;border:1px solid #3f3f46;"><i class="fab fa-tiktok" style="color:#00f2fe;"></i> Watch on TikTok <i class="fas fa-external-link-alt" style="font-size:0.75rem;"></i></a>' +
                     '</div>' +
                 '</div>';
             }
 
             if (media.type === 'instagram') {
-                return '<div style="margin:0 0 20px 0;">' +
-                    '<div style="background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);border-radius:16px;padding:32px 20px;text-align:center;color:white;box-shadow:0 10px 30px rgba(220,39,67,0.25);position:relative;overflow:hidden;">' +
-                        '<div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.25);backdrop-filter:blur(6px);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;box-shadow:0 4px 15px rgba(0,0,0,0.2);"><i class="fab fa-instagram"></i></div>' +
-                        '<h3 style="margin:0 0 6px;font-size:1.3rem;color:#ffffff;font-weight:800;">Official Instagram Reel / Post</h3>' +
-                        '<p style="margin:0 0 20px;color:rgba(255,255,255,0.9);font-size:0.92rem;max-width:440px;margin-left:auto;margin-right:auto;">Click below to watch this official update directly on Instagram.</p>' +
-                        '<a href="' + media.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 32px;background:#ffffff;color:#bc1888;border-radius:30px;font-weight:900;font-size:1rem;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);"><i class="fab fa-instagram" style="font-size:1.15rem;"></i> Watch Reel on Instagram <i class="fas fa-external-link-alt" style="font-size:0.8rem;"></i></a>' +
+                return '<div style="margin:0 0 20px 0;text-align:center;">' +
+                    '<div style="max-width:440px;margin:0 auto;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 6px 25px rgba(0,0,0,0.2);">' +
+                        '<iframe src="' + media.embedUrl + '" style="width:100%;height:520px;border:none;overflow:hidden;background:#fff;" scrolling="no" allowtransparency="true" allow="encrypted-media"></iframe>' +
+                    '</div>' +
+                    '<div style="margin-top:12px;display:flex;justify-content:center;gap:12px;">' +
+                        '<a href="' + media.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:8px 20px;background:linear-gradient(45deg,#f09433,#dc2743,#bc1888);color:#fff;border-radius:25px;font-weight:800;font-size:0.88rem;text-decoration:none;"><i class="fab fa-instagram"></i> Open on Instagram <i class="fas fa-external-link-alt" style="font-size:0.75rem;"></i></a>' +
                     '</div>' +
                 '</div>';
             }
 
             if (media.type === 'facebook') {
-                return '<div style="margin:0 0 20px 0;">' +
-                    '<div style="background:linear-gradient(135deg,#1877f2 0%,#0c4a9e 100%);border-radius:16px;padding:32px 20px;text-align:center;color:white;box-shadow:0 10px 30px rgba(24,119,242,0.25);position:relative;overflow:hidden;">' +
-                        '<div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.2);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;box-shadow:0 4px 15px rgba(0,0,0,0.2);"><i class="fab fa-facebook-f"></i></div>' +
-                        '<h3 style="margin:0 0 6px;font-size:1.3rem;color:#ffffff;font-weight:800;">Official Facebook Video</h3>' +
-                        '<p style="margin:0 0 20px;color:rgba(255,255,255,0.9);font-size:0.92rem;max-width:440px;margin-left:auto;margin-right:auto;">Click below to watch this official broadcast directly on Facebook.</p>' +
-                        '<a href="' + media.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 32px;background:#ffffff;color:#1877f2;border-radius:30px;font-weight:900;font-size:1rem;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);"><i class="fab fa-facebook-f" style="font-size:1.15rem;"></i> Watch Video on Facebook <i class="fas fa-external-link-alt" style="font-size:0.8rem;"></i></a>' +
+                return '<div style="margin:0 0 20px 0;text-align:center;">' +
+                    '<div style="max-width:540px;margin:0 auto;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 6px 25px rgba(0,0,0,0.2);position:relative;padding-bottom:56.25%;height:0;">' +
+                        '<iframe src="' + media.embedUrl + '" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;overflow:hidden;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>' +
+                    '</div>' +
+                    '<div style="margin-top:12px;display:flex;justify-content:center;gap:12px;">' +
+                        '<a href="' + media.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:8px 20px;background:#1877f2;color:#fff;border-radius:25px;font-weight:800;font-size:0.88rem;text-decoration:none;"><i class="fab fa-facebook-f"></i> Open on Facebook <i class="fas fa-external-link-alt" style="font-size:0.75rem;"></i></a>' +
                     '</div>' +
                 '</div>';
             }
 
             return '<div style="margin:0 0 20px 0;border-radius:12px;overflow:hidden;background:#000;box-shadow:0 4px 15px rgba(0,0,0,0.15);">' +
-                '<video controls playsinline style="width:100%;max-height:380px;display:block;" src="' + media.url + '">Your browser does not support HTML video.</video>' +
+                '<video controls playsinline preload="metadata" style="width:100%;max-height:380px;display:block;" src="' + media.url + '">Your browser does not support HTML video.</video>' +
             '</div>';
         },
 
@@ -240,6 +260,7 @@
                 return;
             }
 
+            this.ensureThirdPartyScripts();
             var previewInner = '';
 
             if (media.type === 'youtube') {
@@ -247,31 +268,27 @@
                     '<iframe src="' + media.embedUrl + '" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allowfullscreen></iframe>' +
                 '</div>';
             } else if (media.type === 'tiktok') {
-                previewInner = '<div style="background:linear-gradient(135deg,#050505,#18181b);border:1px solid #27272a;border-radius:8px;padding:14px;text-align:center;color:white;margin-top:6px;">' +
-                    '<div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;">' +
-                        '<i class="fab fa-tiktok" style="font-size:1.3rem;color:#00f2fe;"></i>' +
-                        '<strong style="font-size:0.9rem;color:#fff;">TikTok Video Link Attached</strong>' +
-                    '</div>' +
-                    '<small style="color:#a1a1aa;font-size:0.75rem;word-break:break-all;display:block;margin-bottom:10px;">' + media.url + '</small>' +
-                    '<a href="' + media.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:linear-gradient(90deg,#00f2fe,#fe2c55);color:#000;border-radius:6px;font-weight:800;font-size:0.78rem;text-decoration:none;"><i class="fab fa-tiktok"></i> Test Link in TikTok <i class="fas fa-external-link-alt" style="font-size:0.65rem;"></i></a>' +
-                '</div>';
+                if (media.embedUrl) {
+                    previewInner = '<div style="margin-top:6px;border-radius:8px;overflow:hidden;background:#000;text-align:center;">' +
+                        '<iframe src="' + media.embedUrl + '" style="width:100%;height:380px;border:none;" allow="encrypted-media; fullscreen" allowfullscreen></iframe>' +
+                    '</div>';
+                } else {
+                    previewInner = '<div style="background:linear-gradient(135deg,#050505,#18181b);border:1px solid #27272a;border-radius:8px;padding:14px;text-align:center;color:white;margin-top:6px;">' +
+                        '<div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;">' +
+                            '<i class="fab fa-tiktok" style="font-size:1.3rem;color:#00f2fe;"></i>' +
+                            '<strong style="font-size:0.9rem;color:#fff;">TikTok Video Connected</strong>' +
+                        '</div>' +
+                        '<small style="color:#a1a1aa;font-size:0.75rem;word-break:break-all;display:block;margin-bottom:10px;">' + media.url + '</small>' +
+                        '<a href="' + media.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:linear-gradient(90deg,#00f2fe,#fe2c55);color:#000;border-radius:6px;font-weight:800;font-size:0.78rem;text-decoration:none;"><i class="fab fa-tiktok"></i> Test Link in TikTok <i class="fas fa-external-link-alt" style="font-size:0.65rem;"></i></a>' +
+                    '</div>';
+                }
             } else if (media.type === 'instagram') {
-                previewInner = '<div style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);border-radius:8px;padding:14px;text-align:center;color:white;margin-top:6px;">' +
-                    '<div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;">' +
-                        '<i class="fab fa-instagram" style="font-size:1.3rem;color:#fff;"></i>' +
-                        '<strong style="font-size:0.9rem;color:#fff;">Instagram Reel Link Attached</strong>' +
-                    '</div>' +
-                    '<small style="color:rgba(255,255,255,0.85);font-size:0.75rem;word-break:break-all;display:block;margin-bottom:10px;">' + media.url + '</small>' +
-                    '<a href="' + media.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:#fff;color:#bc1888;border-radius:6px;font-weight:800;font-size:0.78rem;text-decoration:none;"><i class="fab fa-instagram"></i> Test Link in Instagram <i class="fas fa-external-link-alt" style="font-size:0.65rem;"></i></a>' +
+                previewInner = '<div style="margin-top:6px;border-radius:8px;overflow:hidden;background:#fff;text-align:center;">' +
+                    '<iframe src="' + media.embedUrl + '" style="width:100%;height:380px;border:none;overflow:hidden;" scrolling="no" allowtransparency="true"></iframe>' +
                 '</div>';
             } else if (media.type === 'facebook') {
-                previewInner = '<div style="background:linear-gradient(135deg,#1877f2,#0c4a9e);border-radius:8px;padding:14px;text-align:center;color:white;margin-top:6px;">' +
-                    '<div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;">' +
-                        '<i class="fab fa-facebook-f" style="font-size:1.3rem;color:#fff;"></i>' +
-                        '<strong style="font-size:0.9rem;color:#fff;">Facebook Video Link Attached</strong>' +
-                    '</div>' +
-                    '<small style="color:rgba(255,255,255,0.85);font-size:0.75rem;word-break:break-all;display:block;margin-bottom:10px;">' + media.url + '</small>' +
-                    '<a href="' + media.url + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:#fff;color:#1877f2;border-radius:6px;font-weight:800;font-size:0.78rem;text-decoration:none;"><i class="fab fa-facebook-f"></i> Test Link in Facebook <i class="fas fa-external-link-alt" style="font-size:0.65rem;"></i></a>' +
+                previewInner = '<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;background:#000;margin-top:6px;">' +
+                    '<iframe src="' + media.embedUrl + '" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;overflow:hidden;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>' +
                 '</div>';
             } else {
                 previewInner = '<video controls playsinline style="width:100%;max-height:140px;border-radius:8px;background:#000;display:block;margin-top:6px;" src="' + media.url + '">Your browser does not support HTML video.</video>';
@@ -290,6 +307,16 @@
                     '<button type="button" onclick="clearMedia(\'' + prefixKey + '\')" style="position:absolute;top:10px;right:10px;background:#dc2626;color:white;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:0.85rem;z-index:10;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(220,38,38,0.3);" title="Remove Video">&times;</button>' +
                 '</div>';
             container.style.display = 'block';
+        },
+
+        ensureThirdPartyScripts: function() {
+            if (typeof document !== 'undefined' && !document.getElementById('tiktok-embed-script')) {
+                var s = document.createElement('script');
+                s.id = 'tiktok-embed-script';
+                s.src = 'https://www.tiktok.com/embed.js';
+                s.async = true;
+                document.body.appendChild(s);
+            }
         }
     };
 

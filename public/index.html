@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/style.css?v=3.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="js/media-embed.js?v=3.7"></script>
+    <script src="js/media-embed.js?v=3.8"></script>
 </head>
 <body>
     <!-- Top Bar -->
@@ -569,7 +569,10 @@
                 .then(data => {
                     if (Array.isArray(data) && data.length > 0 && !data.error) {
                         homePosts = data;
-                        try { localStorage.setItem('rhnd_posts_db', JSON.stringify(data)); } catch(e) {}
+                        try {
+                            localStorage.setItem('rhnd_posts_db', JSON.stringify(data));
+                            localStorage.setItem('rhnd_news_db', JSON.stringify(data));
+                        } catch(e) {}
                         renderHomeNews(homePosts);
                     }
                 })

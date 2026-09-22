@@ -18,6 +18,9 @@ try {
     // table might already exist
 }
 
+$rawData = file_get_contents("php://input");
+$data = json_decode($rawData, true) ?: [];
+
 // Admin Auth check for write/delete
 if ($method === 'POST' || $method === 'DELETE') {
     $adminPassword = $_SERVER['HTTP_X_ADMIN_PASSWORD'] ?? '';
@@ -25,7 +28,8 @@ if ($method === 'POST' || $method === 'DELETE') {
         $headers = getallheaders();
         $adminPassword = $headers['X-Admin-Password'] ?? $headers['x-admin-password'] ?? $adminPassword;
     }
-    if ($adminPassword !== 'Admin@RHND2026') {
+    $adminPassword = $adminPassword ?: ($data['admin_password'] ?? $_GET['admin_password'] ?? $_GET['password'] ?? '');
+    if (trim($adminPassword) !== 'Admin@RHND2026') {
         http_response_code(401);
         echo json_encode(["error" => "Unauthorized: Incorrect Admin Password"]);
         exit;
@@ -42,7 +46,6 @@ if ($method === 'GET') {
         echo json_encode(["error" => $e->getMessage()]);
     }
 } elseif ($method === 'POST') {
-    $data = json_decode(file_get_contents("php://input"), true);
     if (!isset($data['title']) || !isset($data['url'])) {
         http_response_code(400);
         echo json_encode(["error" => "Missing title or URL"]);
