@@ -136,9 +136,7 @@
 
             if (media.type === 'instagram') {
                 this.ensureThirdPartyScripts();
-                return '<div style="margin:0 0 20px 0;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,0.15);">' +
-                    '<iframe src="' + media.embedUrl + '" style="width:100%;height:600px;border:none;" scrolling="no" allowtransparency="true" allowfullscreen></iframe>' +
-                '</div>';
+                return '<div style="margin:0 0 20px 0;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,0.15);"><blockquote class="instagram-media" data-instgrm-permalink="' + media.url + '" data-instgrm-version="14" style="background:#FFF;border:0;margin:1px;max-width:100%;min-width:326px;padding:0;width:99%;"><section></section></blockquote></div>';
             }
 
             if (media.type === 'facebook') {
@@ -161,10 +159,11 @@
             if (!media) { container.style.display = 'none'; return; }
 
             var previewInner = '';
-            if (media.type === 'youtube' || media.type === 'facebook' || media.type === 'instagram') {
+            if (media.type === 'youtube' || media.type === 'facebook') {
                 previewInner = '<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;background:#000;margin-top:6px;"><iframe src="' + media.embedUrl + '" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe></div>';
-            } else if (media.type === 'tiktok') {
-                previewInner = '<div style="width:100%;height:140px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;margin-top:6px;">TikTok Link Detected</div>';
+            } else if (media.type === 'tiktok' || media.type === 'instagram') {
+                var pName = media.type === 'tiktok' ? 'TikTok' : 'Instagram';
+                previewInner = '<div style="width:100%;height:140px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;margin-top:6px;">' + pName + ' Link Detected</div>';
             } else {
                 previewInner = '<video controls playsinline style="width:100%;max-height:140px;border-radius:8px;background:#000;display:block;margin-top:6px;" src="' + media.url + '"></video>';
             }
@@ -190,6 +189,16 @@
                 ttScript.src = 'https://www.tiktok.com/embed.js';
                 ttScript.async = true;
                 document.body.appendChild(ttScript);
+            }
+            if (!document.getElementById('ig-embed-script')) {
+                var igScript = document.createElement('script');
+                igScript.id = 'ig-embed-script';
+                igScript.src = 'https://www.instagram.com/embed.js';
+                igScript.async = true;
+                document.body.appendChild(igScript);
+            }
+            if (window.instgrm && window.instgrm.Embeds) {
+                setTimeout(function() { window.instgrm.Embeds.process(); }, 500);
             }
         }
     };
