@@ -64,7 +64,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-    <script src="js/media-embed.js?v=3.8"></script>
+    <script src="js/media-embed.js?v=4.0"></script>
     <link rel="stylesheet" href="css/style.css?v=3.4">
     <style>
         :root {
@@ -440,12 +440,10 @@
                                     <div>
                                         <label style="font-weight: 700; font-size: 0.82rem; color: #2563eb; margin-bottom: 4px; display: block;"><i class="fas fa-video"></i> Video (Link / Upload)</label>
                                         <input type="file" id="ov-post-video-file" accept="video/*" class="form-control" style="font-size: 0.78rem; padding: 5px;">
-                                        <input type="text" id="ov-post-video-url" class="form-control" placeholder="Paste link: TikTok, Instagram, Facebook, YouTube, MP4" style="font-size: 0.78rem; padding: 5px; margin-top: 4px;">
+                                        <input type="text" id="ov-post-video-url" class="form-control" placeholder="Paste video link or MP4 URL" style="font-size: 0.78rem; padding: 5px; margin-top: 4px;">
                                         <div style="display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; font-size: 0.68rem;">
-                                            <span style="background: #000; color: #fff; padding: 1px 5px; border-radius: 3px;"><i class="fab fa-tiktok"></i> TikTok</span>
-                                            <span style="background: #fdf2f8; color: #db2777; border: 1px solid #fbcfe8; padding: 1px 5px; border-radius: 3px;"><i class="fab fa-instagram"></i> Instagram</span>
-                                            <span style="background: #eff6ff; color: #1877f2; border: 1px solid #bfdbfe; padding: 1px 5px; border-radius: 3px;"><i class="fab fa-facebook-f"></i> Facebook</span>
-                                            <span style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 1px 5px; border-radius: 3px;"><i class="fab fa-youtube"></i> YouTube</span>
+                                            <span style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 1px 5px; border-radius: 3px;"><i class="fas fa-video"></i> MP4</span>
+                                            <span style="background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; padding: 1px 5px; border-radius: 3px;"><i class="fas fa-link"></i> Video URL</span>
                                         </div>
                                         <div id="ov-post-video-preview" style="display: none; margin-top: 5px; position: relative;">
                                             <video id="ov-post-video-elem" controls style="width: 100%; height: 75px; border-radius: 6px; background: #000; display: none;"></video>
@@ -614,12 +612,10 @@
                                 </div>
                                 <div class="form-group">
                                     <label><i class="fas fa-link"></i> Image / Video / Social Link URL</label>
-                                    <input type="text" id="ov-media-url" class="form-control" required placeholder="Paste URL: TikTok, Instagram, Facebook, YouTube, image or MP4 link">
+                                    <input type="text" id="ov-media-url" class="form-control" required placeholder="Paste URL: image or video link">
                                     <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:5px;">
-                                        <span style="background:#000;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fab fa-tiktok"></i> TikTok</span>
-                                        <span style="background:#fdf2f8;color:#db2777;border:1px solid #fbcfe8;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fab fa-instagram"></i> Instagram</span>
-                                        <span style="background:#eff6ff;color:#1877f2;border:1px solid #bfdbfe;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fab fa-facebook-f"></i> Facebook</span>
-                                        <span style="background:#fee2e2;color:#dc2626;border:1px solid #fecaca;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fab fa-youtube"></i> YouTube</span>
+                                        <span style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fas fa-video"></i> Video</span>
+                                        <span style="background:#f0fdf4;color:#16a34a;border:1px solid #dcfce7;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fas fa-image"></i> Image</span>
                                         <span style="background:#f0fdf4;color:#16a34a;border:1px solid #dcfce7;padding:1px 6px;border-radius:3px;font-size:0.72rem;font-weight:700;"><i class="fas fa-image"></i> Image</span>
                                     </div>
                                     <div id="ov-media-url-preview" style="display:none; margin-top:8px;"></div>
@@ -698,14 +694,11 @@
                                         </label>
                                     </div>
                                     <div style="display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; font-size: 0.72rem;">
-                                        <span style="background: #000; color: #fff; padding: 2px 7px; border-radius: 4px; font-weight: 600;"><i class="fab fa-tiktok"></i> TikTok</span>
-                                        <span style="background: #fdf2f8; color: #db2777; border: 1px solid #fbcfe8; padding: 2px 7px; border-radius: 4px; font-weight: 600;"><i class="fab fa-instagram"></i> Instagram</span>
-                                        <span style="background: #eff6ff; color: #1877f2; border: 1px solid #bfdbfe; padding: 2px 7px; border-radius: 4px; font-weight: 600;"><i class="fab fa-facebook-f"></i> Facebook</span>
-                                        <span style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 2px 7px; border-radius: 4px; font-weight: 600;"><i class="fab fa-youtube"></i> YouTube</span>
+                                        <span style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 2px 7px; border-radius: 4px; font-weight: 600;"><i class="fas fa-video"></i> Video</span>
                                         <span style="background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; padding: 2px 7px; border-radius: 4px; font-weight: 600;"><i class="fas fa-file-video"></i> MP4 / CDN</span>
                                     </div>
                                     <input type="file" id="post-video-file" accept="video/*" class="form-control" style="font-size: 0.8rem; padding: 6px 8px; margin-bottom: 8px;">
-                                    <input type="text" id="post-video-url" class="form-control" placeholder="Or paste link: TikTok, Instagram Reel/Post, Facebook Video, YouTube, MP4" style="font-size: 0.82rem; padding: 7px 10px; margin: 0;">
+                                    <input type="text" id="post-video-url" class="form-control" placeholder="Or paste a video link (MP4, WebM, etc.)" style="font-size: 0.82rem; padding: 7px 10px; margin: 0;">
                                     <div id="post-video-preview" style="display: none; position: relative;">
                                         <video id="post-video-elem" controls style="width: 100%; max-height: 130px; border-radius: 8px; background: #000; display: none;"></video>
                                     </div>
@@ -893,13 +886,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-link"></i> Image / Video / Social Link URL</label>
-                            <input type="text" id="media-url" class="form-control" required placeholder="Paste URL: TikTok, Instagram, Facebook, YouTube, image or MP4 link">
+                            <label><i class="fas fa-link"></i> Image / Video URL</label>
+                            <input type="text" id="media-url" class="form-control" required placeholder="Paste URL: image or video link">
                             <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
-                                <span style="background:#000;color:#fff;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;"><i class="fab fa-tiktok"></i> TikTok</span>
-                                <span style="background:#fdf2f8;color:#db2777;border:1px solid #fbcfe8;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;"><i class="fab fa-instagram"></i> Instagram</span>
-                                <span style="background:#eff6ff;color:#1877f2;border:1px solid #bfdbfe;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;"><i class="fab fa-facebook-f"></i> Facebook</span>
-                                <span style="background:#fee2e2;color:#dc2626;border:1px solid #fecaca;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;"><i class="fab fa-youtube"></i> YouTube</span>
+                                <span style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;"><i class="fas fa-video"></i> Video</span>
                                 <span style="background:#f0fdf4;color:#16a34a;border:1px solid #dcfce7;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;"><i class="fas fa-image"></i> Image</span>
                             </div>
                             <div id="media-url-preview" style="display:none; margin-top:10px;"></div>
@@ -1477,15 +1467,8 @@
                     } else {
                         ovMed.innerHTML = media.slice(0, 4).map(m => {
                                 let thumbHtml = '';
-                                if (window.RHND_MEDIA && m.url) {
-                                    const parsed = RHND_MEDIA.parse(m.url);
-                                    if (parsed && ['tiktok','instagram','facebook','youtube'].includes(parsed.type)) {
-                                        const icons = { tiktok: 'fab fa-tiktok', instagram: 'fab fa-instagram', facebook: 'fab fa-facebook-f', youtube: 'fab fa-youtube' };
-                                        const bgs = { tiktok: '#09090b', instagram: '#dc2743', facebook: '#1877f2', youtube: '#dc2626' };
-                                        thumbHtml = `<div style="width:100%;height:110px;background:${bgs[parsed.type]};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;"><i class="${icons[parsed.type]}" style="color:#fff;font-size:1.6rem;"></i><span style="color:#fff;font-size:0.72rem;font-weight:700;">${parsed.name}</span></div>`;
-                                    } else {
-                                        thumbHtml = `<img src="${m.url}" alt="${m.title}" style="width:100%;height:110px;object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=400&q=80'">`;
-                                    }
+                                if (m.media_type === 'Video') {
+                                    thumbHtml = `<div style="width:100%;height:110px;background:#000;display:flex;align-items:center;justify-content:center;"><video src="${m.url}" style="width:100%;height:100%;object-fit:cover;"></video></div>`;
                                 } else {
                                     thumbHtml = `<img src="${m.url}" alt="${m.title}" style="width:100%;height:110px;object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=400&q=80'">`;
                                 }
@@ -2184,16 +2167,13 @@
                 let previewHtml = '';
                 if (window.RHND_MEDIA && m.url) {
                     const parsed = RHND_MEDIA.parse(m.url);
-                    if (parsed && ['tiktok','instagram','facebook','youtube'].includes(parsed.type)) {
-                        // Social/video platform — show branded card
-                        const icons = { tiktok: 'fab fa-tiktok', instagram: 'fab fa-instagram', facebook: 'fab fa-facebook-f', youtube: 'fab fa-youtube' };
-                        const labels = { tiktok: 'TikTok Video', instagram: 'Instagram Reel', facebook: 'Facebook Video', youtube: 'YouTube Video' };
-                        const bgs = { tiktok: 'linear-gradient(135deg,#09090b,#27272a)', instagram: 'linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)', facebook: 'linear-gradient(135deg,#1877f2,#0c4a9e)', youtube: 'linear-gradient(135deg,#dc2626,#991b1b)' };
-                        previewHtml = `<div class="media-preview" style="background:${bgs[parsed.type]};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
-                            <i class="${icons[parsed.type]}" style="font-size:1.8rem;color:#fff;"></i>
-                            <span style="color:#fff;font-size:0.8rem;font-weight:700;">${labels[parsed.type]}</span>
-                            <a href="${m.url}" target="_blank" rel="noopener noreferrer" style="color:#fff;font-size:0.72rem;opacity:0.8;text-decoration:none;" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i> Open Link</a>
-                        </div>`;
+                    if (parsed && ['direct','youtube'].includes(parsed.type)) {
+
+
+
+                        previewHtml = <div class="media-preview" style="background:#000;display:flex;align-items:center;justify-content:center;position:relative;">
+                            <video controls style="width:100%;height:100%;object-fit:cover;" src=""></video>
+                        </div>;
                     } else {
                         previewHtml = `<div class="media-preview"><img src="${m.url}" alt="${m.title}" onerror="this.src='https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600'"></div>`;
                     }
@@ -2458,7 +2438,7 @@
                             if (typeSelectId) {
                                 const sel = document.getElementById(typeSelectId);
                                 if (sel) {
-                                    if (['tiktok','instagram','facebook','youtube'].includes(media.type)) {
+                                    if (['direct','youtube'].includes(media.type)) {
                                         sel.value = 'Video';
                                     }
                                 }
@@ -2484,7 +2464,7 @@
                     // Auto-detect type from social link
                     if (window.RHND_MEDIA && url) {
                         const parsed = RHND_MEDIA.parse(url);
-                        if (parsed && ['tiktok','instagram','facebook','youtube'].includes(parsed.type)) {
+                        if (parsed && ['direct','youtube'].includes(parsed.type)) {
                             media_type = 'Video';
                         }
                     }
@@ -2506,7 +2486,7 @@
                     // Auto-detect type from social link
                     if (window.RHND_MEDIA && url) {
                         const parsed = RHND_MEDIA.parse(url);
-                        if (parsed && ['tiktok','instagram','facebook','youtube'].includes(parsed.type)) {
+                        if (parsed && ['direct','youtube'].includes(parsed.type)) {
                             media_type = 'Video';
                         }
                     }
