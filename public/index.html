@@ -94,7 +94,7 @@
                     <p style="margin-bottom: 0;">Verified public information, news releases, and announcements</p>
                 </div>
                 <a href="news.html" class="btn btn-secondary" style="padding: 8px 18px; font-size: 0.9rem; font-weight: 700;">
-                    View All News <i class="fas fa-arrow-right" style="margin-left: 6px;"></i>
+                    View All NIG Updates <i class="fas fa-arrow-right" style="margin-left: 6px;"></i>
                 </a>
             </div>
             
@@ -440,7 +440,7 @@
                 const grid = document.getElementById('home-news-cards-grid');
                 if (!grid) return;
                 
-                grid.innerHTML = posts.slice(0, 6).map(post => {
+                grid.innerHTML = posts.slice(0, 2).map(post => {
                     const hasPhoto = !!post.photo;
                     const hasVideo = !!post.video;
                     const hasAudio = !!post.audio;
