@@ -453,15 +453,15 @@
                     return `
                     <div class="update-card" style="cursor: pointer; overflow: hidden; display: flex; flex-direction: column; border-radius: 12px; border: 1px solid #edf2f7; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease;" onclick="openHomeNewsArticle(${post.id})">
                                                 ${hasPhoto ? `
-                        <div style="width: 100%; height: 170px; overflow: hidden; background: #0f172a; position: relative;">
+                        <div style="width: 100%; height: 240px; overflow: hidden; background: #0f172a; position: relative;">
                             <img src="${post.photo}" alt="${post.title}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none'">
                             <div style="position: absolute; bottom: 8px; left: 8px; display: flex; gap: 5px;">
                                 ${hasVideo ? (window.RHND_MEDIA ? RHND_MEDIA.getBadgeHtml(post.video) : '<span style="background: rgba(37,99,235,0.9); color: white; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;"><i class="fas fa-video"></i> Video</span>') : ''}
                                 ${hasAudio ? '<span style="background: rgba(217,119,6,0.9); color: white; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;"><i class="fas fa-microphone"></i> Audio</span>' : ''}
                             </div>
                         </div>
-                        ` : (hasVideo ? (window.RHND_MEDIA ? RHND_MEDIA.getCardMediaHtml(post, 170) : `
-                        <div style="width: 100%; height: 170px; background: #000; overflow: hidden; position: relative;" onclick="event.stopPropagation()">
+                        ` : (hasVideo ? (window.RHND_MEDIA ? RHND_MEDIA.getCardMediaHtml(post, 240) : `
+                        <div style="width: 100%; height: 240px; background: #000; overflow: hidden; position: relative;" onclick="event.stopPropagation()">
                             <video controls preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block; background: #000;" src="${post.video}">
                                 Your browser does not support HTML video.
                             </video>
