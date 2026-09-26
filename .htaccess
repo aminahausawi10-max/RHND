@@ -1,0 +1,27 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 1. Handle API routes (matches vercel.json rewrites)
+    RewriteCond %{REQUEST_URI} ^/api/(.*)$
+    RewriteRule ^api/(.*)$ api/index.php?route= [L,QSA]
+
+    # 2. Specific Page Rewrites (matches vercel.json)
+    RewriteRule ^dashboard/?$ public/member-dashboard.html [L]
+    RewriteRule ^members/?$ public/membership.html [L]
+
+    # 3. Prevent direct access to sensitive folders
+    RewriteRule ^config/ - [F,L]
+    RewriteRule ^src/ - [F,L]
+    RewriteRule ^templates/ - [F,L]
+    RewriteRule ^\.agents/ - [F,L]
+    RewriteRule ^\.vercel/ - [F,L]
+    RewriteRule ^\.env - [F,L]
+    RewriteRule ^init\.sql - [F,L]
+    RewriteRule ^skills-lock\.json - [F,L]
+    RewriteRule ^output\.txt - [F,L]
+    
+    # 4. Route everything else to the public directory
+    RewriteCond %{REQUEST_URI} !^/api/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/ [L]
+</IfModule>
