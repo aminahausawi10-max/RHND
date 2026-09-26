@@ -531,13 +531,22 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
     .top-bar-inner {
         display: flex !important;
         flex-direction: row !important;
-        justify-content: space-between !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
         align-items: center !important;
-        gap: 8px !important;
+        gap: 12px !important;
     }
     .top-bar-left .top-bar-logo img {
         width: 36px !important;
         height: 36px !important;
+        flex-shrink: 0 !important;
+    }
+    .top-bar-left .top-bar-logo img:nth-of-type(2) {
+        margin-left: 6px !important;
+    }
+    .top-bar-left .top-bar-logo {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
     }
     .top-bar-left .top-bar-logo span:first-of-type {
         font-size: 0.86rem !important;
