@@ -531,10 +531,11 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
     .top-bar-inner {
         display: flex !important;
         flex-direction: row !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
         align-items: center !important;
-        gap: 12px !important;
+        gap: 6px !important;
+        width: 100% !important;
     }
     .top-bar-left .top-bar-logo img {
         width: 36px !important;
@@ -545,8 +546,8 @@ a { text-decoration: none; color: inherit; transition: all 0.25s ease; }
         margin-left: 6px !important;
     }
     .top-bar-left .top-bar-logo {
-        flex-wrap: wrap !important;
-        justify-content: center !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
     }
     .top-bar-left .top-bar-logo span:first-of-type {
         font-size: 0.86rem !important;
