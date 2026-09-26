@@ -1388,7 +1388,7 @@
                         ovPosts.innerHTML = posts.slice(0, 5).map(post => `
                             <div style="border-bottom: 1px solid #e2e8f0; padding: 12px 0; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                    ${post.photo ? `<img src="${post.photo}" style="width: 48px; height: 48px; border-radius: 6px; object-fit: cover; flex-shrink: 0;" onerror="this.style.display='none'">` : ''}
+                                    ${post.photo ? `<img src="${post.photo}" style="width: 48px; height: 48px; border-radius: 6px; object-fit: contain; flex-shrink: 0;" onerror="this.style.display='none'">` : ''}
                                     <div>
                                         <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 2px;">
                                             <span class="badge" style="background: #f0fdf4; color: var(--primary-green); font-size: 0.72rem; padding: 1px 6px;">${post.category || 'Update'}</span>
@@ -1578,7 +1578,7 @@
             list.innerHTML = posts.map(post => `
                 <div style="border-bottom: 1px solid #e2e8f0; padding: 18px 0; display: flex; justify-content: space-between; align-items: center; gap: 15px;">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        ${post.photo ? `<img src="${post.photo}" style="width: 70px; height: 70px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 1px solid #e2e8f0;" onerror="this.style.display='none'">` : ''}
+                        ${post.photo ? `<img src="${post.photo}" style="width: 70px; height: 70px; border-radius: 8px; object-fit: contain; flex-shrink: 0; border: 1px solid #e2e8f0;" onerror="this.style.display='none'">` : ''}
                         <div>
                             <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 4px; flex-wrap: wrap;">
                                 <span class="badge" style="background: #f0fdf4; color: var(--primary-green); font-size: 0.75rem; padding: 2px 8px;">${post.category || 'Official Update'}</span>
