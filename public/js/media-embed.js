@@ -92,7 +92,7 @@
 
             if (media.type === 'youtube' && media.thumbnail) {
                 return '<div style="width:100%;height:' + heightPx + 'px;overflow:hidden;background:#000;position:relative;cursor:pointer;" onclick="' + clickFn + '">' +
-                    '<img src="' + media.thumbnail + '" alt="Video" style="width:100%;height:100%;object-fit:cover;">' +
+                    '<img src="' + media.thumbnail + '" alt="Video" style="width:100%;height:100%;object-fit:contain;">' +
                     '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;">' +
                         '<div style="width:50px;height:50px;border-radius:50%;background:#2563eb;color:white;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 4px 15px rgba(0,0,0,0.6);"><i class="fas fa-play" style="margin-left:3px;"></i></div>' +
                     '</div>' +
@@ -108,7 +108,7 @@
 
             // Direct videos
             return '<div style="width:100%;height:' + heightPx + 'px;background:#000;overflow:hidden;position:relative;" onclick="event.stopPropagation()">' +
-                '<video controls playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;background:#000;" src="' + post.video + '">Your browser does not support HTML video.</video>' +
+                '<video controls playsinline preload="metadata" style="width:100%;height:100%;object-fit:contain;display:block;background:#000;" src="' + post.video + '">Your browser does not support HTML video.</video>' +
             '</div>';
         },
 
