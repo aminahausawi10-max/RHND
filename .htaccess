@@ -3,7 +3,7 @@
 
     # 1. Handle API routes (matches vercel.json rewrites)
     RewriteCond %{REQUEST_URI} ^/api/(.*)$
-    RewriteRule ^api/(.*)$ api/index.php?route= [L,QSA]
+    RewriteRule ^api/(.*)$ api/index.php?route=$1 [L,QSA]
 
     # 2. Specific Page Rewrites (matches vercel.json)
     RewriteRule ^dashboard/?$ public/member-dashboard.html [L]
@@ -23,5 +23,5 @@
     # 4. Route everything else to the public directory
     RewriteCond %{REQUEST_URI} !^/api/
     RewriteCond %{REQUEST_URI} !^/public/
-    RewriteRule ^(.*)$ public/ [L]
+    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
