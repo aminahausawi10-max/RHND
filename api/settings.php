@@ -23,9 +23,9 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Ensure settings table exists with safely quoted column names
 try {
     $pdo->exec('CREATE TABLE IF NOT EXISTS settings (
-        "key" VARCHAR(100) PRIMARY KEY,
-        "value" TEXT NOT NULL,
-        "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        `key` VARCHAR(100) PRIMARY KEY,
+        `value` TEXT NOT NULL,
+        `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )');
     
     // Seed defaults if empty
@@ -39,7 +39,7 @@ try {
             'founder_name' => 'Mr. Inuwa Ahmed',
             'founder_phone' => '07047000070'
         ];
-        $ins = $pdo->prepare('INSERT INTO settings ("key", "value") VALUES (?, ?)');
+        $ins = $pdo->prepare('INSERT INTO settings (`key`, `value`) VALUES (?, ?)');
         foreach ($defaults as $k => $v) {
             $ins->execute([$k, $v]);
         }
@@ -48,7 +48,7 @@ try {
 
 if ($method === 'GET') {
     try {
-        $stmt = $pdo->query('SELECT "key", "value" FROM settings');
+        $stmt = $pdo->query('SELECT `key`, `value` FROM settings');
         $rows = $stmt->fetchAll();
         $settings = [];
         foreach ($rows as $row) {
@@ -75,7 +75,7 @@ if ($method === 'GET') {
     }
 
     try {
-        $stmt = $pdo->prepare('INSERT INTO settings ("key", "value") VALUES (?, ?) ON CONFLICT ("key") DO UPDATE SET "value" = EXCLUDED."value", "updated_at" = CURRENT_TIMESTAMP');
+        $stmt = $pdo->prepare('INSERT INTO settings (`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`), `updated_at` = CURRENT_TIMESTAMP');
         
         if (isset($data['key']) && isset($data['value'])) {
             $stmt->execute([$data['key'], (string)$data['value']]);
@@ -95,7 +95,7 @@ if ($method === 'GET') {
     $key = $_GET['key'] ?? null;
     if ($key) {
         try {
-            $stmt = $pdo->prepare('DELETE FROM settings WHERE "key" = ?');
+            $stmt = $pdo->prepare('DELETE FROM settings WHERE `key` = ?');
             $stmt->execute([$key]);
             echo json_encode(["success" => true]);
         } catch (Exception $e) {

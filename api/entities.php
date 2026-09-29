@@ -7,7 +7,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Ensure entities table exists
 try {
     $pdo->exec("CREATE TABLE IF NOT EXISTS entities (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         type VARCHAR(50) NOT NULL,
         name VARCHAR(255) NOT NULL,
         leader VARCHAR(150),

@@ -10,7 +10,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Ensure posts table exists in PostgreSQL and has all required columns and constraints
 try {
     $pdo->exec("CREATE TABLE IF NOT EXISTS posts (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NULL,
         title VARCHAR(255) NOT NULL,
         content TEXT NOT NULL,
@@ -21,10 +21,10 @@ try {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
     $pdo->exec("ALTER TABLE posts ALTER COLUMN user_id DROP NOT NULL");
-    $pdo->exec("ALTER TABLE posts ADD COLUMN IF NOT EXISTS category VARCHAR(100) DEFAULT 'Official Update'");
-    $pdo->exec("ALTER TABLE posts ADD COLUMN IF NOT EXISTS photo TEXT NULL");
-    $pdo->exec("ALTER TABLE posts ADD COLUMN IF NOT EXISTS video TEXT NULL");
-    $pdo->exec("ALTER TABLE posts ADD COLUMN IF NOT EXISTS audio TEXT NULL");
+    try { $pdo->exec("ALTER TABLE posts ADD COLUMN category VARCHAR(100) DEFAULT 'Official Update'"); } catch(Exception $e) {}
+    try { $pdo->exec("ALTER TABLE posts ADD COLUMN photo TEXT NULL"); } catch(Exception $e) {}
+    try { $pdo->exec("ALTER TABLE posts ADD COLUMN video TEXT NULL"); } catch(Exception $e) {}
+    try { $pdo->exec("ALTER TABLE posts ADD COLUMN audio TEXT NULL"); } catch(Exception $e) {}
 } catch (\Exception $e) {
     // Ignore if table exists or permission quirks
 }

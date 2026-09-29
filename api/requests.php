@@ -7,7 +7,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Ensure requests table exists
 try {
     $pdo->exec("CREATE TABLE IF NOT EXISTS requests (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(150) NOT NULL,
         email VARCHAR(150) NOT NULL,
         country VARCHAR(100) DEFAULT 'Nigeria',

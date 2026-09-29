@@ -7,7 +7,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Ensure media_items table exists
 try {
     $pdo->exec("CREATE TABLE IF NOT EXISTS media_items (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         media_type VARCHAR(50) NOT NULL DEFAULT 'Photo',
         url TEXT NOT NULL,

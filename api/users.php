@@ -6,7 +6,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // Ensure users table has country column
 try {
-    $pdo->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS country VARCHAR(100) DEFAULT 'United Kingdom'");
+    try { $pdo->exec("ALTER TABLE users ADD COLUMN country VARCHAR(100) DEFAULT 'United Kingdom'"); } catch(Exception $e) {}
 } catch(Exception $e) {}
 
 // Admin Auth check for write/delete
