@@ -59,7 +59,14 @@ if ($method === 'GET') {
     try {
         $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
         $stmt->execute([$id]);
+        
+        // Update public stats automatically
+         = ->query("SELECT COUNT(*) FROM users")->fetchColumn();
+         = ->prepare('UPDATE settings SET "value" = ? WHERE "key" = ?');
+        ->execute([, 'stat_members']);
+        
         echo json_encode(["success" => true]);
+
     } catch (Exception $e) {
         http_response_code(500);
         echo json_encode(["error" => $e->getMessage()]);
