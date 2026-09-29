@@ -44,7 +44,14 @@ if ($method === 'GET') {
         $country = $data['country'] ?? 'United Kingdom';
         $stmt = $pdo->prepare("INSERT INTO users (name, email, password_hash, country) VALUES (?, ?, ?, ?)");
         $stmt->execute([$data['name'], $data['email'], $hash, $country]);
+        
+        // Update public stats automatically
+        $count = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
+        $stmt_stat = $pdo->prepare('UPDATE settings SET "value" = ? WHERE "key" = ?');
+        $stmt_stat->execute([$count, 'stat_members']);
+        
         echo json_encode(["success" => true, "id" => $pdo->lastInsertId()]);
+
     } catch (Exception $e) {
         http_response_code(400);
         echo json_encode(["error" => "User creation failed (Email may already exist)"]);
@@ -61,9 +68,9 @@ if ($method === 'GET') {
         $stmt->execute([$id]);
         
         // Update public stats automatically
-         = ->query("SELECT COUNT(*) FROM users")->fetchColumn();
-         = ->prepare('UPDATE settings SET "value" = ? WHERE "key" = ?');
-        ->execute([, 'stat_members']);
+        $count = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
+        $stmt_stat = $pdo->prepare('UPDATE settings SET "value" = ? WHERE "key" = ?');
+        $stmt_stat->execute([$count, 'stat_members']);
         
         echo json_encode(["success" => true]);
 
