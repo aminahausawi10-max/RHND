@@ -414,6 +414,7 @@
     <script src="js/main.js?v=3.4"></script>
 
 
+
 <!-- PWA Install Prompt -->
 <div id="pwa-install-overlay" style="
     display: none;
@@ -454,7 +455,7 @@
             cursor: pointer;
             margin-bottom: 10px;
         ">
-            &#128242; Install App
+            &#128242; Install App Now
         </button>
         <button onclick="closePWAPrompt()" style="
             display: block;
@@ -470,7 +471,7 @@
         ">
             Not Now
         </button>
-        <p style="margin: 12px 0 0 0; color: #aaa; font-size: 0.75rem;">You can always install later from your browser menu</p>
+        <p style="margin: 12px 0 0 0; color: #aaa; font-size: 0.75rem;">We will remind you again in 30 minutes</p>
     </div>
 </div>
 <style>
@@ -482,7 +483,7 @@
 <script>
 var deferredPWAPrompt = null;
 
-// Capture the browser install event when ready
+// Capture the browser install event when it is ready
 window.addEventListener('beforeinstallprompt', function(e) {
     e.preventDefault();
     deferredPWAPrompt = e;
@@ -491,9 +492,9 @@ window.addEventListener('beforeinstallprompt', function(e) {
 function showPWAPrompt() {
     // Don't show if already installed
     if (localStorage.getItem('pwa_installed')) return;
-    // Don't show if dismissed in last 3 days
+    // Don't show if dismissed less than 30 minutes ago
     var dismissed = localStorage.getItem('pwa_dismissed');
-    if (dismissed && (Date.now() - parseInt(dismissed)) < 3 * 24 * 60 * 60 * 1000) return;
+    if (dismissed && (Date.now() - parseInt(dismissed)) < 30 * 60 * 1000) return;
 
     var overlay = document.getElementById('pwa-install-overlay');
     if (overlay) overlay.style.display = 'flex';
@@ -501,11 +502,12 @@ function showPWAPrompt() {
 
 function triggerPWAInstall() {
     if (deferredPWAPrompt) {
-        // Android/Chrome: trigger native browser install
+        // Android/Chrome: trigger native install
         deferredPWAPrompt.prompt();
         deferredPWAPrompt.userChoice.then(function(result) {
             if (result.outcome === 'accepted') {
                 localStorage.setItem('pwa_installed', '1');
+                localStorage.removeItem('pwa_dismissed');
             } else {
                 localStorage.setItem('pwa_dismissed', Date.now().toString());
             }
@@ -513,13 +515,24 @@ function triggerPWAInstall() {
             closePWAPrompt();
         });
     } else {
-        // iOS Safari / other browsers: show manual instructions
-        var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        // iOS Safari / other browsers: show step-by-step instructions
+        var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase());
         if (isIOS) {
-            alert('To install on iPhone/iPad:\n\n1. Tap the Share button (the box with an arrow at the bottom of Safari)\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm');
+            alert('To install on iPhone/iPad:
+
+1. Tap the Share button (the box with an arrow at the bottom of Safari)
+2. Scroll down and tap "Add to Home Screen"
+3. Tap "Add" to confirm
+
+The app icon will appear on your home screen!');
         } else {
-            alert('To install:\n\nAndroid: Tap the browser menu (3 dots at the top right) then tap "Add to Home Screen" or "Install App"\n\nPC: Look for the install icon on the right side of your address bar');
+            alert('To install:
+
+Android: Tap the browser menu (3 dots at top right) then tap "Add to Home Screen" or "Install App"
+
+PC Chrome/Edge: Look for the install icon on the right side of your address bar and click it');
         }
+        localStorage.setItem('pwa_dismissed', Date.now().toString());
         closePWAPrompt();
     }
 }
@@ -534,12 +547,13 @@ function closePWAPrompt() {
 
 window.addEventListener('appinstalled', function() {
     localStorage.setItem('pwa_installed', '1');
+    localStorage.removeItem('pwa_dismissed');
     closePWAPrompt();
 });
 
-// Show popup immediately when page loads (500ms so page renders first)
+// Show popup immediately as soon as the page finishes loading
 window.addEventListener('load', function() {
-    setTimeout(showPWAPrompt, 500);
+    setTimeout(showPWAPrompt, 300);
 });
 </script>
 
