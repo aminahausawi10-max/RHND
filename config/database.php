@@ -1,16 +1,12 @@
 <?php
-// HARDCODED DATABASE URL FOR VERCEL
-$dbUrl = "postgresql://neondb_owner:npg_DpIVbjQh3Rz5@ep-green-breeze-at2cczuz-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
+// Configuration for WhoGoHost (MySQL/MariaDB)
+$host    = 'localhost';
+$db      = 'rhnddias_diasporaa';
+$user    = 'rhnddias_diasporaa';
+$pass    = 'YFPDsfH9J6BqnG84nWZH';
+$charset = 'utf8mb4';
 
-// Parse postgres URL: postgres://user:password@host:port/dbname
-$parsedUrl = parse_url($dbUrl);
-$host = $parsedUrl["host"];
-$port = $parsedUrl["port"] ?? 5432;
-$user = $parsedUrl["user"];
-$pass = $parsedUrl["pass"];
-$db = ltrim($parsedUrl["path"], "/");
-
-$dsn = "pgsql:host=$host;port=$port;dbname=$db;sslmode=require";
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
