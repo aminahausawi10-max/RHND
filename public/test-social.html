@@ -97,5 +97,130 @@ function runTest() {
         '</div>';
 }
 </script>
+
+<!-- PWA Install Prompt -->
+<div id="pwa-install-overlay" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+">
+    <div style="
+        background: white;
+        border-radius: 20px;
+        padding: 32px 28px;
+        max-width: 380px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        animation: pwaSlideUp 0.4s ease;
+    ">
+        <img src="images/logo.png" alt="RHND Logo" style="width: 80px; height: 80px; object-fit: contain; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(5,104,57,0.3);">
+        <h2 style="margin: 0 0 8px 0; color: #056839; font-size: 1.3rem; font-weight: 800;">Install RHND App</h2>
+        <p style="margin: 0 0 6px 0; color: #333; font-size: 0.95rem; font-weight: 600;">Renewed Hope Nigeria Diaspora</p>
+        <p style="margin: 0 0 24px 0; color: #666; font-size: 0.85rem; line-height: 1.5;">
+            Install our app for quick access, offline browsing, and a better experience — no App Store needed!
+        </p>
+        <button id="pwa-install-btn" onclick="triggerPWAInstall()" style="
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #056839, #008751);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+        ">
+            📲 Install App
+        </button>
+        <button onclick="closePWAPrompt()" style="
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #f1f5f9;
+            color: #666;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+        ">
+            Not Now
+        </button>
+        <p style="margin: 12px 0 0 0; color: #aaa; font-size: 0.75rem;">You can always install later from your browser menu</p>
+    </div>
+</div>
+<style>
+@keyframes pwaSlideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+</style>
+<script>
+var deferredPWAPrompt = null;
+
+window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPWAPrompt = e;
+    // Show after a short delay so page loads first
+    setTimeout(showPWAPrompt, 1500);
+});
+
+function showPWAPrompt() {
+    // Only show if not already installed and not dismissed recently
+    var dismissed = localStorage.getItem('pwa_dismissed');
+    var installed = localStorage.getItem('pwa_installed');
+    if (installed) return;
+    if (dismissed) {
+        var dismissedTime = parseInt(dismissed);
+        // Don't show again for 3 days after dismissal
+        if (Date.now() - dismissedTime < 3 * 24 * 60 * 60 * 1000) return;
+    }
+    var overlay = document.getElementById('pwa-install-overlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+    }
+}
+
+function triggerPWAInstall() {
+    if (deferredPWAPrompt) {
+        deferredPWAPrompt.prompt();
+        deferredPWAPrompt.userChoice.then(function(result) {
+            if (result.outcome === 'accepted') {
+                localStorage.setItem('pwa_installed', '1');
+            } else {
+                localStorage.setItem('pwa_dismissed', Date.now().toString());
+            }
+            closePWAPrompt();
+        });
+    } else {
+        // Fallback instructions for iOS/Safari or unsupported browsers
+        alert('To install:\n\niPhone/iPad: Tap the Share button (box with arrow) then tap "Add to Home Screen"\n\nAndroid: Tap the browser menu (3 dots) then tap "Add to Home Screen" or "Install App"');
+        closePWAPrompt();
+    }
+}
+
+function closePWAPrompt() {
+    var overlay = document.getElementById('pwa-install-overlay');
+    if (overlay) overlay.style.display = 'none';
+    if (!localStorage.getItem('pwa_installed')) {
+        localStorage.setItem('pwa_dismissed', Date.now().toString());
+    }
+}
+
+// Also handle when app is installed via other means
+window.addEventListener('appinstalled', function() {
+    localStorage.setItem('pwa_installed', '1');
+    closePWAPrompt();
+});
+</script>
+
 </body>
 </html>
