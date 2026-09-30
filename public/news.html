@@ -485,7 +485,7 @@ window.addEventListener('beforeinstallprompt', function(e) {
     e.preventDefault();
     deferredPWAPrompt = e;
     // Show after a short delay so page loads first
-    setTimeout(showPWAPrompt, 1500);
+    setTimeout(showPWAPrompt, 3600000);
 });
 
 function showPWAPrompt() {
@@ -539,3 +539,4 @@ window.addEventListener('appinstalled', function() {
 
 </body>
 </html>
+
