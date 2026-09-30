@@ -128,13 +128,49 @@
 </script>
 </head>
 <body>
-<div id="pwa-install-overlay" style="display:flex;position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(160deg,#034d2a,#056839,#008751);z-index:2147483647;align-items:center;justify-content:center;padding:20px;"><div style="background:#fff;border-radius:24px;padding:36px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);"><div style="width:90px;height:90px;border-radius:20px;background:linear-gradient(135deg,#056839,#008751);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 25px rgba(5,104,57,.4);"><img src="images/logo.png" alt="RHND" style="width:70px;height:70px;object-fit:contain;border-radius:14px;"></div><h2 style="margin:0 0 6px;color:#056839;font-size:1.4rem;font-weight:800;font-family:sans-serif;">RHND App</h2><p style="margin:0 0 4px;color:#333;font-size:1rem;font-weight:700;font-family:sans-serif;">Renewed Hope Nigeria Diaspora</p><p style="margin:0 0 20px;color:#888;font-size:.8rem;font-family:sans-serif;">rhnd-diaspora.com.ng</p><p style="margin:0 0 22px;color:#555;font-size:.9rem;line-height:1.6;font-family:sans-serif;">Install our free app for quick access, offline support and the best experience!</p><button onclick="pwaInst()" style="display:block;width:100%;padding:16px;background:linear-gradient(135deg,#056839,#008751);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:sans-serif;box-shadow:0 4px 15px rgba(5,104,57,.3);">&#128242; Install App</button><button onclick="pwaSkip()" style="display:block;width:100%;padding:14px;background:#f8fafc;color:#666;border:1px solid #e2e8f0;border-radius:14px;font-size:.92rem;font-weight:600;cursor:pointer;font-family:sans-serif;">Continue to Website</button><p style="margin:12px 0 0;color:#bbb;font-size:.72rem;font-family:sans-serif;">Reminder again in 30 minutes</p></div></div>
-<script>var _pe=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();_pe=e;});function pwaInst(){if(_pe){_pe.prompt();_pe.userChoice.then(function(r){if(r.outcome==='accepted'){localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');}else{localStorage.setItem('pwa_dismissed',Date.now()+'');}  _pe=null;pwaSkip();});}else{var io=/iphone|ipad|ipod/i.test(navigator.userAgent);if(io){alert('iPhone/iPad:
-1. Tap Share button (box+arrow)
-2. Tap Add to Home Screen
-3. Tap Add');}else{alert('Android: Tap menu (3 dots) > Add to Home Screen
-
-PC: Click install icon in address bar');}localStorage.setItem('pwa_dismissed',Date.now()+'');pwaSkip();}}function pwaSkip(){var o=document.getElementById('pwa-install-overlay');if(o)o.style.display='none';if(!localStorage.getItem('pwa_installed'))localStorage.setItem('pwa_dismissed',Date.now()+'');}window.addEventListener('appinstalled',function(){localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');pwaSkip();});</script>
+<div id="pwa-install-overlay" style="display:flex;position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(160deg,#034d2a,#056839,#008751);z-index:2147483647;align-items:center;justify-content:center;padding:20px;"><div style="background:#fff;border-radius:24px;padding:36px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);"><div style="width:90px;height:90px;border-radius:20px;background:linear-gradient(135deg,#056839,#008751);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 25px rgba(5,104,57,.4);"><img src="images/logo.png" alt="RHND" style="width:70px;height:70px;object-fit:contain;border-radius:14px;"></div><h2 style="margin:0 0 6px;color:#056839;font-size:1.4rem;font-weight:800;font-family:sans-serif;">RHND App</h2><p style="margin:0 0 4px;color:#333;font-size:1rem;font-weight:700;font-family:sans-serif;">Renewed Hope Nigeria Diaspora</p><p style="margin:0 0 20px;color:#888;font-size:.8rem;font-family:sans-serif;">rhnd-diaspora.com.ng</p><p style="margin:0 0 22px;color:#555;font-size:.9rem;line-height:1.6;font-family:sans-serif;">Install our free app for quick access, offline support and the best experience!</p><button onclick="pwaInst()" id="pwa-inst-btn" style="display:block;width:100%;padding:16px;background:linear-gradient(135deg,#056839,#008751);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:sans-serif;box-shadow:0 4px 15px rgba(5,104,57,.3);">&#128242; Install App</button><button onclick="pwaSkip()" style="display:block;width:100%;padding:14px;background:#f8fafc;color:#666;border:1px solid #e2e8f0;border-radius:14px;font-size:.92rem;font-weight:600;cursor:pointer;font-family:sans-serif;">Continue to Website</button><p style="margin:12px 0 0;color:#bbb;font-size:.72rem;font-family:sans-serif;">Reminder again in 30 minutes</p></div></div>
+<script>var _pe=null,_pr=false;
+window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();_pe=e;_pr=true;
+    var b=document.getElementById('pwa-inst-btn');
+    if(b)b.innerHTML='&#128242; Install App';
+});
+function pwaInst(){
+    var b=document.getElementById('pwa-inst-btn');
+    function doPrompt(){
+        _pe.prompt();
+        _pe.userChoice.then(function(r){
+            if(r.outcome==='accepted'){localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');}
+            else{localStorage.setItem('pwa_dismissed',Date.now()+'');}
+            _pe=null;_pr=false;pwaSkip();
+        });
+    }
+    if(_pe&&_pr){
+        doPrompt();
+    } else {
+        if(b){b.innerHTML='Please wait...';}
+        var t=0,iv=setInterval(function(){
+            t++;
+            if(_pe&&_pr){clearInterval(iv);if(b)b.innerHTML='&#128242; Install App';doPrompt();}
+            else if(t>20){
+                clearInterval(iv);
+                if(b)b.innerHTML='&#128242; Install App';
+                var io=/iphone|ipad|ipod/i.test(navigator.userAgent);
+                if(io){alert('iPhone:\n1. Tap Share button\n2. Tap Add to Home Screen\n3. Tap Add');}
+                else{alert('Android: Tap the 3-dot menu, then "Add to Home Screen" or "Install App"\n\nPC: Click install icon in address bar');}
+                localStorage.setItem('pwa_dismissed',Date.now()+'');pwaSkip();
+            }
+        },200);
+    }
+}
+function pwaSkip(){
+    var o=document.getElementById('pwa-install-overlay');
+    if(o)o.style.display='none';
+    if(!localStorage.getItem('pwa_installed'))localStorage.setItem('pwa_dismissed',Date.now()+'');
+}
+window.addEventListener('appinstalled',function(){
+    localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');pwaSkip();
+});</script>
 
     <!-- Top Bar -->
     <div class="top-bar">
