@@ -206,7 +206,7 @@
 </script>
 </head>
 <body>
-<div id="pwa-install-overlay" style="display:flex;position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(160deg,#034d2a,#056839,#008751);z-index:2147483647;align-items:center;justify-content:center;padding:20px;"><div style="background:#fff;border-radius:24px;padding:36px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);"><div style="width:90px;height:90px;border-radius:20px;background:linear-gradient(135deg,#056839,#008751);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 25px rgba(5,104,57,.4);"><img src="images/logo.png" alt="RHND" style="width:70px;height:70px;object-fit:contain;border-radius:14px;"></div><h2 style="margin:0 0 6px;color:#056839;font-size:1.4rem;font-weight:800;font-family:sans-serif;">RHND App</h2><p style="margin:0 0 4px;color:#333;font-size:1rem;font-weight:700;font-family:sans-serif;">Renewed Hope Nigeria Diaspora</p><p style="margin:0 0 20px;color:#888;font-size:.8rem;font-family:sans-serif;">rhnd-diaspora.com.ng</p><p style="margin:0 0 22px;color:#555;font-size:.9rem;line-height:1.6;font-family:sans-serif;">Install our free app for quick access, offline support and the best experience!</p><button onclick="pwaInst()" id="pwa-inst-btn" style="display:block;width:100%;padding:16px;background:linear-gradient(135deg,#056839,#008751);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:sans-serif;box-shadow:0 4px 15px rgba(5,104,57,.3);">&#128242; Install App</button><button onclick="pwaSkip()" style="display:block;width:100%;padding:14px;background:#f8fafc;color:#666;border:1px solid #e2e8f0;border-radius:14px;font-size:.92rem;font-weight:600;cursor:pointer;font-family:sans-serif;">Continue to Website</button><p style="margin:12px 0 0;color:#bbb;font-size:.72rem;font-family:sans-serif;">Reminder again in 30 minutes</p></div></div>
+<div id="pwa-install-overlay" style="display:flex;position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(160deg,#034d2a,#056839,#008751);z-index:2147483647;align-items:center;justify-content:center;padding:20px;"><div style="background:#fff;border-radius:24px;padding:36px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);"><div style="width:90px;height:90px;border-radius:20px;background:linear-gradient(135deg,#056839,#008751);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 25px rgba(5,104,57,.4);"><img src="images/logo.png" alt="RHND" style="width:70px;height:70px;object-fit:contain;border-radius:14px;"></div><h2 style="margin:0 0 6px;color:#056839;font-size:1.4rem;font-weight:800;font-family:sans-serif;">RHN Diaspora</h2><p style="margin:0 0 4px;color:#333;font-size:1rem;font-weight:700;font-family:sans-serif;">Renewed Hope Diaspora Worldwide</p><p style="margin:0 0 20px;color:#888;font-size:.8rem;font-family:sans-serif;">rhnd-diaspora.com.ng</p><p style="margin:0 0 22px;color:#555;font-size:.9rem;line-height:1.6;font-family:sans-serif;">Install our free app for quick access, offline support and the best experience!</p><button onclick="pwaInst()" id="pwa-inst-btn" style="display:block;width:100%;padding:16px;background:linear-gradient(135deg,#056839,#008751);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:sans-serif;box-shadow:0 4px 15px rgba(5,104,57,.3);">&#128242; Install App</button><button onclick="pwaSkip()" style="display:block;width:100%;padding:14px;background:#f8fafc;color:#666;border:1px solid #e2e8f0;border-radius:14px;font-size:.92rem;font-weight:600;cursor:pointer;font-family:sans-serif;">Continue to Website</button><p style="margin:12px 0 0;color:#bbb;font-size:.72rem;font-family:sans-serif;">Reminder again in 30 minutes</p></div></div>
 <script>var _pe=null,_pr=false;
 window.addEventListener('beforeinstallprompt',function(e){
     e.preventDefault();_pe=e;_pr=true;
@@ -220,7 +220,7 @@ function pwaInst(){
         _pe.userChoice.then(function(r){
             if(r.outcome==='accepted'){localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');}
             else{localStorage.setItem('pwa_dismissed',Date.now()+'');}
-            _pe=null;_pr=false;pwaSkip();
+            _pe=null;_pr=false;window.location.href='login.html';
         });
     }
     if(_pe&&_pr){
@@ -230,13 +230,13 @@ function pwaInst(){
         var t=0,iv=setInterval(function(){
             t++;
             if(_pe&&_pr){clearInterval(iv);if(b)b.innerHTML='&#128242; Install App';doPrompt();}
-            else if(t>20){
+            else if(t>5){
                 clearInterval(iv);
                 if(b)b.innerHTML='&#128242; Install App';
                 var io=/iphone|ipad|ipod/i.test(navigator.userAgent);
                 if(io){alert('iPhone:\n1. Tap Share button\n2. Tap Add to Home Screen\n3. Tap Add');}
                 else{alert('Android: Tap the 3-dot menu, then "Add to Home Screen" or "Install App"\n\nPC: Click install icon in address bar');}
-                localStorage.setItem('pwa_dismissed',Date.now()+'');pwaSkip();
+                localStorage.setItem('pwa_dismissed',Date.now()+'');window.location.href='login.html';
             }
         },200);
     }
@@ -247,7 +247,7 @@ function pwaSkip(){
     if(!localStorage.getItem('pwa_installed'))localStorage.setItem('pwa_dismissed',Date.now()+'');
 }
 window.addEventListener('appinstalled',function(){
-    localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');pwaSkip();
+    localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');window.location.href='login.html';
 });</script>
 
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleMobileSidebar(false)"></div>
@@ -322,7 +322,7 @@ window.addEventListener('appinstalled',function(){
                     <div class="stat-card" onclick="switchOverviewSubTab('members'); scrollToManager();" style="border-bottom-color: #3b82f6; cursor: pointer;" title="Manage members below">
                         <div>
                             <div style="display: flex; align-items: baseline; gap: 8px;">
-                                <h3 id="stat-members" style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;">0</h3>
+                                <h3 id="stat-members" style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;">887,563</h3>
                                 <span id="card-tag-members" style="font-size: 0.72rem; color: #3b82f6; font-weight: 700; background: #eff6ff; padding: 2px 6px; border-radius: 4px; display: none;">Custom</span>
                             </div>
                             <p style="margin: 4px 0 0 0; color: #64748b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">TOTAL MEMBERS</p>
@@ -997,7 +997,7 @@ window.addEventListener('appinstalled',function(){
                         </div>
                         <div class="form-group">
                             <label>Broadcast Message</label>
-                            <textarea id="broadcast-message" class="form-control" rows="4" required placeholder="Enter announcement body...">Join the upcoming Renewed Hope Nigeria Diaspora virtual dialogue with diplomatic representatives this month. Check your registered email for direct invitation links.</textarea>
+                            <textarea id="broadcast-message" class="form-control" rows="4" required placeholder="Enter announcement body...">Join the upcoming Renewed Hope Diaspora Worldwide virtual dialogue with diplomatic representatives this month. Check your registered email for direct invitation links.</textarea>
                         </div>
                         <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                             <button type="submit" class="btn btn-primary" style="background: #b45309; border-color: #b45309;">
@@ -1087,7 +1087,7 @@ window.addEventListener('appinstalled',function(){
                 }
                 if (cardTag) cardTag.style.display = 'inline-block';
             } else {
-                if (statEl) statEl.textContent = count;
+                if (statEl) statEl.textContent = (type === 'members' ? '887,563' : count);
                 if (badge) {
                     badge.textContent = 'Live DB';
                     badge.style.background = '#eff6ff';
@@ -1363,7 +1363,9 @@ window.addEventListener('appinstalled',function(){
                                         <span style="background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;"><i class="fas fa-file-video"></i> Video File Selected</span>
                                         <small style="color: #64748b; font-size: 0.75rem;">${file.name} (${(file.size / (1024*1024)).toFixed(1)} MB)</small>
                                     </div>
-                                    <video controls playsinline style="width: 100%; max-height: 140px; border-radius: 8px; background: #000; display: block;" src="${objUrl}"></video>
+                                    <div class="rhnd-video-container" style="max-height: 220px;">
+                                        <video controls playsinline webkit-playsinline preload="metadata" onloadedmetadata="if(window.adaptVideoContainer)window.adaptVideoContainer(this)" style="width: 100%; height: auto; max-height: 220px; border-radius: 8px; background: #000; object-fit: contain; object-position: center; display: block;" src="${objUrl}"></video>
+                                    </div>
                                     <button type="button" onclick="clearMedia('${prefix}-video')" style="position: absolute; top: 32px; right: 8px; background: rgba(220,38,38,0.9); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 0.8rem; z-index: 10; display: flex; align-items: center; justify-content: center;" title="Remove Video">&times;</button>
                                 </div>
                             `;
@@ -1530,7 +1532,7 @@ window.addEventListener('appinstalled',function(){
                         ovMed.innerHTML = media.slice(0, 4).map(m => {
                                 let thumbHtml = '';
                                 if (m.media_type === 'Video') {
-                                    thumbHtml = `<div style="width:100%;height:110px;background:#000;display:flex;align-items:center;justify-content:center;"><video src="${m.url}" style="width:100%;height:100%;object-fit:cover;"></video></div>`;
+                                    thumbHtml = `<div style="width:100%;height:110px;background:#0b1329;display:flex;align-items:center;justify-content:center;"><video src="${m.url}" style="width:100%;height:100%;object-fit:contain;background:#000;"></video></div>`;
                                 } else {
                                     thumbHtml = `<img src="${m.url}" alt="${m.title}" style="width:100%;height:110px;object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=400&q=80'">`;
                                 }
@@ -2234,7 +2236,7 @@ window.addEventListener('appinstalled',function(){
 
 
                         previewHtml = `<div class="media-preview" style="background:#000;display:flex;align-items:center;justify-content:center;position:relative;">
-                            <video controls style="width:100%;height:100%;object-fit:cover;" src="${m.url}"></video>
+                            <video controls playsinline preload="metadata" onloadedmetadata="if(window.adaptVideoContainer)window.adaptVideoContainer(this)" style="width:100%;height:100%;object-fit:contain;background:#000;" src="${m.url}"></video>
                         </div>`;
                     } else {
                         previewHtml = `<div class="media-preview"><img src="${m.url}" alt="${m.title}" onerror="this.src='https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600'"></div>`;

@@ -1,12 +1,84 @@
 /**
- * RHND Media Embed Utility v4.1
- * Supports TikTok, Instagram, Facebook, YouTube, and direct MP4/video files.
- * Provides clean, error-free presentation without intrusive logos on cards.
+ * RHND Media Embed & Universal Video Engine v5.0
+ * Supports Landscape, Portrait (TikTok, Reels, WhatsApp Status), Square & Custom ratios.
+ * Automatically detects dimensions, never crops, never distorts, preserves full frame
+ * and ensures white backgrounds and objects remain distinct against neutral dark frame.
  */
 (function(window) {
     'use strict';
 
+    /**
+     * Adapt container to video's original dimensions and orientation.
+     * Never crops, never distorts, preserves edge-to-edge content.
+     */
+    function adaptVideoContainer(video) {
+        if (!video) return;
+        var w = video.videoWidth;
+        var h = video.videoHeight;
+        if (!w || !h) return;
+
+        var ratio = w / h;
+        var container = video.closest('.rhnd-video-container') || 
+                        video.closest('.rhnd-card-video-wrap') || 
+                        video.closest('.rhnd-modal-video-wrap') || 
+                        video.closest('.video-container') || 
+                        video.parentElement;
+
+        video.style.objectFit = 'contain';
+        video.style.objectPosition = 'center';
+
+        if (container) {
+            container.classList.remove('rhnd-video-portrait', 'rhnd-video-square', 'rhnd-video-landscape', 'video-portrait', 'video-square', 'video-landscape');
+
+            if (ratio < 0.85) {
+                // Portrait (e.g. 9:16 TikTok, Reels, phone camera)
+                container.classList.add('rhnd-video-portrait', 'video-portrait');
+                if (container.classList.contains('rhnd-card-video-wrap')) {
+                    container.style.height = '360px';
+                }
+            } else if (ratio >= 0.85 && ratio <= 1.15) {
+                // Square (1:1)
+                container.classList.add('rhnd-video-square', 'video-square');
+                if (container.classList.contains('rhnd-card-video-wrap')) {
+                    container.style.height = '300px';
+                }
+            } else {
+                // Landscape (16:9, 4:3, etc.)
+                container.classList.add('rhnd-video-landscape', 'video-landscape');
+                if (container.classList.contains('rhnd-card-video-wrap')) {
+                    container.style.height = '240px';
+                }
+            }
+        }
+    }
+
+    // Expose global helper
+    window.adaptVideoContainer = adaptVideoContainer;
+
+    // Auto-attach to all video elements once loaded
+    function autoInitAllVideos() {
+        var videos = document.querySelectorAll('video');
+        for (var i = 0; i < videos.length; i++) {
+            var v = videos[i];
+            if (v.readyState >= 1) {
+                adaptVideoContainer(v);
+            } else {
+                v.addEventListener('loadedmetadata', function() {
+                    adaptVideoContainer(this);
+                });
+            }
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', autoInitAllVideos);
+    } else {
+        autoInitAllVideos();
+    }
+
     const RHND_MEDIA = {
+
+        adaptVideoContainer: adaptVideoContainer,
 
         /**
          * Parse any media URL and return metadata & embed information.
@@ -67,7 +139,7 @@
                 };
             }
 
-            // 5. Direct Video
+            // 5. Direct Video (MP4, WebM, Cloudinary, etc.)
             return {
                 type: 'direct',
                 id: null,
@@ -82,8 +154,12 @@
             return '<span style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-play-circle"></i> Video</span>';
         },
 
+        /**
+         * Render card media in news/media lists.
+         * Never crops, adapts to orientation, preserves white background contrast.
+         */
         getCardMediaHtml: function(post, heightPx) {
-            heightPx = heightPx || 190;
+            heightPx = heightPx || 220;
             if (!post || !post.video) return '';
             var media = this.parse(post.video);
             if (!media) return '';
@@ -91,8 +167,8 @@
             var clickFn = "event.stopPropagation(); if(typeof openNewsArticle==='function') openNewsArticle(" + post.id + "); else if(typeof openHomeNewsArticle==='function') openHomeNewsArticle(" + post.id + "); else if(typeof openMediaArticle==='function') openMediaArticle(" + post.id + ");";
 
             if (media.type === 'youtube' && media.thumbnail) {
-                return '<div style="width:100%;height:' + heightPx + 'px;overflow:hidden;background:#000;position:relative;cursor:pointer;" onclick="' + clickFn + '">' +
-                    '<img src="' + media.thumbnail + '" alt="Video" style="width:100%;height:100%;object-fit:contain;">' +
+                return '<div class="rhnd-card-video-wrap" style="height:' + heightPx + 'px;cursor:pointer;" onclick="' + clickFn + '">' +
+                    '<img src="' + media.thumbnail + '" alt="Video" style="width:100%;height:100%;object-fit:contain;object-position:center;">' +
                     '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;">' +
                         '<div style="width:50px;height:50px;border-radius:50%;background:#2563eb;color:white;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 4px 15px rgba(0,0,0,0.6);"><i class="fas fa-play" style="margin-left:3px;"></i></div>' +
                     '</div>' +
@@ -100,18 +176,22 @@
             }
 
             if (media.type === 'tiktok' || media.type === 'instagram' || media.type === 'facebook') {
-                return '<div style="width:100%;height:' + heightPx + 'px;background:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;" onclick="' + clickFn + '">' +
+                return '<div class="rhnd-card-video-wrap" style="height:' + heightPx + 'px;cursor:pointer;flex-direction:column;" onclick="' + clickFn + '">' +
                     '<div style="width:52px;height:52px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;margin-bottom:8px;border:1px solid #334155;"><i class="fas fa-play" style="margin-left:4px;"></i></div>' +
                     '<span style="color:#cbd5e1;font-size:0.85rem;font-weight:600;">Click to watch video</span>' +
                 '</div>';
             }
 
-            // Direct videos
-            return '<div style="width:100%;height:' + heightPx + 'px;background:#000;overflow:hidden;position:relative;" onclick="event.stopPropagation()">' +
-                '<video controls playsinline preload="metadata" style="width:100%;height:100%;object-fit:contain;display:block;background:#000;" src="' + post.video + '">Your browser does not support HTML video.</video>' +
+            // Direct videos: Never crop, auto-detect dimensions, contain full frame
+            return '<div class="rhnd-card-video-wrap" onclick="event.stopPropagation()">' +
+                '<video controls playsinline webkit-playsinline preload="metadata" onloadedmetadata="if(window.adaptVideoContainer)window.adaptVideoContainer(this)" style="width:100%;height:100%;max-height:420px;object-fit:contain;object-position:center;display:block;background:#000;" src="' + post.video + '">Your browser does not support HTML video.</video>' +
             '</div>';
         },
 
+        /**
+         * Render full modal media.
+         * Never crops, supports full responsive container for portrait, landscape, square.
+         */
         getModalEmbedHtml: function(videoUrl) {
             var media = this.parse(videoUrl);
             if (!media) return '';
@@ -145,9 +225,9 @@
                 '</div>';
             }
 
-            // Direct videos
-            return '<div style="margin:0 0 20px 0;border-radius:12px;overflow:hidden;background:#000;box-shadow:0 4px 15px rgba(0,0,0,0.15);">' +
-                '<video controls playsinline preload="metadata" style="width:100%;max-height:380px;display:block;" src="' + media.url + '">Your browser does not support HTML video.</video>' +
+            // Direct videos: Full frame responsive container, never crop, contrast background
+            return '<div class="rhnd-modal-video-wrap">' +
+                '<video controls playsinline webkit-playsinline preload="metadata" onloadedmetadata="if(window.adaptVideoContainer)window.adaptVideoContainer(this)" style="width:100%;height:auto;max-width:100%;max-height:72vh;object-fit:contain;object-position:center;display:block;background:#000;" src="' + media.url + '">Your browser does not support HTML video.</video>' +
             '</div>';
         },
 
@@ -165,7 +245,9 @@
                 var pName = media.type === 'tiktok' ? 'TikTok' : 'Instagram';
                 previewInner = '<div style="width:100%;height:140px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;margin-top:6px;">' + pName + ' Link Detected</div>';
             } else {
-                previewInner = '<video controls playsinline style="width:100%;max-height:140px;border-radius:8px;background:#000;display:block;margin-top:6px;" src="' + media.url + '"></video>';
+                previewInner = '<div class="rhnd-video-container" style="margin-top:6px;max-height:260px;">' +
+                    '<video controls playsinline webkit-playsinline preload="metadata" onloadedmetadata="if(window.adaptVideoContainer)window.adaptVideoContainer(this)" style="width:100%;height:auto;max-height:260px;border-radius:8px;background:#000;object-fit:contain;object-position:center;display:block;" src="' + media.url + '"></video>' +
+                '</div>';
             }
 
             var prefixKey = containerId.replace('-preview', '');

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help & Support | Renewed Hope Nigeria Diaspora</title>
+    <title>Help & Support | Renewed Hope Diaspora Worldwide</title>
     <link rel="stylesheet" href="css/style.css?v=3.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -128,7 +128,7 @@
 </script>
 </head>
 <body>
-<div id="pwa-install-overlay" style="display:flex;position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(160deg,#034d2a,#056839,#008751);z-index:2147483647;align-items:center;justify-content:center;padding:20px;"><div style="background:#fff;border-radius:24px;padding:36px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);"><div style="width:90px;height:90px;border-radius:20px;background:linear-gradient(135deg,#056839,#008751);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 25px rgba(5,104,57,.4);"><img src="images/logo.png" alt="RHND" style="width:70px;height:70px;object-fit:contain;border-radius:14px;"></div><h2 style="margin:0 0 6px;color:#056839;font-size:1.4rem;font-weight:800;font-family:sans-serif;">RHND App</h2><p style="margin:0 0 4px;color:#333;font-size:1rem;font-weight:700;font-family:sans-serif;">Renewed Hope Nigeria Diaspora</p><p style="margin:0 0 20px;color:#888;font-size:.8rem;font-family:sans-serif;">rhnd-diaspora.com.ng</p><p style="margin:0 0 22px;color:#555;font-size:.9rem;line-height:1.6;font-family:sans-serif;">Install our free app for quick access, offline support and the best experience!</p><button onclick="pwaInst()" id="pwa-inst-btn" style="display:block;width:100%;padding:16px;background:linear-gradient(135deg,#056839,#008751);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:sans-serif;box-shadow:0 4px 15px rgba(5,104,57,.3);">&#128242; Install App</button><button onclick="pwaSkip()" style="display:block;width:100%;padding:14px;background:#f8fafc;color:#666;border:1px solid #e2e8f0;border-radius:14px;font-size:.92rem;font-weight:600;cursor:pointer;font-family:sans-serif;">Continue to Website</button><p style="margin:12px 0 0;color:#bbb;font-size:.72rem;font-family:sans-serif;">Reminder again in 30 minutes</p></div></div>
+<div id="pwa-install-overlay" style="display:flex;position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(160deg,#034d2a,#056839,#008751);z-index:2147483647;align-items:center;justify-content:center;padding:20px;"><div style="background:#fff;border-radius:24px;padding:36px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);"><div style="width:90px;height:90px;border-radius:20px;background:linear-gradient(135deg,#056839,#008751);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 25px rgba(5,104,57,.4);"><img src="images/logo.png" alt="RHND" style="width:70px;height:70px;object-fit:contain;border-radius:14px;"></div><h2 style="margin:0 0 6px;color:#056839;font-size:1.4rem;font-weight:800;font-family:sans-serif;">RHN Diaspora</h2><p style="margin:0 0 4px;color:#333;font-size:1rem;font-weight:700;font-family:sans-serif;">Renewed Hope Diaspora Worldwide</p><p style="margin:0 0 20px;color:#888;font-size:.8rem;font-family:sans-serif;">rhnd-diaspora.com.ng</p><p style="margin:0 0 22px;color:#555;font-size:.9rem;line-height:1.6;font-family:sans-serif;">Install our free app for quick access, offline support and the best experience!</p><button onclick="pwaInst()" id="pwa-inst-btn" style="display:block;width:100%;padding:16px;background:linear-gradient(135deg,#056839,#008751);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:sans-serif;box-shadow:0 4px 15px rgba(5,104,57,.3);">&#128242; Install App</button><button onclick="pwaSkip()" style="display:block;width:100%;padding:14px;background:#f8fafc;color:#666;border:1px solid #e2e8f0;border-radius:14px;font-size:.92rem;font-weight:600;cursor:pointer;font-family:sans-serif;">Continue to Website</button><p style="margin:12px 0 0;color:#bbb;font-size:.72rem;font-family:sans-serif;">Reminder again in 30 minutes</p></div></div>
 <script>var _pe=null,_pr=false;
 window.addEventListener('beforeinstallprompt',function(e){
     e.preventDefault();_pe=e;_pr=true;
@@ -142,7 +142,7 @@ function pwaInst(){
         _pe.userChoice.then(function(r){
             if(r.outcome==='accepted'){localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');}
             else{localStorage.setItem('pwa_dismissed',Date.now()+'');}
-            _pe=null;_pr=false;pwaSkip();
+            _pe=null;_pr=false;window.location.href='login.html';
         });
     }
     if(_pe&&_pr){
@@ -152,13 +152,13 @@ function pwaInst(){
         var t=0,iv=setInterval(function(){
             t++;
             if(_pe&&_pr){clearInterval(iv);if(b)b.innerHTML='&#128242; Install App';doPrompt();}
-            else if(t>20){
+            else if(t>5){
                 clearInterval(iv);
                 if(b)b.innerHTML='&#128242; Install App';
                 var io=/iphone|ipad|ipod/i.test(navigator.userAgent);
                 if(io){alert('iPhone:\n1. Tap Share button\n2. Tap Add to Home Screen\n3. Tap Add');}
                 else{alert('Android: Tap the 3-dot menu, then "Add to Home Screen" or "Install App"\n\nPC: Click install icon in address bar');}
-                localStorage.setItem('pwa_dismissed',Date.now()+'');pwaSkip();
+                localStorage.setItem('pwa_dismissed',Date.now()+'');window.location.href='login.html';
             }
         },200);
     }
@@ -169,7 +169,7 @@ function pwaSkip(){
     if(!localStorage.getItem('pwa_installed'))localStorage.setItem('pwa_dismissed',Date.now()+'');
 }
 window.addEventListener('appinstalled',function(){
-    localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');pwaSkip();
+    localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');window.location.href='login.html';
 });</script>
 
     <!-- Top Bar -->
@@ -180,7 +180,7 @@ window.addEventListener('appinstalled',function(){
 <img src="images/logo.png" alt="RHND Logo" style="width: 42px; height: 42px; object-fit: contain; background: white; border-radius: 50%; padding: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.25);">
 <div style="line-height: 1.15;">
                         <span style="font-weight: 800; font-size: 1rem; color: white; display: block; letter-spacing: 0.5px;">RENEWED HOPE</span>
-                        <span style="font-weight: 700; font-size: 0.76rem; color: var(--primary-gold); display: block; letter-spacing: 1.2px;">NIGERIA DIASPORA</span>
+                        <span style="font-weight: 700; font-size: 0.76rem; color: var(--primary-gold); display: block; letter-spacing: 1.2px;">DIASPORA WORLDWIDE</span>
                     </div>
 </a>
             </div>
@@ -214,7 +214,7 @@ window.addEventListener('appinstalled',function(){
             <div class="container">
                 <ul class="nav-links">
                     <li><a href="index.html">HOME</a></li>
-                    <li><a href="news.html">NIGERIAN DIASPORA UPDATE</a></li>
+                    <li><a href="news.html">LATEST NEWS</a></li>
                     <li><a href="membership.html">TOTAL MEMBERS</a></li>
                     <li><a href="support.html" class="active">HELP & SUPPORT</a></li>
                 </ul>
@@ -234,7 +234,7 @@ window.addEventListener('appinstalled',function(){
                 </div>
                 <div class="hero-title-group">
                     <span class="title-main">RENEWED HOPE</span>
-                    <span class="title-sub">NIGERIA DIASPORA</span>
+                    <span class="title-sub">DIASPORA WORLDWIDE</span>
                 </div>
                 <div class="hero-emblem-badge">
                     <img src="images/leader_portrait.png" alt="Leader Portrait" class="leader-img">
@@ -259,16 +259,16 @@ window.addEventListener('appinstalled',function(){
                             <img src="images/logo.png" alt="RHND Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
                         </div>
                         <div style="width: 75px; height: 75px; background: #022313; border-radius: 50%; padding: 3px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.35); border: 2.5px solid var(--primary-gold); overflow: hidden;">
-                            <img src="images/founder.png" alt="Mr. Inuwa Ahmed - Founder & Consultant" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            <img src="images/founder.png" alt="Mr. Anwar Ahmed - Founder & Consultant" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                         </div>
                     </div>
                     <div>
                         <span style="background: rgba(212,175,55,0.2); color: var(--primary-gold); border: 1px solid rgba(212,175,55,0.5); padding: 3px 12px; border-radius: 15px; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; display: inline-block; margin-bottom: 6px; white-space: nowrap;">
                             <i class="fas fa-crown"></i> Founder & Consultant
                         </span>
-                        <h3 style="margin: 0 0 4px 0; color: white; font-size: clamp(1.15rem, 3.5vw, 1.4rem); font-weight: 800; white-space: nowrap;">MR. INUWA AHMED</h3>
-                        <div style="color: var(--primary-gold); font-size: 0.95rem; font-weight: 700; margin-bottom: 2px;">Consultant Nigeria Diaspora Services</div>
-                        <p style="margin: 0; color: #94a3b8; font-size: 0.88rem;">Diaspora Diplomatic Support &bull; Founder &bull; High-Priority Citizen Escalations</p>
+                        <h3 style="margin: 0 0 4px 0; color: white; font-size: clamp(1.15rem, 3.5vw, 1.4rem); font-weight: 800; white-space: nowrap;">MR. ANWAR AHMED</h3>
+                        <div style="color: var(--primary-gold); font-size: 0.95rem; font-weight: 700; margin-bottom: 2px;">Consultant Nigerian Diaspora Services (Documentation and Eco-System)</div>
+                        <p style="margin: 0; color: #94a3b8; font-size: 0.88rem;">Founder, Renew Hope Nigerian Diaspora &bull; Chairman Nigerian Diaspora Association &bull; Chairman, Arab, Hausa Radio TV (Diaspora Media)</p>
                     </div>
                 </div>
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
@@ -358,7 +358,16 @@ window.addEventListener('appinstalled',function(){
                         </span>
                     </div>
 
-                    <form id="public-support-ticket-form">
+                    <div id="login-required-msg" style="display:none; text-align:center; padding:40px 20px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:15px; margin-bottom: 20px;">
+    <i class="fas fa-lock" style="font-size:3rem; color:#cbd5e1; margin-bottom:15px;"></i>
+    <h3 style="color:#0f172a; margin:0 0 10px 0;">Members Only</h3>
+    <p style="color:#64748b; margin:0 0 20px 0;">You must be logged in to send a message to the admin.</p>
+    <div style="display:flex; justify-content:center; gap:10px;">
+        <a href="login.html" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+        <a href="register.html" class="btn btn-secondary"><i class="fas fa-user-plus"></i> Create Account</a>
+    </div>
+</div>
+<form id="public-support-ticket-form">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="ticket-name">Full Name <span style="color: #ef4444;">*</span></label>
@@ -458,7 +467,7 @@ window.addEventListener('appinstalled',function(){
             <div style="max-width: 900px; margin: 0 auto 40px auto;">
                 <div class="section-header text-center" style="margin-bottom: 35px;">
                     <h2>Frequently Asked Questions</h2>
-                    <p>Find quick answers to common questions about Renewed Hope Nigeria Diaspora services</p>
+                    <p>Find quick answers to common questions about Renewed Hope Diaspora Worldwide services</p>
                     <div class="line" style="margin: 15px auto;"></div>
                 </div>
 
@@ -505,7 +514,7 @@ window.addEventListener('appinstalled',function(){
                             Is this platform affiliated with the Federal Government of Nigeria?
                         </summary>
                         <div style="padding: 0 22px 18px 22px; color: #475569; font-size: 0.95rem; line-height: 1.7;">
-                            The <strong>Renewed Hope Nigeria Diaspora (RHND)</strong> platform is a dedicated community information hub that aggregates verified government policies, diplomatic resources, and citizen services to support Nigerians living abroad.
+                            The <strong>Renewed Hope Diaspora Worldwide (RHND)</strong> platform is a dedicated community information hub that aggregates verified government policies, diplomatic resources, and citizen services to support Nigerians living abroad.
                         </div>
                     </details>
                 </div>
@@ -564,13 +573,13 @@ window.addEventListener('appinstalled',function(){
             <div class="footer-col brand-col">
                 <div class="logo-text footer-logo">
                     <h2 class="text-white">RENEWED HOPE</h2>
-                    <h3 class="text-gold">NIGERIA DIASPORA</h3>
+                    <h3 class="text-gold">DIASPORA WORLDWIDE</h3>
                 </div>
                 <p class="mt-20">Connecting Nigerians Worldwide. A professional platform for diaspora information and support.</p>
                 <div style="margin-top: 15px; padding: 12px 14px; background: rgba(255,255,255,0.08); border-radius: 8px; border-left: 3px solid var(--primary-gold);">
                     <small style="display: block; color: var(--primary-gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Founder & Consultant:</small>
-                    <strong style="color: white; font-size: 0.95rem; display: block; margin-top: 2px;">Mr. Inuwa Ahmed</strong>
-                    <small style="display: block; color: #cbd5e1; font-size: 0.8rem; margin-top: 2px;">Consultant Nigeria Diaspora Services &bull; Diaspora Diplomatic Support &bull; Founder</small>
+                    <strong style="color: white; font-size: 0.95rem; display: block; margin-top: 2px;">Mr. Anwar Ahmed</strong>
+                    <small style="display: block; color: #cbd5e1; font-size: 0.8rem; margin-top: 2px;">Consultant Nigerian Diaspora Services (Documentation and Eco-System) &bull; Founder, Renew Hope Nigerian Diaspora &bull; Chairman Nigerian Diaspora Association &bull; Chairman, Arab, Hausa Radio TV (Diaspora Media)</small>
                     <a href="https://wa.me/2347047000070" target="_blank" style="color: #25D366; font-size: 0.88rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-top: 5px; font-weight: 700;">
                         <i class="fab fa-whatsapp"></i> WhatsApp Info
                     </a>
@@ -614,7 +623,7 @@ window.addEventListener('appinstalled',function(){
         </div>
         <div class="footer-bottom">
             <div class="container">
-                <p>&copy; 2026 Renewed Hope Nigeria Diaspora. All Rights Reserved.</p>
+                <p>&copy; 2026 Renewed Hope Diaspora Worldwide. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
@@ -869,6 +878,16 @@ window.addEventListener('appinstalled',function(){
 
 
 
-</body>
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!localStorage.getItem("rhnd_user")) {
+                var form = document.getElementById("public-support-ticket-form");
+                var msg = document.getElementById("login-required-msg");
+                if(form) form.style.display = "none";
+                if(msg) msg.style.display = "block";
+            }
+        });
+    </script>
+    </body>
 </html>
 

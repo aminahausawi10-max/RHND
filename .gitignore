@@ -1,5 +1,15 @@
-
 .env
 vendor/
 .vercel
-
+*.zip
+*.backup.html
+fix_*.py
+scratch_*.py
+update_*.py
+remove_*.py
+add_*.py
+check_*.py
+find_*.py
+create_*.py
+readd_*.py
+live_index.html

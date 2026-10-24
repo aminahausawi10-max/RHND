@@ -1,223 +1,309 @@
-<!DOCTYPE html>
+import os
+
+html_code = <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Dashboard | RHND</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Renewed Hope Diaspora Worldwide - Member Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css?v=3.4">
     <style>
+        :root {
+            --primary-green: #056839;
+            --dark-green: #022615;
+            --emerald-deep: #03361f;
+            --primary-gold: #d4af37;
+            --gold-light: #fbbf24;
+            --bg-canvas: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        * { box-sizing: border-box; }
         body { 
-            background-color: #eef2f6; 
+            background-color: var(--bg-canvas); 
             margin: 0; 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; 
             overflow-x: hidden; 
-            color: #1e293b;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
         }
         .dashboard-container { display: flex; min-height: 100vh; }
         
-        /* Neumorphic Sidebar */
+        /* Modern Diplomatic Sidebar */
         .sidebar { 
             width: 280px; 
-            background: linear-gradient(180deg, #022615 0%, #043a21 50%, #056839 100%); 
+            background: linear-gradient(180deg, #022313 0%, #043821 50%, #022c1b 100%); 
             color: white; 
             display: flex; 
             flex-direction: column; 
-            box-shadow: 6px 0 20px rgba(0,0,0,0.12); 
-            z-index: 10; 
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 4px 0 25px rgba(0,0,0,0.15); 
+            z-index: 100; 
             flex-shrink: 0; 
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .sidebar-header { 
-            padding: 25px 20px; 
+            padding: 28px 24px; 
             text-align: center; 
             border-bottom: 1px solid rgba(255,255,255,0.08); 
+            background: rgba(0,0,0,0.15);
         }
         .sidebar-header img { 
-            width: 75px; 
-            height: 75px; 
+            width: 70px; 
+            height: 70px; 
             object-fit: contain; 
-            margin-bottom: 10px; 
-            background: white; 
+            margin-bottom: 12px; 
+            background: #ffffff; 
             border-radius: 50%; 
-            padding: 8px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            padding: 5px; 
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.5), 0 8px 20px rgba(0,0,0,0.3);
         }
-        .sidebar-nav { padding: 18px 0; flex-grow: 1; overflow-y: auto; }
+        .sidebar-header h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            margin: 0 0 4px 0;
+        }
+        .sidebar-header .sub-tag {
+            font-size: 0.75rem;
+            color: var(--primary-gold);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: rgba(212, 175, 55, 0.15);
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .sidebar-nav { padding: 20px 14px; flex-grow: 1; overflow-y: auto; }
         .nav-item { 
-            margin: 5px 15px;
-            padding: 12px 18px; 
+            margin-bottom: 6px;
+            padding: 12px 16px; 
             display: flex; 
             align-items: center; 
-            gap: 14px; 
-            color: rgba(255,255,255,0.85); 
+            gap: 12px; 
+            color: rgba(255,255,255,0.75); 
             cursor: pointer; 
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: all 0.2s ease; 
             font-weight: 600; 
-            font-size: 0.94rem; 
+            font-size: 0.92rem; 
             border-radius: 12px;
+            border: 1px solid transparent;
         }
         .nav-item:hover { 
-            background: rgba(255,255,255,0.1); 
-            color: var(--primary-gold); 
-            transform: translateX(4px);
+            background: rgba(255,255,255,0.08); 
+            color: #ffffff; 
         }
         .nav-item.active { 
-            background: rgba(0,0,0,0.25); 
-            color: var(--primary-gold); 
-            box-shadow: inset 3px 3px 6px rgba(0,0,0,0.35), inset -2px -2px 5px rgba(255,255,255,0.06);
-            border-left: 3px solid var(--primary-gold);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(5, 104, 57, 0.4) 100%); 
+            color: var(--gold-light); 
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .nav-item i { font-size: 1.15rem; width: 22px; text-align: center; }
+        .nav-item i { font-size: 1.1rem; width: 22px; text-align: center; }
+        .nav-label { flex: 1; }
+        .nav-count-badge {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold-light);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
         
-        /* Main Content */
+        /* Main Layout */
         .main-content { 
             flex: 1; 
             display: flex; 
             flex-direction: column; 
             height: 100vh; 
             overflow-y: auto; 
-            background: #eef2f6; 
+            background: var(--bg-canvas); 
         }
+        
+        /* Modern Clean Top Navbar */
         .top-navbar { 
-            background: #eef2f6; 
-            padding: 16px 35px; 
+            background: #ffffff; 
+            padding: 16px 32px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            box-shadow: 0 4px 18px rgba(163, 177, 198, 0.35); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
             position: sticky; 
             top: 0; 
-            z-index: 5; 
-            border-bottom: 1px solid rgba(255,255,255,0.8); 
+            z-index: 50; 
+            border-bottom: 1px solid var(--border-color); 
         }
-        .user-profile { display: flex; align-items: center; gap: 12px; }
+        .user-profile { display: flex; align-items: center; gap: 14px; }
         .avatar { 
             width: 44px; 
             height: 44px; 
-            background: #eef2f6; 
+            background: linear-gradient(135deg, #056839, #022313); 
             border-radius: 50%; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            color: var(--primary-green); 
-            font-weight: bold; 
-            font-size: 1.2rem; 
-            box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff;
-            border: 2px solid rgba(212, 175, 55, 0.5); 
+            color: var(--primary-gold); 
+            font-weight: 800; 
+            font-size: 1.1rem; 
+            border: 2px solid rgba(212, 175, 55, 0.6); 
+            box-shadow: 0 4px 10px rgba(5, 104, 57, 0.2);
         }
-        
+
         /* Panels */
-        .panel { padding: 35px; display: none; animation: fadeIn 0.3s ease; }
+        .panel { padding: 30px 32px; display: none; animation: fadeIn 0.3s ease; }
         .panel.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Neumorphic Cards */
-        .welcome-card { 
-            background: #eef2f6; 
+        /* Luxury Diplomatic Welcome Hero Banner */
+        .welcome-hero { 
+            background: linear-gradient(135deg, #022c19 0%, #064e3b 50%, #022416 100%); 
             border-radius: 20px; 
-            padding: 28px 35px; 
+            padding: 32px 36px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            box-shadow: 8px 8px 18px #d1d9e6, -8px -8px 18px #ffffff; 
-            margin-bottom: 30px; 
-            border: 1px solid rgba(255,255,255,0.8); 
-            flex-wrap: wrap; 
-            gap: 15px; 
+            box-shadow: 0 10px 30px rgba(2, 44, 25, 0.15); 
+            margin-bottom: 28px; 
+            border: 1px solid rgba(212, 175, 55, 0.35); 
+            color: white;
+            position: relative;
+            overflow: hidden;
+            flex-wrap: wrap;
+            gap: 20px;
         }
-        .welcome-text h2 { color: var(--secondary-dark-green); margin: 0 0 6px 0; font-size: 1.65rem; font-weight: 800; }
-        .welcome-text p { color: #64748b; margin: 0; font-size: 0.95rem; }
+        .welcome-hero::after {
+            content: '';
+            position: absolute;
+            right: -60px;
+            bottom: -60px;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .welcome-text h2 { 
+            color: #ffffff; 
+            margin: 0 0 8px 0; 
+            font-size: 1.75rem; 
+            font-weight: 800; 
+            letter-spacing: -0.3px;
+        }
+        .welcome-text p { 
+            color: rgba(255,255,255,0.85); 
+            margin: 0; 
+            font-size: 0.96rem; 
+            max-width: 600px;
+            line-height: 1.5;
+        }
         .id-badge { 
-            background: #eef2f6; 
-            color: var(--primary-green); 
-            padding: 8px 18px; 
-            border-radius: 20px; 
+            background: rgba(255,255,255,0.1); 
+            color: var(--gold-light); 
+            padding: 10px 20px; 
+            border-radius: 30px; 
             font-weight: 700; 
-            box-shadow: inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff; 
-            font-size: 0.88rem; 
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            font-size: 0.9rem; 
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-family: monospace;
+            letter-spacing: 0.5px;
         }
         
+        /* Modern KPI Stat Cards */
         .quick-stats { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
             gap: 20px; 
             margin-bottom: 28px; 
         }
         .stat-card { 
             background: #ffffff; 
-            border-radius: 14px; 
-            padding: 22px 24px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            border-radius: 16px; 
+            padding: 24px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03); 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            transition: transform 0.2s ease, box-shadow 0.2s ease; 
+            transition: all 0.25s ease; 
             cursor: pointer; 
-            border: 1px solid #edf2f7; 
+            border: 1px solid var(--border-color); 
         }
         .stat-card:hover { 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06); 
-            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08); 
+            transform: translateY(-3px); 
+            border-color: rgba(5, 104, 57, 0.3);
         }
         .stat-icon { 
-            width: 54px; 
-            height: 54px; 
+            width: 52px; 
+            height: 52px; 
             border-radius: 14px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 1.5rem; 
+            font-size: 1.4rem; 
+            flex-shrink: 0;
         }
-        .stat-info h3 { font-size: 2.3rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1; }
-        .stat-info p { color: #64748b; font-size: 0.82rem; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-info h3 { font-size: 2rem; color: var(--text-main); margin: 0 0 4px 0; font-weight: 800; line-height: 1; }
+        .stat-info p { color: var(--text-muted); font-size: 0.8rem; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: 0.6px; }
         
+        /* Modern Content Cards */
         .content-card { 
-            background: #eef2f6; 
-            border-radius: 22px; 
-            padding: 30px 34px; 
-            box-shadow: 8px 8px 20px #d1d9e6, -8px -8px 20px #ffffff; 
-            border: 1px solid rgba(255,255,255,0.7); 
+            background: #ffffff; 
+            border-radius: 20px; 
+            padding: 28px 32px; 
+            box-shadow: 0 2px 12px rgba(0,0,0,0.03); 
+            border: 1px solid var(--border-color); 
             margin-bottom: 28px; 
         }
         .content-card h3 { 
-            color: var(--secondary-dark-green); 
-            margin-bottom: 20px; 
-            border-bottom: 2px solid rgba(209, 217, 230, 0.6); 
-            padding-bottom: 12px; 
-            font-size: 1.25rem; 
-            font-weight: 700; 
+            color: var(--text-main); 
+            margin: 0 0 20px 0; 
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 14px; 
+            font-size: 1.2rem; 
+            font-weight: 800; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
         }
         
-        /* Neumorphic Form Inputs */
+        /* Modern Forms */
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #334155; font-size: 0.9rem; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #334155; font-size: 0.88rem; }
         .form-control { 
             width: 100%; 
             padding: 12px 16px; 
-            border: 1px solid rgba(209, 217, 230, 0.5); 
-            border-radius: 12px; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 10px; 
             font-family: inherit; 
             font-size: 0.95rem; 
-            background: #eef2f6; 
-            box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
-            color: #0f172a;
+            background: #ffffff; 
+            color: var(--text-main);
             box-sizing: border-box;
             transition: all 0.2s ease;
         }
         .form-control:focus { 
             outline: none; 
-            box-shadow: inset 5px 5px 9px #cad2df, inset -5px -5px 9px #ffffff, 0 0 0 2px var(--primary-green); 
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(5, 104, 57, 0.15); 
         }
 
-        /* Neumorphic Buttons */
+        /* Modern Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -227,62 +313,62 @@
             font-weight: 700;
             transition: all 0.2s ease;
             text-decoration: none;
+            font-family: inherit;
         }
         .btn-primary {
-            background: linear-gradient(145deg, #06723e, #04552e) !important;
+            background: linear-gradient(135deg, #056839 0%, #034827 100%) !important;
             color: white !important;
-            border-radius: 12px !important;
-            box-shadow: 5px 5px 12px #d1d9e6, -5px -5px 12px #ffffff !important;
+            border-radius: 10px !important;
+            box-shadow: 0 4px 12px rgba(5, 104, 57, 0.25) !important;
             border: 1px solid rgba(255,255,255,0.2) !important;
         }
         .btn-primary:hover {
-            box-shadow: inset 3px 3px 6px #022b17, inset -2px -2px 5px #056839 !important;
-            transform: translateY(1px);
+            background: linear-gradient(135deg, #067c44 0%, #045931 100%) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(5, 104, 57, 0.35) !important;
         }
         .btn-secondary {
-            background: #eef2f6 !important;
+            background: #f1f5f9 !important;
             color: #334155 !important;
-            border-radius: 12px !important;
-            box-shadow: 5px 5px 12px #d1d9e6, -5px -5px 12px #ffffff !important;
-            border: 1px solid rgba(255,255,255,0.8) !important;
+            border-radius: 10px !important;
+            border: 1px solid #cbd5e1 !important;
         }
         .btn-secondary:hover {
-            box-shadow: inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff !important;
+            background: #e2e8f0 !important;
             color: var(--primary-green) !important;
         }
 
-        .site-nav-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 15px; }
+        .site-nav-links { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 15px; }
         .site-nav-btn { 
             display: inline-flex; 
             align-items: center; 
             gap: 8px; 
-            padding: 11px 18px; 
-            background: #eef2f6; 
-            border-radius: 12px; 
+            padding: 12px 20px; 
+            background: #ffffff; 
+            border-radius: 10px; 
             color: #334155; 
             font-weight: 600; 
-            font-size: 0.88rem; 
+            font-size: 0.9rem; 
             text-decoration: none; 
-            box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #ffffff;
-            border: 1px solid rgba(255,255,255,0.8);
+            border: 1px solid var(--border-color);
             transition: all 0.2s ease; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
         .site-nav-btn:hover { 
-            box-shadow: inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff; 
+            border-color: var(--primary-green);
             color: var(--primary-green); 
-            border-color: rgba(209, 217, 230, 0.6);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
     
-        /* =========================================================
-           NEUMORPHIC LUXURY DIASPORA ID CARD (DARK SOFT-UI)
-           ========================================================= */
+        /* Luxury Diaspora ID Card (Dark Soft-UI) */
         .diaspora-id-card {
             background: linear-gradient(145deg, #022313 0%, #033a20 45%, #056839 100%);
             border: 2px solid rgba(212, 175, 55, 0.55);
-            border-radius: 22px;
+            border-radius: 20px;
             padding: 26px 28px;
             color: white;
-            box-shadow: 12px 12px 28px #cad2df, -10px -10px 24px #ffffff, inset 1px 1px 2px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 15px 35px rgba(2, 35, 19, 0.3);
             position: relative;
             overflow: hidden;
             max-width: 580px;
@@ -298,53 +384,35 @@
             background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 60%);
             pointer-events: none;
         }
+
         .id-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(212, 175, 55, 0.3);
             padding-bottom: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
         .id-card-brand {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-        .id-card-brand img {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-            background: white;
-            border-radius: 50%;
-            padding: 4px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
         .id-card-brand h4 {
             margin: 0;
-            font-size: 0.85rem;
-            color: var(--primary-gold);
-            letter-spacing: 0.8px;
+            font-size: 0.95rem;
             font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #ffffff;
         }
         .id-card-brand p {
-            margin: 0;
-            font-size: 0.65rem;
-            color: rgba(255,255,255,0.8);
-            letter-spacing: 1.2px;
-        }
-        .id-card-type {
-            font-size: 0.7rem;
-            font-weight: 800;
+            margin: 2px 0 0 0;
+            font-size: 0.68rem;
             color: var(--primary-gold);
-            background: #021e10;
-            padding: 5px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(212,175,55,0.4);
-            box-shadow: inset 2px 2px 5px #011109, inset -1px -1px 3px rgba(212, 175, 55, 0.2);
-            letter-spacing: 0.8px;
-            white-space: nowrap;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
+
         .id-card-body {
             display: flex;
             gap: 22px;
@@ -358,16 +426,16 @@
             flex-shrink: 0;
         }
         .id-photo-frame {
-            width: 120px;
-            height: 145px;
-            border-radius: 16px;
+            width: 115px;
+            height: 140px;
+            border-radius: 14px;
             border: 2.5px solid var(--primary-gold);
             background: #021e10;
-            box-shadow: inset 4px 4px 10px #01120a, inset -3px -3px 6px rgba(5, 104, 57, 0.4), 0 4px 12px rgba(0,0,0,0.25);
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
         }
         .id-photo-frame i {
             font-size: 3.5rem;
@@ -379,20 +447,19 @@
             object-fit: cover;
         }
         .id-upload-btn {
-            font-size: 0.68rem;
-            background: linear-gradient(145deg, #043a21, #022313);
-            color: white;
-            padding: 4px 10px;
+            font-size: 0.7rem;
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold-light);
+            padding: 4px 12px;
             border-radius: 20px;
             cursor: pointer;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            box-shadow: 2px 2px 6px #01140a, -2px -2px 5px rgba(5, 104, 57, 0.3);
-            font-weight: 600;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            font-weight: 700;
             transition: all 0.2s;
         }
         .id-upload-btn:hover {
             background: var(--primary-gold);
-            color: #0f172a;
+            color: #022313;
         }
         .id-details-list {
             flex: 1;
@@ -406,7 +473,7 @@
             flex-direction: column;
         }
         .id-label {
-            font-size: 0.58rem;
+            font-size: 0.6rem;
             color: rgba(212, 175, 55, 0.9);
             letter-spacing: 1px;
             font-weight: 700;
@@ -414,7 +481,7 @@
             margin-bottom: 2px;
         }
         .id-val-name {
-            font-size: 1rem;
+            font-size: 1.05rem;
             color: white;
             font-weight: 800;
             letter-spacing: 0.5px;
@@ -428,12 +495,11 @@
             font-family: monospace;
             font-weight: 700;
             letter-spacing: 1.2px;
-            background: #021e10;
-            padding: 3px 8px;
+            background: rgba(0,0,0,0.3);
+            padding: 4px 10px;
             border-radius: 6px;
             display: inline-block;
-            box-shadow: inset 2px 2px 5px #011109, inset -1px -1px 3px rgba(5, 104, 57, 0.3);
-            border: 1px solid rgba(212, 175, 55, 0.25);
+            border: 1px solid rgba(212, 175, 55, 0.3);
             width: fit-content;
         }
         .id-val-country {
@@ -448,38 +514,26 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-top: 2px;
+            margin-top: 4px;
             font-size: 0.75rem;
-            flex-wrap: wrap;
-        }
-        .id-status-badge {
-            color: #4ade80;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: #021e10;
-            padding: 3px 9px;
-            border-radius: 20px;
-            box-shadow: inset 2px 2px 4px #011109, inset -1px -1px 3px rgba(74, 222, 128, 0.15);
         }
         .id-expiry-badge {
-            color: rgba(255,255,255,0.85);
-            font-weight: 600;
-            background: #021e10;
-            padding: 3px 9px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 700;
+            background: rgba(0,0,0,0.25);
+            padding: 3px 10px;
             border-radius: 20px;
-            box-shadow: inset 2px 2px 4px #011109, inset -1px -1px 3px rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.15);
         }
         .id-card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: 14px;
-            padding-top: 8px;
+            padding-top: 10px;
             border-top: 1px solid rgba(212, 175, 55, 0.2);
-            font-size: 0.65rem;
-            color: rgba(255,255,255,0.65);
+            font-size: 0.68rem;
+            color: rgba(255,255,255,0.7);
         }
         .id-card-footer i {
             color: var(--primary-gold);
@@ -500,7 +554,7 @@
             height: 100vh !important;
             background: rgba(0, 0, 0, 0.5) !important;
             backdrop-filter: blur(3px) !important;
-            z-index: 999 !important;
+            z-index: 90 !important;
             display: none;
         }
         .sidebar-overlay.active {
@@ -509,219 +563,42 @@
 
         .mobile-menu-btn {
             display: none;
-            background: #eef2f6 !important;
+            background: #ffffff !important;
             color: var(--primary-green) !important;
-            border: 1px solid rgba(255,255,255,0.8) !important;
-            border-radius: 10px !important;
-            box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important;
             padding: 8px 12px !important;
-            font-size: 1.15rem !important;
+            font-size: 1.1rem !important;
             cursor: pointer !important;
         }
 
         @media (max-width: 768px) {
-            .dashboard-container {
-                flex-direction: column !important;
-            }
+            .dashboard-container { flex-direction: column !important; }
             .sidebar {
                 position: fixed !important;
                 top: 0 !important;
                 left: -300px !important;
                 width: 270px !important;
                 height: 100vh !important;
-                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
                 z-index: 1000 !important;
-                box-shadow: 8px 0 25px rgba(0,0,0,0.3) !important;
             }
-            .sidebar.mobile-open {
-                left: 0 !important;
-            }
-            .mobile-menu-btn {
-                display: inline-flex !important;
-            }
-            .top-navbar {
-                padding: 12px 16px !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
-                position: sticky !important;
-                top: 0 !important;
-                z-index: 10 !important;
-            }
-            .top-website-btn {
-                display: none !important;
-            }
-            .top-logout-btn {
-                display: none !important;
-            }
-            .user-profile {
-                gap: 8px !important;
-            }
-            .user-name-display {
-                font-size: 0.88rem !important;
-                max-width: 120px !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-            }
-            .user-email-display {
-                font-size: 0.75rem !important;
-                max-width: 120px !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-            }
-            .panel {
-                padding: 16px 12px !important;
-            }
-            .welcome-card {
-                padding: 20px 16px !important;
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                gap: 12px !important;
-            }
-            .welcome-text h2 {
-                font-size: 1.25rem !important;
-                line-height: 1.3 !important;
-                word-break: break-word !important;
-            }
-            .content-card {
-                padding: 20px 16px !important;
-                border-radius: 16px !important;
-            }
-            .content-card h3 {
-                font-size: 1.1rem !important;
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                gap: 6px !important;
-            }
-            .quick-stats {
-                grid-template-columns: 1fr !important;
-                gap: 12px !important;
-            }
-            .site-nav-links {
-                display: grid !important;
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 8px !important;
-            }
-            .site-nav-btn {
-                padding: 10px 8px !important;
-                font-size: 0.8rem !important;
-                justify-content: center !important;
-                text-align: center !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
-            }
-            .form-row {
-                grid-template-columns: 1fr !important;
-                gap: 12px !important;
-            }
-            .diaspora-id-card {
-                padding: 16px 14px !important;
-                border-radius: 16px !important;
-                max-width: 100% !important;
-                box-sizing: border-box !important;
-            }
-            .id-card-body {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center !important;
-                gap: 12px !important;
-            }
-            .id-photo-frame {
-                width: 95px !important;
-                height: 115px !important;
-                flex-shrink: 0 !important;
-            }
-            .id-details-list {
-                gap: 6px !important;
-            }
-            .id-label {
-                font-size: 0.55rem !important;
-            }
-            .id-val-name {
-                font-size: 0.88rem !important;
-            }
-            .id-val-number {
-                font-size: 0.82rem !important;
-            }
-            .id-val-country {
-                font-size: 0.78rem !important;
-            }
-            .id-meta-bar {
-                font-size: 0.68rem !important;
-                gap: 8px !important;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .diaspora-id-card {
-                padding: 12px 10px !important;
-                border-radius: 14px !important;
-            }
-            .id-card-header {
-                padding-bottom: 6px !important;
-                margin-bottom: 8px !important;
-            }
-            .id-card-brand img {
-                width: 28px !important;
-                height: 28px !important;
-            }
-            .id-card-brand h4 {
-                font-size: 0.65rem !important;
-            }
-            .id-card-brand p {
-                font-size: 0.5rem !important;
-            }
-            .id-card-type {
-                font-size: 0.55rem !important;
-                padding: 2px 6px !important;
-            }
-            .id-card-body {
-                gap: 10px !important;
-            }
-            .id-photo-frame {
-                width: 80px !important;
-                height: 98px !important;
-            }
-            .id-upload-btn {
-                font-size: 0.55rem !important;
-                padding: 2px 5px !important;
-            }
-            .id-details-list {
-                gap: 4px !important;
-            }
-            .id-label {
-                font-size: 0.5rem !important;
-            }
-            .id-val-name {
-                font-size: 0.8rem !important;
-            }
-            .id-val-number {
-                font-size: 0.75rem !important;
-            }
-            .id-val-country {
-                font-size: 0.7rem !important;
-            }
-            .id-meta-bar {
-                font-size: 0.62rem !important;
-                gap: 6px !important;
-            }
-            .id-card-footer {
-                margin-top: 8px !important;
-                padding-top: 6px !important;
-                font-size: 0.52rem !important;
-            }
-            .site-nav-links {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
+            .sidebar.mobile-open { left: 0 !important; }
+            .mobile-menu-btn { display: inline-flex !important; }
+            .top-navbar { padding: 14px 18px !important; }
+            .top-website-btn, .top-logout-btn { display: none !important; }
+            .panel { padding: 20px 16px !important; }
+            .welcome-hero { padding: 24px 20px !important; }
+            .form-row { grid-template-columns: 1fr !important; }
+            .diaspora-id-card { padding: 18px 16px !important; }
+            .id-photo-frame { width: 90px !important; height: 110px !important; }
         }
     </style>
+
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#056839">
     <link rel="apple-touch-icon" href="images/logo.png">
 <script>
-// Run instantly before page renders - hide overlay only if user already installed or dismissed recently
 (function() {
     var installed = localStorage.getItem('pwa_installed');
     var dismissed = localStorage.getItem('pwa_dismissed');
@@ -736,7 +613,7 @@
 </script>
 </head>
 <body>
-<div id="pwa-install-overlay" style="display:flex;position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(160deg,#034d2a,#056839,#008751);z-index:2147483647;align-items:center;justify-content:center;padding:20px;"><div style="background:#fff;border-radius:24px;padding:36px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);"><div style="width:90px;height:90px;border-radius:20px;background:linear-gradient(135deg,#056839,#008751);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 25px rgba(5,104,57,.4);"><img src="images/logo.png" alt="RHND" style="width:70px;height:70px;object-fit:contain;border-radius:14px;"></div><h2 style="margin:0 0 6px;color:#056839;font-size:1.4rem;font-weight:800;font-family:sans-serif;">RHND App</h2><p style="margin:0 0 4px;color:#333;font-size:1rem;font-weight:700;font-family:sans-serif;">Renewed Hope Nigeria Diaspora</p><p style="margin:0 0 20px;color:#888;font-size:.8rem;font-family:sans-serif;">rhnd-diaspora.com.ng</p><p style="margin:0 0 22px;color:#555;font-size:.9rem;line-height:1.6;font-family:sans-serif;">Install our free app for quick access, offline support and the best experience!</p><button onclick="pwaInst()" id="pwa-inst-btn" style="display:block;width:100%;padding:16px;background:linear-gradient(135deg,#056839,#008751);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:sans-serif;box-shadow:0 4px 15px rgba(5,104,57,.3);">&#128242; Install App</button><button onclick="pwaSkip()" style="display:block;width:100%;padding:14px;background:#f8fafc;color:#666;border:1px solid #e2e8f0;border-radius:14px;font-size:.92rem;font-weight:600;cursor:pointer;font-family:sans-serif;">Continue to Website</button><p style="margin:12px 0 0;color:#bbb;font-size:.72rem;font-family:sans-serif;">Reminder again in 30 minutes</p></div></div>
+<div id="pwa-install-overlay" style="display:flex;position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(160deg,#034d2a,#056839,#008751);z-index:2147483647;align-items:center;justify-content:center;padding:20px;"><div style="background:#fff;border-radius:24px;padding:36px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);"><div style="width:90px;height:90px;border-radius:20px;background:linear-gradient(135deg,#056839,#008751);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 25px rgba(5,104,57,.4);"><img src="images/logo.png" alt="RHND" style="width:70px;height:70px;object-fit:contain;border-radius:14px;"></div><h2 style="margin:0 0 6px;color:#056839;font-size:1.4rem;font-weight:800;font-family:sans-serif;">RHN Diaspora</h2><p style="margin:0 0 4px;color:#333;font-size:1rem;font-weight:700;font-family:sans-serif;">Renewed Hope Diaspora Worldwide</p><p style="margin:0 0 20px;color:#888;font-size:.8rem;font-family:sans-serif;">rhnd-diaspora.com.ng</p><p style="margin:0 0 22px;color:#555;font-size:.9rem;line-height:1.6;font-family:sans-serif;">Install our free app for quick access, offline support and the best experience!</p><button onclick="pwaInst()" id="pwa-inst-btn" style="display:block;width:100%;padding:16px;background:linear-gradient(135deg,#056839,#008751);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:sans-serif;box-shadow:0 4px 15px rgba(5,104,57,.3);">&#128242; Install App</button><button onclick="pwaSkip()" style="display:block;width:100%;padding:14px;background:#f8fafc;color:#666;border:1px solid #e2e8f0;border-radius:14px;font-size:.92rem;font-weight:600;cursor:pointer;font-family:sans-serif;">Continue to Website</button><p style="margin:12px 0 0;color:#bbb;font-size:.72rem;font-family:sans-serif;">Reminder again in 30 minutes</p></div></div>
 <script>var _pe=null,_pr=false;
 window.addEventListener('beforeinstallprompt',function(e){
     e.preventDefault();_pe=e;_pr=true;
@@ -750,7 +627,7 @@ function pwaInst(){
         _pe.userChoice.then(function(r){
             if(r.outcome==='accepted'){localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');}
             else{localStorage.setItem('pwa_dismissed',Date.now()+'');}
-            _pe=null;_pr=false;pwaSkip();
+            _pe=null;_pr=false;window.location.href='login.html';
         });
     }
     if(_pe&&_pr){
@@ -760,13 +637,13 @@ function pwaInst(){
         var t=0,iv=setInterval(function(){
             t++;
             if(_pe&&_pr){clearInterval(iv);if(b)b.innerHTML='&#128242; Install App';doPrompt();}
-            else if(t>20){
+            else if(t>5){
                 clearInterval(iv);
                 if(b)b.innerHTML='&#128242; Install App';
                 var io=/iphone|ipad|ipod/i.test(navigator.userAgent);
                 if(io){alert('iPhone:\n1. Tap Share button\n2. Tap Add to Home Screen\n3. Tap Add');}
                 else{alert('Android: Tap the 3-dot menu, then "Add to Home Screen" or "Install App"\n\nPC: Click install icon in address bar');}
-                localStorage.setItem('pwa_dismissed',Date.now()+'');pwaSkip();
+                localStorage.setItem('pwa_dismissed',Date.now()+'');window.location.href='login.html';
             }
         },200);
     }
@@ -777,7 +654,7 @@ function pwaSkip(){
     if(!localStorage.getItem('pwa_installed'))localStorage.setItem('pwa_dismissed',Date.now()+'');
 }
 window.addEventListener('appinstalled',function(){
-    localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');pwaSkip();
+    localStorage.setItem('pwa_installed','1');localStorage.removeItem('pwa_dismissed');window.location.href='login.html';
 });</script>
 
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleMobileSidebar(false)"></div>
@@ -786,31 +663,39 @@ window.addEventListener('appinstalled',function(){
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="images/logo.png" alt="RHND Logo">
-                <h3 style="font-weight: 800; letter-spacing: 1px; color: var(--primary-gold); margin: 0;">RHND PORTAL</h3>
-                <div style="font-size: 0.78rem; color: rgba(255,255,255,0.7); margin-top: 2px;">Diaspora Member Account</div>
+                <h3 style="margin-bottom: 2px;">RENEWED HOPE</h3>
+                <div style="color: var(--primary-gold); font-weight: 700; font-size: 0.72rem; letter-spacing: 1px; margin-bottom: 8px;">DIASPORA WORLDWIDE</div>
+                <span class="sub-tag">Member Portal</span>
             </div>
             <div class="sidebar-nav">
                 <div class="nav-item active" onclick="switchTab('dashboard')">
-                    <i class="fas fa-home"></i> Dashboard Overview
+                    <i class="fas fa-chart-pie"></i>
+                    <span class="nav-label">Dashboard Overview</span>
                 </div>
                 <div class="nav-item" onclick="switchTab('members')">
-                    <i class="fas fa-users"></i> Total Members (<span class="total-members-badge-count">1</span>)
+                    <i class="fas fa-users"></i>
+                    <span class="nav-label">Total Members</span>
+                    <span class="nav-count-badge total-members-badge-count">1</span>
                 </div>
                 <div class="nav-item" onclick="switchTab('profile')">
-                    <i class="fas fa-user-edit"></i> My Profile
+                    <i class="fas fa-user-circle"></i>
+                    <span class="nav-label">My Profile</span>
                 </div>
                 <div class="nav-item" onclick="switchTab('services')">
-                    <i class="fas fa-passport"></i> Diaspora Services
+                    <i class="fas fa-passport"></i>
+                    <span class="nav-label">Diaspora Services</span>
                 </div>
                 <div class="nav-item" onclick="switchTab('support')">
-                    <i class="fas fa-life-ring"></i> Help & Support
+                    <i class="fas fa-headset"></i>
+                    <span class="nav-label">Help & Support</span>
                 </div>
                 <div class="nav-item" onclick="window.location.href='index.html'">
-                    <i class="fas fa-globe"></i> Browse Public Website
+                    <i class="fas fa-globe"></i>
+                    <span class="nav-label">Browse Public Website</span>
                 </div>
             </div>
             <div style="padding: 20px;">
-                <button onclick="rhndLogout()" style="width: 100%; padding: 12px; background: rgba(239,68,68,0.25); border: 1px solid rgba(239,68,68,0.4); color: white; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: background 0.2s;">
+                <button onclick="rhndLogout()" style="width: 100%; padding: 12px; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.2s ease;">
                     <i class="fas fa-sign-out-alt"></i> Logout / Sign Out
                 </button>
             </div>
@@ -820,24 +705,24 @@ window.addEventListener('appinstalled',function(){
         <main class="main-content">
             <!-- Top Navbar -->
             <div class="top-navbar">
-                <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 14px;">
                     <button class="mobile-menu-btn" onclick="toggleMobileSidebar(true)" aria-label="Toggle navigation menu">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <span style="font-weight: 700; color: #0f172a; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-user-circle text-gold"></i> Member Portal
+                    <span style="font-weight: 800; color: var(--text-main); font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-shield-halved" style="color: var(--primary-gold);"></i> Member Portal
                     </span>
-                    <a href="index.html" class="btn btn-secondary top-website-btn" style="padding: 6px 14px; font-size: 0.85rem; font-weight: 600;">
+                    <a href="index.html" class="btn btn-secondary top-website-btn" style="padding: 7px 14px; font-size: 0.85rem; font-weight: 600;">
                         <i class="fas fa-globe"></i> View Public Website
                     </a>
                 </div>
                 <div class="user-profile">
                     <div class="avatar"><i class="fas fa-user"></i></div>
                     <div>
-                        <div class="user-name-display" style="font-weight: 700; color: var(--secondary-dark-green);">Registered Member</div>
-                        <div class="user-email-display" style="font-size: 0.82rem; color: #64748b;">Verified Account</div>
+                        <div class="user-name-display" style="font-weight: 800; color: var(--text-main); font-size: 0.95rem;">Registered Member</div>
+                        <div class="user-email-display" style="font-size: 0.8rem; color: var(--text-muted);">Verified Account</div>
                     </div>
-                    <button onclick="rhndLogout()" class="btn-login top-logout-btn" style="margin-left: 15px; padding: 7px 14px; background: #fee2e2; color: #dc2626; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">
+                    <button onclick="rhndLogout()" class="btn-login top-logout-btn" style="margin-left: 10px; padding: 8px 16px; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
@@ -845,30 +730,30 @@ window.addEventListener('appinstalled',function(){
             
             <!-- 1. DASHBOARD OVERVIEW TAB -->
             <div id="tab-dashboard" class="panel active">
-                <div class="welcome-card">
+                <div class="welcome-hero">
                     <div class="welcome-text">
-                        <h2 id="dash-welcome-heading">Welcome to your Diaspora Dashboard!</h2>
+                        <h2 id="dash-welcome-heading">Welcome back, Member!</h2>
                         <p>Access government services, manage your registered diaspora profile, and get priority assistance.</p>
                     </div>
                     <div class="id-badge"><i class="fas fa-id-card"></i> ID: RHND-NIG-00001</div>
                 </div>
                 
                 <div class="quick-stats">
-                    <div class="stat-card" onclick="switchTab('members')" style="border-bottom: 4px solid #3b82f6; cursor: pointer;" title="View all registered members">
+                    <div class="stat-card" onclick="switchTab('members')" title="View all registered members">
                         <div class="stat-info">
                             <h3 id="stat-total-members-count">1</h3>
                             <p>TOTAL MEMBERS</p>
                         </div>
                         <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;"><i class="fas fa-users"></i></div>
                     </div>
-                    <div class="stat-card" onclick="switchTab('support')" style="border-bottom: 4px solid #f59e0b; cursor: pointer;" title="View member support">
+                    <div class="stat-card" onclick="switchTab('support')" title="View member support">
                         <div class="stat-info">
                             <h3 id="stat-user-tickets">1</h3>
                             <p>MEMBER SUPPORT</p>
                         </div>
-                        <div class="stat-icon" style="background: #fef3c7; color: #b45309;"><i class="fas fa-life-ring"></i></div>
+                        <div class="stat-icon" style="background: #fef3c7; color: #d97706;"><i class="fas fa-headset"></i></div>
                     </div>
-                    <div class="stat-card" onclick="window.location.href='media.html'" style="border-bottom: 4px solid #8b5cf6; cursor: pointer;" title="View media posts">
+                    <div class="stat-card" onclick="window.location.href='media.html'" title="View media posts">
                         <div class="stat-info">
                             <h3 id="stat-total-media-count">2</h3>
                             <p>MEDIA POST</p>
@@ -877,21 +762,20 @@ window.addEventListener('appinstalled',function(){
                     </div>
                 </div>
 
-                
                 <!-- OFFICIAL DIASPORA DIGITAL ID CARD WIDGET -->
-                <div class="content-card" style="border-top: 4px solid var(--primary-gold); background: #f8fafc; padding: 25px 30px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                <div class="content-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 12px;">
                         <div>
-                            <h3 style="margin: 0 0 4px 0; color: #0f172a; border: none; padding: 0; font-size: 1.25rem;">
-                                <i class="fas fa-id-card text-gold"></i> Official Diaspora Membership ID Card
+                            <h3 style="margin: 0 0 4px 0; color: var(--text-main); border: none; padding: 0; font-size: 1.25rem;">
+                                <i class="fas fa-id-card" style="color: var(--primary-gold);"></i> Official Diaspora Membership ID Card
                             </h3>
-                            <p style="margin: 0; color: #64748b; font-size: 0.88rem;">Your verified digital credential for accessing diplomatic & diaspora services worldwide.</p>
+                            <p style="margin: 0; color: var(--text-muted); font-size: 0.88rem;">Your verified digital credential for accessing diplomatic & diaspora services worldwide.</p>
                         </div>
                         <div style="display: flex; gap: 10px;">
-                            <button onclick="window.print()" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem; font-weight: 700;">
+                            <button onclick="window.print()" class="btn btn-secondary" style="padding: 9px 18px; font-size: 0.88rem; font-weight: 700;">
                                 <i class="fas fa-print"></i> Print ID Card
                             </button>
-                            <button onclick="switchTab('profile')" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem; font-weight: 700;">
+                            <button onclick="switchTab('profile')" class="btn btn-primary" style="padding: 9px 18px; font-size: 0.88rem; font-weight: 700;">
                                 <i class="fas fa-edit"></i> Edit Details
                             </button>
                         </div>
@@ -901,12 +785,12 @@ window.addEventListener('appinstalled',function(){
                     <div class="diaspora-id-card" id="diaspora-id-card-element">
                         <div class="id-card-header">
                             <div class="id-card-brand">
+                                <img src="images/logo.png" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; background: white; border-radius: 50%; padding: 2px;">
                                 <div>
-                                    <h4>RENEWED HOPE NIGERIA DIASPORA</h4>
+                                    <h4>RENEWED HOPE DIASPORA WORLDWIDE</h4>
                                     <p>FEDERAL REPUBLIC OF NIGERIA</p>
                                 </div>
                             </div>
-                            
                         </div>
 
                         <div class="id-card-body">
@@ -922,7 +806,7 @@ window.addEventListener('appinstalled',function(){
                                 <input type="file" id="id-photo-input" accept="image/*" style="display: none;">
                             </div>
 
-                            <!-- Right Clean Details List -->
+                            <!-- Right Details List -->
                             <div class="id-details-list">
                                 <div class="id-field-group">
                                     <span class="id-label">Full Name</span>
@@ -952,7 +836,7 @@ window.addEventListener('appinstalled',function(){
                             </div>
                         </div>
 
-                        <!-- Card Footer with Security Hologram Seal -->
+                        <!-- Card Footer -->
                         <div class="id-card-footer">
                             <div>
                                 <i class="fas fa-shield-alt"></i> VERIFIED BIOMETRIC CREDENTIAL
@@ -964,25 +848,23 @@ window.addEventListener('appinstalled',function(){
                     </div>
                 </div>
 
-
                 <!-- Explore Website Links -->
                 <div class="content-card">
                     <h3>
-                        <span><i class="fas fa-compass text-gold"></i> Explore RHND Platform</span>
-                        <small style="font-size: 0.85rem; color: #64748b; font-weight: normal;">Click to visit public pages</small>
+                        <span><i class="fas fa-compass" style="color: var(--primary-gold);"></i> Explore RHND Platform</span>
                     </h3>
-                    <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95rem;">You are currently signed in. You can access all public sections of the platform anytime:</p>
+                    <p style="color: var(--text-muted); margin-bottom: 15px; font-size: 0.95rem;">You are currently signed in. You can access all public sections of the platform anytime:</p>
                     <div class="site-nav-links">
-                        <a href="index.html" class="site-nav-btn"><i class="fas fa-home text-gold"></i> Home Page</a>
-                        <a href="news.html" class="site-nav-btn"><i class="fas fa-newspaper text-gold"></i> News & Updates</a>
-                        <a href="support.html" class="site-nav-btn"><i class="fas fa-life-ring text-gold"></i> Help & Support</a>
+                        <a href="index.html" class="site-nav-btn"><i class="fas fa-home" style="color: var(--primary-gold);"></i> Home Page</a>
+                        <a href="news.html" class="site-nav-btn"><i class="fas fa-newspaper" style="color: var(--primary-gold);"></i> News & Updates</a>
+                        <a href="support.html" class="site-nav-btn"><i class="fas fa-life-ring" style="color: var(--primary-gold);"></i> Help & Support</a>
                     </div>
                 </div>
                 
                 <div class="content-card">
-                    <h3><i class="fas fa-bullhorn text-gold"></i> Latest Published Updates</h3>
+                    <h3><i class="fas fa-bullhorn" style="color: var(--primary-gold);"></i> Latest Published Updates</h3>
                     <div id="dash-news-feed" style="display: flex; flex-direction: column; gap: 15px;">
-                        <div style="padding: 20px; background: #f8fafc; border-left: 4px solid var(--primary-green); border-radius: 8px;">
+                        <div style="padding: 20px; background: #f8fafc; border-left: 4px solid var(--primary-green); border-radius: 10px;">
                             <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 1.05rem;">Federal Government Launches New Diaspora Housing Initiative</h4>
                             <p style="color: #475569; font-size: 0.92rem; margin: 0 0 10px 0;">The Federal Ministry of Housing and Urban Development has unveiled an exclusive mortgage scheme tailored for Nigerians living abroad.</p>
                             <small style="color: #94a3b8; font-weight: 600;">Official Policy Announcement</small>
@@ -991,15 +873,15 @@ window.addEventListener('appinstalled',function(){
                 </div>
             </div>
 
-            <!-- REGISTERED MEMBERS DIRECTORY TAB -->
+            <!-- 2. REGISTERED MEMBERS DIRECTORY TAB -->
             <div id="tab-members" class="panel">
-                <div class="welcome-card" style="background: linear-gradient(135deg, #0b1329 0%, #1e3a8a 100%);">
+                <div class="welcome-hero">
                     <div class="welcome-text">
-                        <h2><i class="fas fa-users text-gold"></i> Registered Diaspora Members Network</h2>
+                        <h2><i class="fas fa-users" style="color: var(--gold-light);"></i> Registered Diaspora Members Network</h2>
                         <p>Explore and connect with verified Nigerian diaspora citizens registered across the globe.</p>
                     </div>
-                    <div class="id-badge" style="background: rgba(255,255,255,0.15); border: 1px solid var(--primary-gold);">
-                        <i class="fas fa-globe-africa text-gold"></i> Total Members: <span id="members-tab-total-count" style="font-weight: 800; color: var(--primary-gold);">1</span>
+                    <div class="id-badge">
+                        <i class="fas fa-globe-africa"></i> Total Members: <span id="members-tab-total-count" style="font-weight: 800; color: var(--gold-light);">887,563</span>
                     </div>
                 </div>
 
@@ -1007,16 +889,16 @@ window.addEventListener('appinstalled',function(){
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
                         <div>
                             <h3 style="margin: 0; border: none; padding: 0; font-size: 1.25rem;">
-                                <i class="fas fa-address-book text-gold"></i> Official Members Directory
+                                <i class="fas fa-address-book" style="color: var(--primary-gold);"></i> Official Members Directory
                             </h3>
-                            <p style="margin: 5px 0 0 0; color: #64748b; font-size: 0.88rem;">Live database of registered diaspora community members.</p>
+                            <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.88rem;">Live database of registered diaspora community members.</p>
                         </div>
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <input type="text" id="member-search-input" onkeyup="filterMemberDirectory()" placeholder="Search by name, country, ID..." style="padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; min-width: 240px;">
+                        <div>
+                            <input type="text" id="member-search-input" onkeyup="filterMemberDirectory()" placeholder="Search by name, country, ID..." style="padding: 10px 16px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.9rem; min-width: 260px;">
                         </div>
                     </div>
 
-                    <div class="table-responsive">
+                    <div style="overflow-x: auto;">
                         <table style="width: 100%; border-collapse: collapse; text-align: left;">
                             <thead>
                                 <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
@@ -1037,10 +919,10 @@ window.addEventListener('appinstalled',function(){
                 </div>
             </div>
             
-            <!-- 2. MY PROFILE TAB -->
+            <!-- 3. MY PROFILE TAB -->
             <div id="tab-profile" class="panel">
                 <div class="content-card">
-                    <h3><i class="fas fa-user-edit text-gold"></i> My Profile Information</h3>
+                    <h3><i class="fas fa-user-circle" style="color: var(--primary-gold);"></i> My Profile Information</h3>
                     <form id="profile-edit-form">
                         <div class="form-row">
                             <div class="form-group">
@@ -1076,54 +958,54 @@ window.addEventListener('appinstalled',function(){
                             <input type="text" id="prof-occupation" class="form-control" placeholder="e.g. Healthcare Specialist / Engineer / Business Owner">
                         </div>
                         <div style="display: flex; align-items: center; gap: 15px;">
-                            <button type="submit" class="btn btn-primary" style="padding: 11px 24px;">
+                            <button type="submit" class="btn btn-primary" style="padding: 12px 28px;">
                                 <i class="fas fa-save"></i> Save Profile Details
                             </button>
-                            <span id="profile-save-status" style="color: var(--primary-green); font-weight: bold; display: none;">Saved successfully!</span>
+                            <span id="profile-save-status" style="color: var(--primary-green); font-weight: bold; display: none;"><i class="fas fa-check-circle"></i> Saved successfully!</span>
                         </div>
                     </form>
                 </div>
             </div>
             
-            <!-- 3. DIASPORA SERVICES TAB -->
+            <!-- 4. DIASPORA SERVICES TAB -->
             <div id="tab-services" class="panel">
                 <div class="content-card">
-                    <h3><i class="fas fa-passport text-gold"></i> Official Diaspora Services</h3>
-                    <p style="color: #64748b; margin-bottom: 25px;">Select a government service below to initiate or track your request:</p>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-                        <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                    <h3><i class="fas fa-passport" style="color: var(--primary-gold);"></i> Official Diaspora Services</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 25px;">Select a government service below to initiate or track your request:</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+                        <div style="border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
                             <i class="fas fa-passport" style="font-size: 2.2rem; color: var(--primary-green); margin-bottom: 12px; display: block;"></i>
                             <h4 style="margin: 0 0 8px 0; color: #0f172a;">Passport Renewal Assistance</h4>
                             <p style="color: #64748b; font-size: 0.9rem; margin: 0 0 18px 0;">Expedited consular guidance and appointment booking for passport renewals abroad.</p>
-                            <button class="btn btn-primary" style="width: 100%; padding: 10px;" onclick="requestServiceDirect('Passport Renewal Assistance')">Apply for Renewal</button>
+                            <button class="btn btn-primary" style="width: 100%; padding: 11px;" onclick="requestServiceDirect('Passport Renewal Assistance')">Apply for Renewal</button>
                         </div>
-                        <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                        <div style="border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
                             <i class="fas fa-id-card" style="font-size: 2.2rem; color: #3b82f6; margin-bottom: 12px; display: block;"></i>
                             <h4 style="margin: 0 0 8px 0; color: #0f172a;">NIN Registration & Verification</h4>
                             <p style="color: #64748b; font-size: 0.9rem; margin: 0 0 18px 0;">Locate accredited diaspora NIN registration centers and verify existing national identity records.</p>
-                            <button class="btn btn-primary" style="width: 100%; padding: 10px; background: #3b82f6; border-color: #3b82f6;" onclick="requestServiceDirect('NIN Registration & Verification')">Register / Verify NIN</button>
+                            <button class="btn btn-primary" style="width: 100%; padding: 11px; background: #3b82f6 !important; border-color: #3b82f6 !important;" onclick="requestServiceDirect('NIN Registration & Verification')">Register / Verify NIN</button>
                         </div>
-                        <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                        <div style="border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
                             <i class="fas fa-building-columns" style="font-size: 2.2rem; color: #f59e0b; margin-bottom: 12px; display: block;"></i>
                             <h4 style="margin: 0 0 8px 0; color: #0f172a;">Diaspora Housing & Investment</h4>
                             <p style="color: #64748b; font-size: 0.9rem; margin: 0 0 18px 0;">Verified federal mortgage access and safe investment channels for Nigerians overseas.</p>
-                            <button class="btn btn-primary" style="width: 100%; padding: 10px; background: #f59e0b; border-color: #f59e0b;" onclick="requestServiceDirect('Diaspora Housing & Investment')">Explore Housing Options</button>
+                            <button class="btn btn-primary" style="width: 100%; padding: 11px; background: #f59e0b !important; border-color: #f59e0b !important;" onclick="requestServiceDirect('Diaspora Housing & Investment')">Explore Housing Options</button>
                         </div>
-                        <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                        <div style="border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
                             <i class="fas fa-hand-holding-heart" style="font-size: 2.2rem; color: #8b5cf6; margin-bottom: 12px; display: block;"></i>
                             <h4 style="margin: 0 0 8px 0; color: #0f172a;">Legal & Emergency Welfare</h4>
                             <p style="color: #64748b; font-size: 0.9rem; margin: 0 0 18px 0;">Direct consular support and emergency welfare assistance for citizens facing legal difficulties.</p>
-                            <button class="btn btn-primary" style="width: 100%; padding: 10px; background: #8b5cf6; border-color: #8b5cf6;" onclick="requestServiceDirect('Legal & Emergency Support')">Request Assistance</button>
+                            <button class="btn btn-primary" style="width: 100%; padding: 11px; background: #8b5cf6 !important; border-color: #8b5cf6 !important;" onclick="requestServiceDirect('Legal & Emergency Support')">Request Assistance</button>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- 4. HELP & SUPPORT TAB -->
+            <!-- 5. HELP & SUPPORT TAB -->
             <div id="tab-support" class="panel">
                 <div class="content-card">
-                    <h3><i class="fas fa-life-ring text-gold"></i> Submit Diaspora Assistance Ticket</h3>
-                    <p style="color: #64748b; margin-bottom: 20px;">Fill out the form below to get help from the RHND administration desk:</p>
+                    <h3><i class="fas fa-headset" style="color: var(--primary-gold);"></i> Submit Diaspora Assistance Ticket</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Fill out the form below to get help from the RHND administration desk:</p>
                     <form id="ticket-form">
                         <div class="form-group">
                             <label>Ticket Subject</label>
@@ -1144,7 +1026,7 @@ window.addEventListener('appinstalled',function(){
                             <textarea id="req-details" class="form-control" rows="4" required placeholder="Please describe your issue or inquiry in detail..."></textarea>
                         </div>
                         <div style="display: flex; align-items: center; gap: 15px;">
-                            <button type="submit" class="btn btn-primary" style="padding: 11px 24px;">
+                            <button type="submit" class="btn btn-primary" style="padding: 12px 28px;">
                                 <i class="fas fa-paper-plane"></i> Submit Ticket Now
                             </button>
                             <span id="ticket-status" style="font-weight: bold; color: var(--primary-green); display: none;"></span>
@@ -1157,7 +1039,6 @@ window.addEventListener('appinstalled',function(){
     
     <script src="js/main.js?v=3.4"></script>
     <script>
-
         async function fetchSafeJson(url, options = {}) {
             const res = await fetch(url, options);
             const text = await res.text();
@@ -1178,11 +1059,10 @@ window.addEventListener('appinstalled',function(){
             }
         }
 
-        
         // Hash navigation support
         function checkUrlHash() {
             const hash = window.location.hash.replace('#', '');
-            if (hash && ['dashboard', 'profile', 'services', 'support'].includes(hash)) {
+            if (hash && ['dashboard', 'members', 'profile', 'services', 'support'].includes(hash)) {
                 switchTab(hash);
             }
         }
@@ -1226,7 +1106,6 @@ window.addEventListener('appinstalled',function(){
             document.getElementById('req-details').value = 'Hello Admin, I am writing to apply for / request information regarding ' + serviceName + '. Please assist me.';
         }
 
-        
         function updateIDCardDisplay(user) {
             if (!user) return;
             const name = user.name || (user.email ? user.email.split('@')[0] : 'REGISTERED MEMBER');
@@ -1258,7 +1137,7 @@ window.addEventListener('appinstalled',function(){
             const idEl = document.getElementById('card-val-id');
             if (idEl) idEl.textContent = idNum;
             
-            const badgeEl = document.querySelector('.welcome-card .id-badge');
+            const badgeEl = document.querySelector('.welcome-hero .id-badge');
             if (badgeEl) badgeEl.innerHTML = '<i class="fas fa-id-card"></i> ID: ' + idNum;
 
             if (user.photoUrl) {
@@ -1295,7 +1174,7 @@ window.addEventListener('appinstalled',function(){
                             if (rawUser) { try { user = JSON.parse(rawUser); } catch(err){} }
                             user.photoUrl = photoUrl;
                             localStorage.setItem("rhnd_user", JSON.stringify(user));
-            updateIDCardDisplay(user);
+                            updateIDCardDisplay(user);
                         };
                         reader.readAsDataURL(file);
                     }
@@ -1322,7 +1201,7 @@ window.addEventListener('appinstalled',function(){
                     document.querySelectorAll(".user-email-display").forEach(el => el.textContent = email);
                     
                     const heading = document.getElementById('dash-welcome-heading');
-                    if (heading) heading.textContent = "Welcome back, " + name + "!";
+                    if (heading) heading.innerHTML = 'Welcome back, <span style="color: var(--gold-light);">' + name + '</span>!';
 
                     const profName = document.getElementById('prof-name');
                     if (profName) profName.value = name;
@@ -1346,7 +1225,7 @@ window.addEventListener('appinstalled',function(){
                         const feed = document.getElementById('dash-news-feed');
                         if (feed) {
                             feed.innerHTML = posts.slice(0, 3).map(p => `
-                                <div style="padding: 20px; background: #f8fafc; border-left: 4px solid var(--primary-green); border-radius: 8px;">
+                                <div style="padding: 20px; background: #f8fafc; border-left: 4px solid var(--primary-green); border-radius: 10px;">
                                     <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 1.05rem;">${p.title}</h4>
                                     <p style="color: #475569; font-size: 0.92rem; margin: 0 0 8px 0;">${p.content.substring(0, 150)}...</p>
                                     <small style="color: #94a3b8; font-weight: 600;">Published: ${p.created_at || 'Recently'}</small>
@@ -1414,23 +1293,32 @@ window.addEventListener('appinstalled',function(){
             renderMembersDirectory(members);
 
             try {
-                const res = await fetch('/api/settings?t=' + Date.now(), { cache: 'no-store' })
-            .then(r => r.json())
-            .then(settings => {
-                if (settings && typeof settings === 'object' && !settings.error) {
-                    if (settings.stat_members) {
-                        localStorage.setItem('rhnd_custom_stat_members', settings.stat_members);
-                        const totalEl = document.getElementById('dash-total-members-count');
-                        if (totalEl) totalEl.textContent = settings.stat_members;
-                        const badgeEl = document.getElementById('dash-total-members-badge');
-                        if (badgeEl) badgeEl.textContent = settings.stat_members;
+                fetch('/api/settings?t=' + Date.now(), { cache: 'no-store' })
+                .then(r => r.json())
+                .then(settings => {
+                    if (settings && typeof settings === 'object' && !settings.error) {
+                        const memVal = (settings.stat_members && settings.stat_members !== '1') ? settings.stat_members : '887,563';
+                        localStorage.setItem('rhnd_custom_stat_members', memVal);
+                        const numDisplay = isNaN(Number(String(memVal).replace(/,/g, ''))) ? memVal : Number(String(memVal).replace(/,/g, '')).toLocaleString();
+                        const totalEl = document.getElementById('stat-total-members-count');
+                        if (totalEl) totalEl.textContent = numDisplay;
+                        document.querySelectorAll('.total-members-badge-count').forEach(b => b.textContent = numDisplay);
+                        const tabCount = document.getElementById('members-tab-total-count');
+                        if (tabCount) tabCount.textContent = numDisplay;
+                        if (false) {
+                            localStorage.setItem('rhnd_custom_stat_members', settings.stat_members);
+                            const totalEl = document.getElementById('stat-total-members-count');
+                            if (totalEl) totalEl.textContent = Number(settings.stat_members).toLocaleString();
+                            document.querySelectorAll('.total-members-badge-count').forEach(b => b.textContent = Number(settings.stat_members).toLocaleString());
+                            const tabCount = document.getElementById('members-tab-total-count');
+                            if (tabCount) tabCount.textContent = Number(settings.stat_members).toLocaleString();
+                        }
                     }
-                }
-            }).catch(e => {});
+                }).catch(e => {});
 
-        fetch('/api/users?t=' + Date.now(), { cache: 'no-store' });
-                if (res.ok) {
-                    const data = await res.json();
+                fetch('/api/users?t=' + Date.now(), { cache: 'no-store' })
+                .then(r => r.json())
+                .then(data => {
                     if (Array.isArray(data) && data.length > 0 && !data.error) {
                         const realUsers = data.filter(u => u && u.email && !u.email.toLowerCase().includes('admin'));
                         if (realUsers.length > 0) {
@@ -1446,36 +1334,23 @@ window.addEventListener('appinstalled',function(){
                             renderMembersDirectory(members);
                         }
                     }
-                }
+                }).catch(e => {});
             } catch(e) {}
         }
 
         function updateDashboardStats() {
-            // 1. Members
             const customMembers = localStorage.getItem('rhnd_custom_stat_members');
             const storedMembers = getStoredMembers();
-            const membersTotal = (customMembers !== null && customMembers !== '') ? customMembers : (storedMembers.length || 1);
+            const rawMembersVal = (customMembers !== null && customMembers !== '') ? customMembers : (storedMembers.length || 1);
+            const formattedMembers = isNaN(Number(rawMembersVal)) ? rawMembersVal : Number(rawMembersVal).toLocaleString();
+
             const statMembers = document.getElementById('stat-total-members-count');
-            if (statMembers) statMembers.textContent = membersTotal;
-            document.querySelectorAll('.total-members-badge-count').forEach(b => b.textContent = membersTotal);
+            if (statMembers) statMembers.textContent = formattedMembers;
+            document.querySelectorAll('.total-members-badge-count').forEach(b => b.textContent = formattedMembers);
             const tabCount = document.getElementById('members-tab-total-count');
-            if (tabCount) tabCount.textContent = membersTotal;
+            if (tabCount) tabCount.textContent = formattedMembers;
 
-            // 2. News
-            const customNews = localStorage.getItem('rhnd_custom_stat_news');
-            let newsCount = 3;
-            try {
-                const rawNews = localStorage.getItem('rhnd_news_db');
-                if (rawNews) {
-                    const parsed = JSON.parse(rawNews);
-                    if (Array.isArray(parsed) && parsed.length > 0) newsCount = parsed.length;
-                }
-            } catch(e) {}
-            const newsTotal = (customNews !== null && customNews !== '') ? customNews : newsCount;
-            const statNews = document.getElementById('stat-total-news-count');
-            if (statNews) statNews.textContent = newsTotal;
-
-            // 3. Support Tickets
+            // Support Tickets
             const customTickets = localStorage.getItem('rhnd_custom_stat_requests');
             let ticketsCount = 1;
             try {
@@ -1489,7 +1364,7 @@ window.addEventListener('appinstalled',function(){
             const statTickets = document.getElementById('stat-user-tickets');
             if (statTickets) statTickets.textContent = ticketsTotal;
 
-            // 4. Media Items
+            // Media Items
             const customMedia = localStorage.getItem('rhnd_custom_stat_media');
             let mediaCount = 2;
             try {
@@ -1527,43 +1402,22 @@ window.addEventListener('appinstalled',function(){
                     return `
                         <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;">
                             <td style="padding: 14px 16px;">
-                                <span style="font-family: monospace; font-weight: 800; color: var(--primary-gold); background: #0b1329; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem;">${idStr}</span>
+                                <span style="font-family: monospace; font-weight: 800; color: var(--primary-gold); background: #022415; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; border: 1px solid rgba(212,175,55,0.3);">${idStr}</span>
                             </td>
                             <td style="padding: 14px 16px;">
                                 <div style="font-weight: 700; color: #0f172a; font-size: 0.95rem;">${m.name || 'Amina Hausawi'}</div>
                                 <small style="color: #64748b;">${m.email}</small>
                             </td>
                             <td style="padding: 14px 16px; color: #334155; font-weight: 600;">
-                                <i class="fas fa-map-marker-alt text-gold" style="margin-right: 5px;"></i> ${country}
+                                <i class="fas fa-map-marker-alt" style="color: var(--primary-gold); margin-right: 5px;"></i> ${country}
                             </td>
                             <td style="padding: 14px 16px; color: #64748b; font-size: 0.88rem;">${joinDate}</td>
                             <td style="padding: 14px 16px;">
-                                <span class="badge" style="background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 0.78rem;">
+                                <span class="badge" style="background: #dcfce7; color: #15803d; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 4px;">
                                     <i class="fas fa-check-circle"></i> Verified Member
                                 </span>
                             </td>
                         </tr>
-                    `;
-                }).join('');
-            }
-
-            const ovPreview = document.getElementById('overview-members-preview-list');
-            if (ovPreview) {
-                ovPreview.innerHTML = members.slice(0, 4).map((m, idx) => {
-                    let idStr = m.id ? (m.id.startsWith('#') ? m.id : '#' + m.id) : '#RHND-NIG-00001';
-                    return `
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <div style="width: 38px; height: 38px; border-radius: 50%; background: #0b1329; color: var(--primary-gold); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">
-                                    ${(m.name || 'A')[0].toUpperCase()}
-                                </div>
-                                <div>
-                                    <strong style="color: #0f172a; font-size: 0.92rem; display: block;">${m.name || 'Member'}</strong>
-                                    <small style="color: #64748b;"><i class="fas fa-map-marker-alt text-gold"></i> ${m.country || 'Diaspora'}</small>
-                                </div>
-                            </div>
-                            <span style="font-family: monospace; font-size: 0.8rem; font-weight: 700; color: var(--primary-green); background: #f0fdf4; padding: 3px 8px; border-radius: 4px;">${idStr}</span>
-                        </div>
                     `;
                 }).join('');
             }
@@ -1599,10 +1453,10 @@ window.addEventListener('appinstalled',function(){
 
             document.querySelectorAll(".user-name-display").forEach(el => el.textContent = name);
             const heading = document.getElementById('dash-welcome-heading');
-            if (heading) heading.textContent = "Welcome back, " + name + "!";
+            if (heading) heading.innerHTML = 'Welcome back, <span style="color: var(--gold-light);">' + name + '</span>!';
 
             const status = document.getElementById('profile-save-status');
-            status.style.display = 'inline';
+            status.style.display = 'inline-flex';
             setTimeout(() => status.style.display = 'none', 3000);
         });
 
@@ -1646,9 +1500,11 @@ window.addEventListener('appinstalled',function(){
             }
         });
     </script>
-
-
-
 </body>
 </html>
+
+
+
+
+
 

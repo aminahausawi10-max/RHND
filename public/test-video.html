@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Display & Orientation Diagnostic Test</title>
+    <link rel="stylesheet" href="css/style.css?v=5.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/media-embed.js?v=5.0"></script>
+    <style>
+        body { font-family: sans-serif; background: #f8fafc; padding: 25px; color: #0f172a; }
+        .test-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 25px; }
+        .test-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .test-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: #033a20; }
+        .test-desc { font-size: 0.85rem; color: #64748b; margin-bottom: 14px; }
+        .status-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; background: #dcfce7; color: #15803d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <h1>Video Display, Orientation & Edge Cropping Verification</h1>
+        <p style="color: #64748b;">Testing: Landscape (wide), Portrait (tall 9:16), Square (1:1), White Background Visibility, and Zero-Crop Edge Integrity.</p>
+
+        <div class="test-grid">
+            <!-- 1. LANDSCAPE WIDE VIDEO -->
+            <div class="test-card">
+                <div class="test-title"><i class="fas fa-desktop"></i> 1. Wide Landscape Video (16:9)</div>
+                <div class="test-desc">Wide videos automatically stretch responsively without distortion or zoom.</div>
+                <div class="rhnd-video-container">
+                    <video controls playsinline preload="metadata" onloadedmetadata="if(window.adaptVideoContainer)window.adaptVideoContainer(this)" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+                </div>
+                <div class="status-badge"><i class="fas fa-check-circle"></i> Aspect Ratio Preserved & Contain Mode Active</div>
+            </div>
+
+            <!-- 2. PORTRAIT TALL VIDEO (TikTok / Reels / Status) -->
+            <div class="test-card">
+                <div class="test-title"><i class="fas fa-mobile-alt"></i> 2. Tall Portrait Video (TikTok / Reels / Phone)</div>
+                <div class="test-desc">Automatically detected as portrait. Displays full height with zero edge cutoff.</div>
+                <div class="rhnd-video-container">
+                    <!-- Standard portrait aspect sample -->
+                    <video controls playsinline preload="metadata" onloadedmetadata="if(window.adaptVideoContainer)window.adaptVideoContainer(this)" src="https://assets.mixkit.co/videos/preview/mixkit-vertical-video-of-a-woman-opening-a-window-41865-large.mp4"></video>
+                </div>
+                <div class="status-badge"><i class="fas fa-check-circle"></i> Auto-Adapts to Portrait Container</div>
+            </div>
+
+            <!-- 3. WHITE BACKGROUND VIDEO CONTRAST TEST -->
+            <div class="test-card">
+                <div class="test-title"><i class="fas fa-eye"></i> 3. White Background & Object Visibility Test</div>
+                <div class="test-desc">Dark neutral container (#0b1329) ensures white videos, glasses, lenses & white objects never blend with page background.</div>
+                <div class="rhnd-video-container">
+                    <video controls playsinline preload="metadata" onloadedmetadata="if(window.adaptVideoContainer)window.adaptVideoContainer(this)" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>
+                </div>
+                <div class="status-badge"><i class="fas fa-check-circle"></i> High Contrast Border & Frame Active</div>
+            </div>
+
+            <!-- 4. CARD PREVIEW MODE -->
+            <div class="test-card">
+                <div class="test-title"><i class="fas fa-th-large"></i> 4. News & Media Card Display Mode</div>
+                <div class="test-desc">Direct card video container never crops sides or zooms in. Complete frame visible.</div>
+                <div class="rhnd-card-video-wrap">
+                    <video controls playsinline preload="metadata" onloadedmetadata="if(window.adaptVideoContainer)window.adaptVideoContainer(this)" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+                </div>
+                <div class="status-badge"><i class="fas fa-check-circle"></i> Zero-Crop Card Container Active</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

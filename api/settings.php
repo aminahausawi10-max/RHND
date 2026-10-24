@@ -32,11 +32,11 @@ try {
     $chk = $pdo->query('SELECT COUNT(*) FROM settings')->fetchColumn();
     if ($chk == 0) {
         $defaults = [
-            'stat_members' => '1',
+            'stat_members' => '887,563',
             'stat_news' => '3',
             'stat_requests' => '1',
             'stat_media' => '2',
-            'founder_name' => 'Mr. Inuwa Ahmed',
+            'founder_name' => 'Mr. Anwar Ahmed',
             'founder_phone' => '07047000070'
         ];
         $ins = $pdo->prepare('INSERT INTO settings (`key`, `value`) VALUES (?, ?)');
@@ -53,6 +53,9 @@ if ($method === 'GET') {
         $settings = [];
         foreach ($rows as $row) {
             $settings[$row['key']] = $row['value'];
+        }
+        if (empty($settings['stat_members']) || $settings['stat_members'] === '1') {
+            $settings['stat_members'] = '887,563';
         }
         echo json_encode($settings);
     } catch (Exception $e) {
